@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Erik Židanek – Automation Engineer</title>
+<meta name="description" content="Erik Židanek – Lead Engineer, industrial automation and process control. Siemens S7-1200/1500, Rockwell Studio 5000 with PlantPAx, ISA-88 phase logic, FAT/SAT commissioning, Python tools for specification-based PLC engineering.">
+<style>
+/*
+  VOICE   : a calm engineering portfolio first (~70%), with HMI character (~30%) concentrated in the simulator
+  IDEA    : readable CV on an engineering-canvas ground; the live line simulator is the one signature piece
+  PICTURE : the interactive display-test line (Simulator); elsewhere plain panels, a timeline and a workflow strip
+  COLOUR  : #1E1E2E canvas, #252536 panels, blue = selection/focus, green/amber/rose only for real states
+  TYPE    : system sans (Inter if installed) for prose and headings, mono for identifiers, code and live values
+  LAYOUT  : fixed header + left rail (bottom tab bar under 820px); one heading per section; simulator scrolls inside its panel
+*/
+:root{
+  --bg:#1E1E2E; --bg-2:#181825; --panel:#252536; --panel-hi:#2B2B3F; --line:#313244; --line-2:#45475A;
+  --ink:#CDD6F4; --mute:#A6ADC8; --dim:#8A8FA8;
+  --ok:#A6E3A1; --focus:#89B4FA; --warn:#F9E2AF; --hi:#F38BA8;
+  --k:#B4BEFE; --t:#94E2D5; --s:#FAB387; --c:#8A8FA8;
+  --r:6px; --hdr:58px; --rail:220px;
+  --sans:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,sans-serif;
+  --mono:"JetBrains Mono",Consolas,"SFMono-Regular",Menlo,"Liberation Mono",ui-monospace,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:calc(var(--hdr) + 16px)}
+body{margin:0;color:var(--ink);font:16px/1.6 var(--sans);overflow-x:clip;-webkit-font-smoothing:antialiased;
+  background:var(--bg) radial-gradient(rgba(205,214,244,.045) 1px,transparent 1.3px) 0 0/24px 24px fixed}
+h1,h2,h3,h4{margin:0;font-weight:600;line-height:1.2}
+p{margin:0 0 .7em}
+a{color:var(--focus)}
+button,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+[hidden]{display:none!important}
+.mute{color:var(--mute)}
+.mono{font-family:var(--mono)}
+code{font-family:var(--mono)}
+
+/* ---------- Header ---------- */
+.top{position:fixed;inset:0 0 auto 0;height:var(--hdr);z-index:30;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 18px;
+  background:linear-gradient(180deg,#22223a,#1b1b2b);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px;overflow:hidden;white-space:nowrap}
+.logo{width:32px;height:32px;flex:none}
+.brand .hn{display:block;font-weight:600;font-size:15px}
+.brand .hr{display:block;font-size:12.5px;color:var(--mute);overflow:hidden;text-overflow:ellipsis}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:8px 14px;border:1px solid var(--line-2);border-radius:var(--r);
+  background:linear-gradient(180deg,#2f2f45,#26263a);font-size:14px;cursor:pointer;color:var(--ink);text-decoration:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
+.btn:hover{border-color:var(--focus)}
+.btn:active{transform:translateY(1px)}
+.btn-pri{background:linear-gradient(180deg,#9cc2fb,#7aa6ef);color:#14142a;border-color:#9cc2fb;font-weight:600}
+.btn-pri:hover{background:#b4d0fc}
+.btn-sm{min-height:32px;padding:4px 10px;font-size:13px}
+.top .short{display:none}
+
+/* ---------- Navigation rail ---------- */
+.rail{position:fixed;top:var(--hdr);bottom:0;left:0;width:var(--rail);z-index:20;background:linear-gradient(180deg,#1b1b2b,#181825);
+  border-right:1px solid var(--line);padding:16px 10px;display:flex;flex-direction:column;gap:3px}
+.rail button{position:relative;display:flex;align-items:center;gap:10px;min-height:44px;padding:8px 10px;border:1px solid transparent;border-radius:var(--r);
+  background:none;text-align:left;cursor:pointer;font-size:14.5px;color:var(--mute)}
+.rail button:hover{color:var(--ink);background:rgba(255,255,255,.03)}
+.rail button[aria-current="page"]{color:var(--ink);background:linear-gradient(90deg,rgba(137,180,250,.16),rgba(137,180,250,.03));border-color:#3b4a66}
+.rail .num{font-family:var(--mono);font-size:11px;color:var(--dim);width:18px}
+.rail button[aria-current="page"] .num{color:var(--focus)}
+.rail svg{width:17px;height:17px;flex:none}
+.rail .ndot{position:absolute;top:10px;right:12px;width:8px;height:8px;border-radius:50%;background:var(--warn)}
+.rail .rail-ft{margin-top:auto;padding:10px;font-family:var(--mono);font-size:11px;color:var(--dim);border-top:1px solid var(--line)}
+
+/* ---------- Main + sections ---------- */
+main{padding:calc(var(--hdr) + 24px) 28px 40px calc(var(--rail) + 28px);max-width:calc(1280px + var(--rail))}
+.view{animation:viewIn .2s ease-out}
+@keyframes viewIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.view-hd{margin:6px 0 20px;max-width:760px}
+.view-hd .vnum{font-family:var(--mono);font-size:12px;color:var(--dim)}
+.view-hd h1{font-size:clamp(26px,3vw,32px);margin:2px 0 6px;letter-spacing:-.01em}
+.view-hd p{color:var(--mute);margin:0}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(12,minmax(0,1fr))}
+.c12{grid-column:span 12}.c8{grid-column:span 8}.c7{grid-column:span 7}.c6{grid-column:span 6}.c5{grid-column:span 5}.c4{grid-column:span 4}
+.panel{background:linear-gradient(180deg,var(--panel-hi),var(--panel) 64px);border:1px solid var(--line);border-radius:var(--r);padding:18px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 14px 30px -20px rgba(0,0,0,.8)}
+.panel-hd{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 10px;margin:-18px -18px 16px;padding:12px 18px;border-bottom:1px solid var(--line);
+  background:rgba(0,0,0,.12);border-radius:var(--r) var(--r) 0 0;font-size:13px;color:var(--mute)}
+.panel-hd h2{font-size:15px;color:var(--ink)}
+.flash{animation:flash 1.6s ease-out}
+@keyframes flash{0%,40%{box-shadow:0 0 0 2px var(--focus)}100%{box-shadow:0 0 0 2px transparent}}
+.badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11.5px;padding:2px 8px;border:1px solid var(--line-2);border-radius:4px;color:var(--mute);background:var(--bg-2);white-space:nowrap}
+.badge.warn{color:var(--warn);border-color:#5d5640}
+.badges{display:flex;flex-wrap:wrap;gap:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.chip{min-height:38px;padding:6px 14px;border:1px solid var(--line-2);border-radius:20px;background:var(--bg-2);font-size:14px;color:var(--mute);cursor:pointer}
+.chip:hover{color:var(--ink)}
+.chip[aria-pressed="true"]{color:var(--focus);border-color:var(--focus);background:#1f2a40}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block;flex:none}
+
+/* ---------- Overview ---------- */
+.intro{padding:clamp(20px,5vw,56px) 0 clamp(28px,4vw,44px);max-width:1000px}
+.intro .idt{font-family:var(--mono);font-size:12px;color:var(--focus)}
+.intro h1{font-size:clamp(38px,5.4vw,60px);font-weight:650;letter-spacing:-.02em;line-height:1.04;margin:12px 0 10px}
+.intro .role{font-size:clamp(16px,1.9vw,20px);color:var(--mute);margin:0}
+.intro .lead{font-size:clamp(19px,2.1vw,24px);line-height:1.45;margin:26px 0 30px;max-width:36ch;text-wrap:balance}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.actions .btn{min-height:46px;padding:10px 18px;font-size:15px}
+.evidence{list-style:none;display:flex;flex-wrap:wrap;gap:10px 0;margin:36px 0 0;padding:18px 0 0;border-top:1px solid var(--line);font-size:14.5px;color:var(--mute)}
+.evidence li{padding-right:22px;margin-right:22px;border-right:1px solid var(--line)}
+.evidence li:last-child{border:0;margin:0;padding:0}
+.evidence b{color:var(--ink);font-weight:600}
+.avail{display:inline-flex;align-items:center;gap:8px;margin-top:18px;font-size:13.5px;color:var(--mute)}
+.flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.flow li{position:relative;padding:14px 16px;border:1px solid var(--line);border-radius:var(--r);background:var(--bg-2)}
+.flow li:not(:last-child)::after{content:"";position:absolute;right:-11px;top:50%;width:10px;height:10px;border-top:2px solid var(--line-2);border-right:2px solid var(--line-2);transform:translateY(-50%) rotate(45deg)}
+.flow .fn{font-family:var(--mono);font-size:11.5px;color:var(--dim)}
+.flow h3{font-size:16px;margin:4px 0 6px}
+.flow p{font-size:14px;color:var(--mute);margin:0}
+.stack{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.stack .panel{display:flex;flex-direction:column;gap:10px}
+.stack h3{font-size:16px}
+.stack ul{margin:0;padding-left:18px;font-size:14.5px;color:var(--ink)}
+.stack li{margin-bottom:4px}
+.stack .btn{align-self:flex-start;margin-top:auto}
+.note{font-size:13px;color:var(--dim);margin:8px 0 0}
+.teaser{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 20px}
+.teaser p{margin:0;max-width:62ch}
+.teaser .lbl{font-family:var(--mono);font-size:12px;color:var(--focus);display:block;margin-bottom:4px}
+
+/* ---------- Experience ---------- */
+.gantt{display:grid;gap:6px}
+.g-row{display:grid;grid-template-columns:220px minmax(0,1fr);align-items:center;gap:14px}
+.g-lbl{font-size:14px;line-height:1.3}
+.g-lbl b{display:block;font-weight:600}
+.g-lbl span{color:var(--mute);font-size:13px}
+.g-trk{position:relative;height:22px;border-radius:4px;background:rgba(0,0,0,.18);border:1px solid var(--line)}
+.g-trk .gl{position:absolute;top:0;bottom:0;width:1px;background:rgba(205,214,244,.05)}
+.g-bar{position:absolute;top:4px;bottom:4px;border-radius:3px;background:linear-gradient(180deg,#6b7090,#4f5270)}
+.g-bar.now{background:linear-gradient(180deg,#b9ecb4,#8fd189)}
+.g-bar.edu{background:repeating-linear-gradient(135deg,#3a3a52 0 6px,#33334a 6px 12px);border:1px solid var(--line-2)}
+.g-axis{position:relative;height:18px;font-family:var(--mono);font-size:11px;color:var(--dim)}
+.g-axis span{position:absolute;transform:translateX(-50%)}
+.g-legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:8px;font-size:12.5px;color:var(--mute)}
+.g-legend span::before{content:"";display:inline-block;width:14px;height:8px;border-radius:2px;margin-right:6px;vertical-align:middle;background:var(--c)}
+.roles{list-style:none;margin:18px 0 0;padding:0;border-top:1px solid var(--line)}
+.roles li{display:grid;grid-template-columns:170px minmax(0,1fr);gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
+.roles li:last-child{border:0}
+.roles .when{font-family:var(--mono);font-size:12.5px;color:var(--mute);white-space:nowrap;padding-top:2px}
+.roles h3{font-size:15.5px}
+.roles h3 span{font-weight:400;color:var(--mute)}
+.roles p{margin:4px 0 0;color:var(--mute);font-size:14.5px}
+.hw{display:grid;grid-template-columns:230px minmax(0,1fr);gap:16px;align-items:start}
+.tree{font-size:14px}
+.tree ul{list-style:none;margin:0;padding:0 0 0 14px;border-left:1px dashed var(--line-2)}
+.tree>ul{padding-left:0;border:0}
+.tree button{display:block;width:100%;text-align:left;min-height:34px;padding:5px 8px;border:1px solid transparent;border-radius:var(--r);background:none;cursor:pointer;color:var(--mute)}
+.tree button:hover{color:var(--ink)}
+.tree button[aria-pressed="true"]{color:var(--focus);border-color:#3b4a66;background:#1f2a40}
+.tree .grp{color:var(--ink);font-weight:500}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{font-size:12.5px;font-weight:500;color:var(--mute);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line-2);white-space:nowrap;background:rgba(0,0,0,.12)}
+td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.nm{font-family:var(--mono);font-size:13.5px;white-space:nowrap}
+td.env{font-family:var(--mono);font-size:12.5px;color:var(--mute)}
+.lvl{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--mute);white-space:nowrap;width:100px}
+.bar{display:flex;gap:3px}
+.bar i{flex:1;height:6px;border-radius:1px;background:var(--line)}
+.bar i.on{background:var(--mute)}
+.bar.max i.on{background:var(--ink)}
+.topo{display:flex;flex-direction:column;align-items:center}
+.cpu{display:flex;align-items:center;gap:12px;padding:10px 16px;border:1px solid #4b6390;border-radius:var(--r);background:linear-gradient(180deg,#26324d,#1f2a40)}
+.cpu svg{width:26px;height:26px;color:var(--focus)}
+.cpu b{display:block;font-size:14px}
+.cpu span{font-size:13px;color:var(--mute)}
+.trunk{width:2px;height:20px;background:var(--line-2)}
+.nodes{position:relative;width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;padding-top:20px}
+.nodes::before{content:"";position:absolute;left:8%;right:8%;top:0;height:2px;background:var(--line-2)}
+.node{position:relative;display:flex;flex-direction:column;gap:6px;text-align:left;min-height:104px;padding:12px;border:1px solid var(--line);border-radius:var(--r);background:var(--bg-2);cursor:pointer}
+.node::before{content:"";position:absolute;left:50%;top:-21px;width:2px;height:20px;background:var(--line-2)}
+.node:hover{border-color:var(--focus)}
+.node[aria-expanded="true"]{border-color:var(--focus);background:#1f2a40}
+.node[aria-expanded="true"]::before{background:var(--focus)}
+.node svg{width:22px;height:22px;color:var(--mute)}
+.node[aria-expanded="true"] svg{color:var(--focus)}
+.node .nn{font-weight:600;font-size:14.5px}
+.node .nl{font-size:13px;color:var(--mute)}
+.drawer{margin-top:16px;border:1px solid #4b6390;border-radius:var(--r);background:var(--bg-2);overflow:hidden}
+.drawer-hd{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);background:#1f2a40;font-weight:600;font-size:14.5px}
+.drawer-bd{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:18px;padding:14px}
+.drawer-bd ul{margin:0;padding-left:18px;font-size:14.5px}
+.drawer-bd li{margin-bottom:6px}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 12px;font-size:14px;align-content:start;margin:0}
+.kv dt{color:var(--mute);font-size:13px}
+.kv dd{margin:0}
+
+/* ---------- Projects + tools ---------- */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:16px}
+.card{display:flex;flex-direction:column;gap:10px}
+.card .ptag{font-family:var(--mono);font-size:11.5px;color:var(--dim)}
+.card h3{font-size:17px}
+.card .rl{font-size:14px;color:var(--mute)}
+.cra{margin:0;display:grid;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.cra div{display:grid;grid-template-columns:104px minmax(0,1fr);gap:10px;font-size:14px;padding:9px 11px;border-bottom:1px solid var(--line);background:var(--bg-2)}
+.cra div:last-child{border:0}
+.cra dt{font-size:12.5px;color:var(--mute);padding-top:1px}
+.cra dd{margin:0}
+.card .btn{align-self:flex-start;margin-top:auto}
+.tool{display:flex;flex-direction:column;gap:8px}
+.tool h3{font-size:16.5px}
+.tool ul{margin:0;padding-left:18px;font-size:14px}
+.tool li{margin-bottom:5px}
+.tool code{font-size:12.5px;color:var(--t)}
+.modal{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(10,10,18,.75)}
+.fp{width:min(700px,100%);max-height:calc(100vh - 32px);overflow:auto;background:var(--panel);border:1px solid var(--line-2);border-radius:8px;box-shadow:0 30px 60px -20px #000}
+.fp-hd{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 16px;background:#1f2a40;border-bottom:1px solid #4b6390;font-family:var(--mono);font-size:12.5px;color:var(--mute)}
+.fp-bd{padding:18px}
+.fp-bd h3{font-size:20px;margin-bottom:4px}
+.fp-bd h4{margin:18px 0 6px;font-size:13px;font-weight:600;color:var(--mute)}
+.fp-bd ul{margin:0;padding-left:18px}
+.fp-bd li{margin-bottom:5px}
+
+/* ---------- Simulator (HMI styling lives here) ---------- */
+.sim-intro{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:20px;margin-bottom:16px}
+.sim-intro ol{margin:0;padding-left:20px}
+.sim-intro li{margin-bottom:4px}
+.disclaimer{font-size:13.5px;color:var(--mute);border-left:2px solid var(--line-2);padding-left:12px;margin:0}
+.hmi{padding:0;overflow:hidden;font-family:var(--mono)}
+.hmi .panel-hd{margin:0;font-family:var(--mono);font-size:12px}
+.hmi .panel-hd h2{font-family:var(--mono);font-size:12.5px}
+.hbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:12px 14px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.14)}
+.seg{display:inline-flex;border:1px solid var(--line-2);border-radius:var(--r);overflow:hidden}
+.seg button{min-height:38px;padding:6px 12px;border:0;background:var(--bg-2);font-family:var(--mono);font-size:12px;color:var(--mute);cursor:pointer}
+.seg button+button{border-left:1px solid var(--line-2)}
+.seg button[aria-pressed="true"]{background:#22304a;color:var(--focus)}
+.fld{display:inline-flex;align-items:center;gap:8px;font-size:11.5px;color:var(--mute)}
+select{min-height:38px;padding:6px 10px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--bg-2);font-family:var(--mono);font-size:12.5px;color:var(--ink)}
+.cmdbar{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto}
+.hmi .btn{font-family:var(--mono);font-size:12px;min-height:38px}
+.cmdbar .btn{min-width:76px}
+.cmdbar .btn.off{opacity:.38}
+.cmdbar .btn.go:not(.off){border-color:#3c5a45;color:var(--ok)}
+.cmdbar .btn.ab:not(.off){border-color:#6a3f4c;color:var(--hi)}
+.next{flex-basis:100%;font-size:12px;color:var(--focus)}
+.banner{display:flex;align-items:center;gap:10px;padding:9px 14px;font-size:12.5px;border-bottom:1px solid var(--line);color:var(--mute);background:rgba(166,227,161,.04)}
+.banner .bi{width:10px;height:10px;border-radius:2px;background:var(--ok);flex:none}
+.banner.HIGH{background:rgba(243,139,168,.12);color:var(--hi)}.banner.HIGH .bi{background:var(--hi)}
+.banner.MED{background:rgba(249,226,175,.10);color:var(--warn)}.banner.MED .bi{background:var(--warn)}
+.banner.LOW{background:rgba(205,214,244,.06);color:var(--ink)}.banner.LOW .bi{background:var(--mute)}
+.pg-wrap{overflow-x:auto;background:radial-gradient(ellipse at 50% 0%,#26263a,#1c1c2c 70%);border-bottom:1px solid var(--line)}
+#pg{display:block;width:100%;height:auto;min-width:640px}
+#pg text{font-family:var(--mono)}
+.z-lbl{font-size:11px;fill:#8A8FA8}
+.z-st{font-size:11px;fill:#A6ADC8}
+.zone{fill:rgba(255,255,255,.012);stroke:#34344a;stroke-dasharray:4 4}
+.zone.guard{stroke:#F9E2AF;stroke-dasharray:none;fill:rgba(249,226,175,.04)}
+.eq{fill:url(#gEq);stroke:#585b70}
+.mot{fill:#2a2a3e;stroke:#8A8FA8;stroke-width:2}
+.mot.on{fill:#2c4433;stroke:#A6E3A1}
+.pe rect{fill:#45475a}
+.pe line{stroke:#45475a;stroke-width:1.5;stroke-dasharray:3 3}
+.pe.on line{stroke:#89B4FA;stroke-dasharray:none}
+.pe.on rect{fill:#89B4FA}
+.hint{display:none;font-size:11px;color:var(--dim);padding:6px 12px}
+.hgrid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:1px;background:var(--line)}
+.hcell{background:var(--panel);padding:14px;display:flex;flex-direction:column;gap:10px}
+.hcell h3{font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--mute);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.sm{display:grid;gap:5px}
+.sm .row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+.sm .s{position:relative;overflow:hidden;padding:9px 2px;text-align:center;border:1px solid var(--line);border-radius:4px;font-size:11px;color:var(--dim);background:var(--bg-2)}
+.sm .s i{position:absolute;left:0;bottom:0;height:2px;background:var(--focus);width:0}
+.sm .s.on{color:var(--ink);border-color:var(--ink);background:#33344a;font-weight:700}
+.sm .s.on.run{color:#14241a;background:var(--ok);border-color:var(--ok)}
+.sm .s.on.hold{color:#14142a;background:var(--focus);border-color:var(--focus)}
+.sm .s.on.abort{color:#2a1018;background:var(--hi);border-color:var(--hi)}
+.sm .s.on.trans{background:#22304a;border-color:var(--focus);color:var(--focus)}
+.stbig{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.stbig b{font-size:22px}
+.stbig span{font-size:11.5px;color:var(--mute)}
+.rings{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.ring{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;color:var(--mute)}
+.ring svg{width:64px;height:64px}
+.ring .rv{font-size:13px;fill:#CDD6F4}
+.cnt{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.cnt div{padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--bg-2)}
+.cnt span{display:block;font-size:10px;color:var(--dim)}
+.cnt b{font-size:16px}
+.ctl{display:grid;gap:6px}
+.ctl-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--bg-2)}
+.ctl-row .tn{font-size:12px}
+.ctl-row .td{font-family:var(--sans);font-size:12px;color:var(--mute)}
+.ctl-row.dis{opacity:.45}
+.btnrow{display:flex;flex-wrap:wrap;gap:6px}
+.btnrow .btn{flex:1 1 120px;font-size:11.5px}
+.sw{position:relative;width:66px;height:30px;flex:none;border:1px solid var(--line-2);border-radius:15px;background:var(--bg);cursor:pointer;font-family:var(--mono);font-size:10px;color:var(--mute)}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--mute);transition:left .15s}
+.sw span{position:absolute;right:7px;top:7px}
+.sw[aria-checked="true"]{border-color:var(--focus);color:var(--ink)}
+.sw[aria-checked="true"]::after{left:39px;background:var(--focus)}
+.sw[aria-checked="true"] span{left:7px;right:auto}
+.sw.wn[aria-checked="true"]{border-color:var(--warn)}
+.sw.wn[aria-checked="true"]::after{background:var(--warn)}
+.sw.hi[aria-checked="true"]{border-color:var(--hi)}
+.sw.hi[aria-checked="true"]::after{background:var(--hi)}
+.trend{position:relative;height:220px;border:1px solid var(--line);border-radius:4px;background:var(--bg-2)}
+.trend canvas{position:absolute;inset:0;width:100%;height:100%}
+.pens{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:11px;color:var(--mute)}
+.pens span::before{content:"";display:inline-block;width:14px;height:3px;margin-right:6px;vertical-align:middle;background:var(--c)}
+.pens b{color:var(--ink);font-weight:500}
+.watch{font-size:12px}
+.watch td{padding:5px 8px;font-family:var(--mono);white-space:nowrap}
+.watch td:last-child{text-align:right}
+.watch .tr{color:var(--ok)}.watch .fa{color:var(--dim)}
+.almt{font-size:12px}
+.almt th{font-family:var(--mono);font-size:11px}
+.almt td{padding:6px 8px;font-family:var(--mono);vertical-align:middle}
+.almt .pr{font-weight:700}
+.almt .pr.HIGH{color:var(--hi)}.almt .pr.MED{color:var(--warn)}.almt .pr.LOW{color:var(--mute)}
+.almt tr.un td{background:rgba(249,226,175,.04)}
+.almt .empty{color:var(--dim);text-align:center;padding:18px}
+.log{height:220px;overflow:auto;margin:0;padding:6px 10px;list-style:none;background:var(--bg-2);border:1px solid var(--line);border-radius:4px;font-size:11.5px}
+.log li{display:grid;grid-template-columns:auto 34px minmax(0,1fr);gap:8px;padding:2px 0;border-bottom:1px solid #26263a}
+.log .ts{color:var(--dim)}
+.log .lv{color:var(--mute)}
+.log .lv.ALM{color:var(--warn)}.log .lv.RUN{color:var(--ok)}.log .lv.WRN{color:var(--warn)}.log .lv.CMD{color:var(--focus)}
+.hcell details summary{cursor:pointer;font-size:12px;color:var(--mute);min-height:32px;display:flex;align-items:center}
+.hcell pre{margin:0;overflow-x:auto;padding:12px;font:12px/1.6 var(--mono);background:var(--bg-2);border:1px solid var(--line);border-radius:var(--r)}
+.k{color:var(--k)}.cm{color:var(--c);font-style:italic}
+.sim-fail{padding:18px;color:var(--warn);font-family:var(--sans)}
+
+/* ---------- Contact ---------- */
+.contact-actions{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.addr{font-family:var(--mono);font-size:14px;color:var(--mute);margin:0 0 6px}
+form{display:grid;gap:12px;margin-top:8px}
+label{display:grid;gap:4px;font-size:13.5px;color:var(--mute)}
+input,textarea{font:16px/1.4 var(--sans);color:var(--ink);background:var(--bg-2);border:1px solid var(--line-2);border-radius:var(--r);padding:10px;min-height:44px}
+textarea{min-height:120px;resize:vertical}
+input:focus,textarea:focus{border-color:var(--focus);outline:none}
+.out{font-size:13.5px;color:var(--mute);min-height:1.4em;margin:0}
+.out.ok{color:var(--ok)}.out.warn{color:var(--warn)}
+.cfg-missing{font-size:13.5px;color:var(--warn);border:1px dashed #5d5640;border-radius:var(--r);padding:10px 12px;margin:0 0 12px}
+.page-ft{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--dim);display:flex;flex-wrap:wrap;gap:6px 18px}
+
+/* ---------- Printable CV overlay ---------- */
+
+/* ---------- Responsive ---------- */
+@media (max-width:1180px){
+  .c8,.c7,.c6,.c5{grid-column:span 12}
+  .hgrid .c4{grid-column:span 6}.hgrid .wide-md{grid-column:span 12}
+  .hgrid .c8,.hgrid .c7,.hgrid .c5{grid-column:span 12}
+  .stack{grid-template-columns:1fr 1fr}
+  .flow{grid-template-columns:1fr 1fr}.flow li:nth-child(2)::after{display:none}
+}
+@media (max-width:820px){
+  :root{--hdr:56px;--tab:64px}
+  .top{padding:0 12px}
+  .brand .hr{display:none}
+  .top .long{display:none}.top .short{display:inline}
+  .rail{top:auto;bottom:0;left:0;right:0;width:auto;height:calc(var(--tab) + env(safe-area-inset-bottom));padding:4px 4px env(safe-area-inset-bottom);
+    flex-direction:row;gap:2px;border-right:0;border-top:1px solid var(--line);z-index:40}
+  .rail .rail-ft,.rail .num{display:none}
+  .rail button{flex:1 1 0;flex-direction:column;justify-content:center;gap:3px;min-height:56px;padding:4px 2px;font-size:11px;text-align:center}
+  .rail button[aria-current="page"]{background:none;border-color:transparent;box-shadow:inset 0 -3px 0 var(--focus)}
+  .rail .ndot{top:6px;right:calc(50% - 16px)}
+  main{padding:calc(var(--hdr) + 16px) 14px calc(var(--tab) + 28px + env(safe-area-inset-bottom)) 14px}
+  .hw{grid-template-columns:1fr}
+  .tree>ul>li>ul{display:flex;flex-wrap:wrap;gap:4px;border:0;padding:0}
+  .tree>ul>li>ul>li>ul{display:none}
+  .drawer-bd,.sim-intro{grid-template-columns:1fr}
+  .roles li{grid-template-columns:1fr;gap:2px}
+  .g-row{grid-template-columns:1fr;gap:3px}
+  .hgrid .c4{grid-column:span 12}
+  .hint{display:block}
+  .cmdbar{margin-left:0}
+  .stack{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .flow{grid-template-columns:1fr}.flow li::after{display:none}
+  .evidence{flex-direction:column}.evidence li{border:0;margin:0;padding:0}
+  .cra div{grid-template-columns:1fr;gap:2px}
+  .cmdbar .btn{min-width:0;flex:1 1 30%}
+  .actions .btn{flex:1 1 auto}
+}
+@media (max-width:600px){
+  table{font-size:13.5px}
+  .stacked thead{display:none}
+  .stacked tr{display:grid;padding-block:10px;border-bottom:1px solid var(--line)}
+  .stacked td{display:flow-root;border:0;padding:3px 0;padding-inline-start:7.5em;text-align:start;white-space:normal}
+  .stacked td::before{content:attr(data-l);float:inline-start;width:7em;margin-inline-start:-7.5em;font-size:12px;color:var(--mute)}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* ---------- Print: plain page print only (the CV itself is a separate PDF) ---------- */
+@media print{.top,.rail{display:none!important}main{padding:0}body{background:#fff;color:#111}}
+</style>
+</head>
+<body>
+
+<!-- ===================== HEADER ===================== -->
+<header class="top">
+  <div class="brand">
+    <svg class="logo" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2l16 9v18l-16 9-16-9V11z" fill="#22304a" stroke="#89B4FA" stroke-width="1.5"/><text x="20" y="25" text-anchor="middle" font-family="Consolas,monospace" font-size="13" font-weight="700" fill="#CDD6F4">EZ</text></svg>
+    <div><span class="hn">Erik Židanek</span><span class="hr">Lead Engineer · Industrial Automation &amp; Process Control</span></div>
+  </div>
+  <a class="btn btn-sm" data-cv hidden target="_blank" rel="noopener">Download CV</a>
+</header>
+
+<!-- ===================== NAVIGATION ===================== -->
+<nav class="rail" aria-label="Sections">
+  <button type="button" data-view="overview"><span class="num">01</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span>Overview</span></button>
+  <button type="button" data-view="experience"><span class="num">02</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="1"/><path d="M8 7V4h8v3M3 13h18"/></svg><span>Experience</span></button>
+  <button type="button" data-view="tools"><span class="num">03</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 6l-6 6 6 6M16 6l6 6-6 6M14 4l-4 16"/></svg><span>Tools</span></button>
+  <button type="button" data-view="projects"><span class="num">04</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="5" y="4" width="14" height="18" rx="1"/><path d="M9 2h6v4H9zM8 11h8M8 15h8M8 19h5"/></svg><span>Projects</span></button>
+  <button type="button" data-view="simulator"><span class="num">05</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 17h20M5 17V9h5v8M14 17v-5h5v5M7.5 9V5"/></svg><span>Simulator</span><i class="ndot" id="navDot" hidden></i></button>
+  <button type="button" data-view="contact"><span class="num">06</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="1"/><path d="M2 7l10 7 10-7"/></svg><span>Contact</span></button>
+  <div class="rail-ft">[ID: ERIK_ZIDANEK]</div>
+</nav>
+
+<main id="main">
+
+<!-- ===================== OVERVIEW ===================== -->
+<section class="view" data-view="overview" aria-labelledby="h-ov">
+  <div class="intro">
+    <span class="idt">Ljubljana region, Slovenia (EU)</span>
+    <h1 id="h-ov">Erik Židanek</h1>
+    <p class="role">Lead Engineer · Industrial Automation &amp; Process Control</p>
+    <p class="lead">I develop and commission Siemens and Rockwell automation systems and build Python tools for specification-based PLC engineering.</p>
+    <div class="actions">
+      <button class="btn btn-pri" type="button" data-goto="projects">View projects</button>
+      <a class="btn" data-cv hidden target="_blank" rel="noopener">Download CV</a>
+      <button class="btn" type="button" data-goto="contact">Contact</button>
+    </div>
+    <ul class="evidence">
+      <li><b>6+ years</b> at INEA, including student work</li>
+      <li>Commissioning in <b>5 countries</b></li>
+      <li>Engineering tools used across <b>8 plant sections</b></li>
+    </ul>
+    <span class="avail"><i class="dot" aria-hidden="true"></i>Open to opportunities</span>
+  </div>
+
+  <div class="grid">
+    <article class="panel c12">
+      <div class="panel-hd"><h2>How I work</h2></div>
+      <ol class="flow">
+        <li><span class="fn">1</span><h3>Specifications</h3><p>Functional specs, process narratives, interlock lists and sequence workbooks.</p></li>
+        <li><span class="fn">2</span><h3>PLC engineering</h3><p>LAD, SCL and GRAPH on Siemens; ISA-88 phase logic in Studio 5000, partly generated and checked with my own Python tools.</p></li>
+        <li><span class="fn">3</span><h3>Testing</h3><p>FAT test lists, test runs and defect logging, including machines built by subcontractors.</p></li>
+        <li><span class="fn">4</span><h3>Commissioning</h3><p>SAT and start-up on the customer's site, in five countries so far.</p></li>
+      </ol>
+    </article>
+
+    <div class="c12">
+      <div class="stack">
+        <article class="panel">
+          <h3>Control systems</h3>
+          <ul><li>Siemens S7-1200 / S7-1500, TIA Portal V15–V21</li><li>Rockwell Studio 5000 V37 with PlantPAx</li><li>LAD, SCL, GRAPH</li><li>ISA-88 phase and state logic</li><li>Servo drives, VFDs, vision, RFID, robots</li></ul>
+          <button class="btn btn-sm" type="button" data-goto="experience" data-target="#skillsPanel">Technical skills</button>
+        </article>
+        <article class="panel">
+          <h3>Connectivity and HMI</h3>
+          <ul><li>PROFINET, Ethernet, EtherCAT</li><li>Modbus, python-snap7</li><li>OPC UA (personal project)</li><li>WinCC Basic, Comfort and Unified panels</li></ul>
+          <button class="btn btn-sm" type="button" data-goto="experience" data-target="#netPanel">Networks and protocols</button>
+        </article>
+        <article class="panel">
+          <h3>Engineering software</h3>
+          <ul><li>Python: specification-to-L5X toolchain</li><li>Python: specification-to-code audits</li><li>Custom HTML HMIs</li><li>TIA Portal Openness (exploring)</li></ul>
+          <button class="btn btn-sm" type="button" data-goto="tools">Engineering tools</button>
+        </article>
+      </div>
+      <p class="note">Engineering technology stack – an illustrative skills map, not a plant architecture model.</p>
+    </div>
+
+    <article class="panel c12 teaser">
+      <div><span class="lbl">Interactive engineering demo — simulated data</span><p>A small display-test line runs in your browser, with unit states, fault injection, alarms and trends you can try yourself.</p></div>
+      <button class="btn" type="button" data-goto="simulator">Open the simulator</button>
+    </article>
+  </div>
+</section>
+
+<!-- ===================== EXPERIENCE ===================== -->
+<section class="view" data-view="experience" aria-labelledby="h-exp" hidden>
+  <div class="view-hd"><span class="vnum">02</span><h1 id="h-exp">Experience</h1><p>Roles at INEA and before, then the platforms, devices and protocols I work with.</p></div>
+  <div class="grid">
+    <article class="panel c12">
+      <div class="panel-hd"><h2>Career timeline</h2><span>2013 – today</span></div>
+      <div class="gantt" id="gantt"></div>
+      <div class="g-legend"><span style="--c:#8fd189">Current role</span><span style="--c:#5d6080">Earlier roles</span><span style="--c:#3a3a52">Education</span></div>
+      <ol class="roles">
+        <li><span class="when">Feb 2026 – present</span><div><h3>Lead Engineer <span>· INEA d.o.o.</span></h3><p>Leads a group of students and junior engineers that grew from one to four people, within a project team of about 20 on a refinery process-control project.</p></div></li>
+        <li><span class="when">Oct 2024 – Feb 2026</span><div><h3>Senior Engineer <span>· INEA d.o.o.</span></h3></div></li>
+        <li><span class="when">Oct 2021 – Oct 2024</span><div><h3>Application Engineer <span>· INEA d.o.o.</span></h3></div></li>
+        <li><span class="when">Jan 2020 – Oct 2021</span><div><h3>Student work <span>· INEA d.o.o.</span></h3></div></li>
+        <li><span class="when">Across INEA roles</span><div><h3>Selected work</h3><p>Siemens automation for automotive assembly and test lines, subcontracted equipment with FAT/SAT and customer-site commissioning, refinery process control in Studio 5000, and reusable Python engineering tools. Details are under Projects and Tools.</p></div></li>
+        <li><span class="when">Summers 2017 – 2018</span><div><h3>Assembly Technician <span>· Total Mont</span></h3><p>Installed and dismantled automotive production cells and lines in Germany and Belgium, including cable disconnection, reconnection and installation.</p></div></li>
+      </ol>
+    </article>
+
+    <article class="panel c12" id="skillsPanel">
+      <div class="panel-hd"><h2>Technical skills</h2><span id="hwCount"></span></div>
+      <div class="hw">
+        <nav class="tree" aria-label="Filter skills" id="tree"></nav>
+        <div>
+          <table class="stacked">
+            <thead><tr><th>Component</th><th>Environment</th><th>Proficiency</th><th>Where I used it</th></tr></thead>
+            <tbody id="hwBody"></tbody>
+          </table>
+          <p class="note">Proficiency is self-assessed. Advanced: works independently on projects. Proficient: has delivered project work with it. Basic: working knowledge.</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="panel c12" id="netPanel">
+      <div class="panel-hd"><h2>Networks and protocols</h2><span>Select a node for details</span></div>
+      <div class="topo">
+        <div class="cpu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M7 4v16M11 8h6M11 12h6M11 16h4"/></svg><div><b>Controller</b><span>Siemens S7-1200 / S7-1500 · Rockwell Logix</span></div></div>
+        <div class="trunk"></div>
+        <div class="nodes" id="nodes"></div>
+      </div>
+      <div class="drawer" id="drawer" hidden>
+        <div class="drawer-hd"><span id="drTitle"></span><button class="btn btn-sm" type="button" id="drClose">Close</button></div>
+        <div class="drawer-bd" id="drBody"></div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ===================== ENGINEERING TOOLS ===================== -->
+<section class="view" data-view="tools" aria-labelledby="h-tools" hidden>
+  <div class="view-hd"><span class="vnum">03</span><h1 id="h-tools">Engineering tools</h1><p>Reusable Python and web tools I built for PLC engineering. Script names are the real file names.</p></div>
+  <div class="cards" id="toolGrid"></div>
+</section>
+
+<!-- ===================== PROJECTS ===================== -->
+<section class="view" data-view="projects" aria-labelledby="h-prj" hidden>
+  <div class="view-hd"><span class="vnum">04</span><h1 id="h-prj">Projects</h1><p>Selected work. Client names are left out.</p></div>
+  <div class="chips" role="group" aria-label="Filter projects" id="prjFilter">
+    <button class="chip" type="button" data-f="all" aria-pressed="true">All</button>
+    <button class="chip" type="button" data-f="plc" aria-pressed="false">PLC systems</button>
+    <button class="chip" type="button" data-f="scada" aria-pressed="false">HMI / SCADA</button>
+    <button class="chip" type="button" data-f="int" aria-pressed="false">Integration</button>
+  </div>
+  <div class="cards" id="cards"></div>
+</section>
+
+<!-- ===================== SIMULATOR ===================== -->
+<section class="view" data-view="simulator" aria-labelledby="h-sim" hidden>
+  <div class="view-hd"><span class="vnum">05</span><h1 id="h-sim">Simulator</h1><p>Interactive engineering demo — simulated data.</p></div>
+  <div class="panel sim-intro">
+    <div>
+      <p>A display-test line like the machines I commission: parts pass a code reader, a servo test station and a reject diverter. It runs entirely in your browser.</p>
+      <ol>
+        <li>Press <b>Reset</b>, then <b>Start</b>, and watch parts flow.</li>
+        <li>In the Fault injection panel, open the guard door or press the E-stop to see Hold and Abort.</li>
+        <li>Acknowledge the alarms, then <b>Clear</b> and <b>Reset</b> to recover.</li>
+      </ol>
+    </div>
+    <p class="disclaimer">Simulation only. It does not connect to or control any equipment and is not a validated production or safety system. The state model is a simplified example in the style of S88/PackML.</p>
+  </div>
+
+  <article class="panel hmi" id="simPanel">
+    <div class="panel-hd"><h2>DISPLAY-TEST LINE · SIMULATED</h2><span id="scanTxt" style="white-space:nowrap">SCAN 0</span></div>
+    <div class="hbar">
+      <div class="seg" role="group" aria-label="Operating mode"><button type="button" data-mode="AUTO" aria-pressed="true">AUTO</button><button type="button" data-mode="MANUAL" aria-pressed="false">MANUAL</button></div>
+      <label class="fld">RECIPE <select id="recipe"><option value="DSP_07IN">DSP_07IN</option><option value="DSP_10IN" selected>DSP_10IN</option><option value="DSP_12IN">DSP_12IN</option></select></label>
+      <div class="cmdbar" id="cmdbar">
+        <button class="btn go" type="button" data-cmd="RESET">RESET</button>
+        <button class="btn go" type="button" data-cmd="START">START</button>
+        <button class="btn" type="button" data-cmd="HOLD">HOLD</button>
+        <button class="btn" type="button" data-cmd="UNHOLD">UNHOLD</button>
+        <button class="btn" type="button" data-cmd="STOP">STOP</button>
+        <button class="btn ab" type="button" data-cmd="ABORT">ABORT</button>
+        <button class="btn" type="button" data-cmd="CLEAR">CLEAR</button>
+      </div>
+      <span class="next" id="nextHint" aria-live="polite">Next: press RESET to prepare the line.</span>
+    </div>
+    <div class="banner" id="banner" role="status"><i class="bi"></i><span id="bannerTxt">NO ACTIVE ALARMS</span></div>
+
+    <div class="pg-wrap">
+      <svg id="pg" viewBox="0 0 1000 300" role="img" aria-label="Process graphic of the simulated display-test line">
+        <defs>
+          <linearGradient id="gBelt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3a52"/><stop offset="1" stop-color="#26263a"/></linearGradient>
+          <linearGradient id="gEq" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3a52"/><stop offset="1" stop-color="#2a2a3e"/></linearGradient>
+          <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#3a3a52" stroke-width="2.5"/></pattern>
+        </defs>
+        <rect class="zone" x="14" y="30" width="190" height="240" rx="6"/><text class="z-lbl" x="24" y="48">ST00 INFEED</text>
+        <rect class="zone" x="226" y="30" width="150" height="240" rx="6"/><text class="z-lbl" x="236" y="48">ST10 CODE READ</text>
+        <rect class="zone" id="zGuard" x="440" y="30" width="160" height="240" rx="6"/><text class="z-lbl" x="450" y="48">ST20 DISPLAY TEST</text>
+        <rect class="zone" x="690" y="30" width="140" height="240" rx="6"/><text class="z-lbl" x="700" y="48">ST30 SORT</text>
+        <rect class="zone" x="852" y="30" width="140" height="240" rx="6"/><text class="z-lbl" x="862" y="48">OUTFEED</text>
+        <path d="M110 206v58M420 206v58M640 206v58M880 206v58" stroke="#313244" stroke-width="3"/>
+        <rect x="24" y="180" width="714" height="26" rx="13" fill="url(#gBelt)" stroke="#45475a"/>
+        <rect x="802" y="180" width="112" height="26" rx="13" fill="url(#gBelt)" stroke="#45475a"/>
+        <line id="belt1" x1="38" y1="193" x2="726" y2="193" stroke="#4d4f66" stroke-width="16" stroke-dasharray="3 17"/>
+        <line id="belt2" x1="814" y1="193" x2="902" y2="193" stroke="#4d4f66" stroke-width="16" stroke-dasharray="3 17"/>
+        <circle cx="37" cy="193" r="9" fill="#2a2a3e" stroke="#8A8FA8"/><circle cx="725" cy="193" r="9" fill="#2a2a3e" stroke="#8A8FA8"/><circle cx="901" cy="193" r="9" fill="#2a2a3e" stroke="#8A8FA8"/>
+        <polygon points="742,190 800,190 792,262 752,262" fill="url(#hatch)" stroke="#45475a"/>
+        <rect x="728" y="262" width="88" height="30" rx="4" fill="#2a2a3e" stroke="#585b70"/>
+        <text id="rejTxt" class="z-st" x="772" y="282" text-anchor="middle">REJ 0</text>
+        <line id="flap" x1="742" y1="181" x2="800" y2="181" stroke="#CDD6F4" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="742" cy="181" r="4" fill="#CDD6F4"/>
+        <rect x="918" y="196" width="68" height="70" rx="4" fill="#232335" stroke="#585b70"/>
+        <rect id="binFill" x="921" y="263" width="62" height="0" fill="rgba(166,227,161,.35)"/>
+        <text id="binTxt" class="z-st" x="952" y="284" text-anchor="middle">0/24</text>
+        <path d="M60 206v28" stroke="#45475a" stroke-width="2"/>
+        <circle id="m1" class="mot" cx="60" cy="250" r="16"/><text x="60" y="255" text-anchor="middle" font-size="13" font-weight="700" fill="#CDD6F4">M</text>
+        <text id="m1Txt" class="z-st" x="84" y="248">M1 0.0 m/min</text>
+        <text id="m1Sub" class="z-lbl" x="84" y="262">VFD · STOPPED</text>
+        <g class="pe" id="pe1"><rect x="308" y="136" width="8" height="12" rx="2"/><line x1="312" y1="148" x2="312" y2="180"/></g>
+        <g class="pe" id="pe2"><rect x="528" y="136" width="8" height="12" rx="2"/><line x1="532" y1="148" x2="532" y2="180"/></g>
+        <g class="pe" id="pe3"><rect x="716" y="136" width="8" height="12" rx="2"/><line x1="720" y1="148" x2="720" y2="180"/></g>
+        <path d="M300 56v14" stroke="#585b70" stroke-width="3"/>
+        <rect class="eq" x="268" y="70" width="64" height="34" rx="5"/><text x="300" y="91" text-anchor="middle" font-size="10" fill="#A6ADC8">READER</text>
+        <polygon id="rdrBeam" points="292,104 308,104 322,158 278,158" fill="rgba(137,180,250,0)"/>
+        <text id="st10Txt" class="z-st" x="236" y="230">IDLE</text>
+        <text id="codeTxt" class="z-lbl" x="236" y="246">—</text>
+        <rect x="474" y="58" width="8" height="122" fill="#2f2f45" stroke="#45475a"/><rect x="558" y="58" width="8" height="122" fill="#2f2f45" stroke="#45475a"/>
+        <rect class="eq" x="466" y="56" width="108" height="14" rx="3"/>
+        <rect id="rod" x="516" y="70" width="8" height="6" fill="#8A8FA8"/>
+        <g id="head"><rect class="eq" x="500" y="76" width="40" height="22" rx="3"/><rect x="508" y="98" width="24" height="4" rx="1" fill="#94E2D5"/></g>
+        <text id="zTxt" class="z-st" x="450" y="230">Z 0.0 mm</text>
+        <text id="st20Txt" class="z-lbl" x="450" y="246">IDLE</text>
+        <text id="st30Txt" class="z-st" x="700" y="230">GOOD</text>
+        <g id="parts"></g>
+      </svg>
+    </div>
+    <div class="hint">Swipe the graphic sideways to see the whole line.</div>
+
+    <div class="hgrid">
+      <div class="hcell c4">
+        <h3>UNIT STATE <span id="tInState">0.0 s</span></h3>
+        <div class="stbig"><b id="stBig">STOPPED</b><span id="modeTxt">AUTO · DSP_10IN</span></div>
+        <div class="sm" id="sm"></div>
+        <details><summary>View state logic (SCL sketch)</summary>
+<pre><code><span class="cm">// Abort and hold causes are evaluated every scan</span>
+<span class="k">IF</span> #EStop <span class="k">OR</span> #ServoFault <span class="k">THEN</span> #State := ABORTING;
+<span class="k">ELSIF</span> (#GuardOpen <span class="k">OR</span> #Jam <span class="k">OR</span> #BinFull)
+      <span class="k">AND</span> #State = RUNNING <span class="k">THEN</span> #State := HOLDING;
+<span class="k">END_IF</span>;
+<span class="k">CASE</span> #State <span class="k">OF</span>
+  IDLE:     <span class="k">IF</span> #Cmd.Start <span class="k">AND</span> #Auto <span class="k">THEN</span> #State := STARTING; <span class="k">END_IF</span>;
+  STARTING: <span class="k">IF</span> #SpeedAtSetpoint <span class="k">THEN</span> #State := RUNNING; <span class="k">END_IF</span>;
+  HOLDING:  <span class="k">IF</span> #ConveyorStopped <span class="k">THEN</span> #State := HELD; <span class="k">END_IF</span>;
+  HELD:     <span class="k">IF</span> #Cmd.Unhold <span class="k">AND NOT</span> #HoldCause <span class="k">THEN</span> #State := UNHOLDING; <span class="k">END_IF</span>;
+  ABORTED:  <span class="k">IF</span> #Cmd.Clear <span class="k">AND</span> #AllAcked <span class="k">THEN</span> #State := CLEARING; <span class="k">END_IF</span>;
+  <span class="cm">// ... RESETTING, STOPPING, UNHOLDING, CLEARING</span>
+<span class="k">END_CASE</span>;</code></pre>
+        </details>
+      </div>
+      <div class="hcell c4">
+        <h3>PRODUCTION <span id="ppmTxt">0 PPM</span></h3>
+        <div class="rings" id="rings"></div>
+        <div class="cnt">
+          <div><span>PARTS IN</span><b id="cIn">0</b></div>
+          <div><span>GOOD</span><b id="cGood" style="color:var(--ok)">0</b></div>
+          <div><span>REJECT</span><b id="cRej">0</b></div>
+          <div><span>NOREAD</span><b id="cNr">0</b></div>
+          <div><span>TEST FAIL</span><b id="cFail">0</b></div>
+          <div><span>YIELD</span><b id="cYield">—</b></div>
+        </div>
+      </div>
+      <div class="hcell c4 wide-md">
+        <h3>FAULT INJECTION</h3>
+        <div class="ctl">
+          <div class="ctl-row"><div><div class="tn">E-STOP</div><div class="td">Latching emergency stop</div></div><button class="sw hi" type="button" role="switch" aria-checked="false" data-f="estop" aria-label="E-stop pressed"><span>OFF</span></button></div>
+          <div class="ctl-row"><div><div class="tn">GUARD DOOR ST20</div><div class="td">Door open</div></div><button class="sw wn" type="button" role="switch" aria-checked="false" data-f="guard" aria-label="Guard door open"><span>OFF</span></button></div>
+          <div class="ctl-row"><div><div class="tn">READER WINDOW ST10</div><div class="td">Dirty lens, more NOREADs</div></div><button class="sw wn" type="button" role="switch" aria-checked="false" data-f="dirty" aria-label="Reader window dirty"><span>OFF</span></button></div>
+          <div class="btnrow">
+            <button class="btn" type="button" data-act="jam">JAM NEXT PART</button>
+            <button class="btn" type="button" data-act="servo">SERVO FAULT</button>
+            <button class="btn" type="button" data-act="unjam">REMOVE JAMMED PART</button>
+            <button class="btn" type="button" data-act="empty">EMPTY GOOD BIN</button>
+          </div>
+        </div>
+        <h3>MANUAL MODE <span>needs MANUAL + STOPPED</span></h3>
+        <div class="ctl" id="manual">
+          <div class="ctl-row"><div class="tn">M1 JOG (50 %)</div><button class="sw" type="button" role="switch" aria-checked="false" data-m="jog" aria-label="Jog conveyor"><span>OFF</span></button></div>
+          <div class="ctl-row"><div class="tn">DIVERTER → REJECT</div><button class="sw" type="button" role="switch" aria-checked="false" data-m="div" aria-label="Diverter to reject"><span>OFF</span></button></div>
+          <div class="ctl-row"><div class="tn">SERVO Z → TEST POS</div><button class="sw" type="button" role="switch" aria-checked="false" data-m="z" aria-label="Servo to test position"><span>OFF</span></button></div>
+        </div>
+      </div>
+      <div class="hcell c8">
+        <h3>TREND · LAST 60 S <span>5 Hz</span></h3>
+        <div class="trend"><canvas id="trend" aria-label="Trend of conveyor speed, servo position and throughput"></canvas></div>
+        <div class="pens"><span style="--c:#89B4FA">M1 speed <b id="pv1">0.0</b> m/min (0–20)</span><span style="--c:#CBA6F7">Servo Z <b id="pv2">0.0</b> mm (0–50)</span><span style="--c:#FAB387">Throughput <b id="pv3">0</b> ppm (0–40)</span></div>
+      </div>
+      <div class="hcell c4 wide-md">
+        <h3>WATCH TABLE · DB_LINE</h3>
+        <table class="watch"><tbody id="watch"></tbody></table>
+      </div>
+      <div class="hcell c7">
+        <h3>ALARMS <button class="btn btn-sm" type="button" id="ackAll">ACK ALL</button></h3>
+        <div style="overflow-x:auto"><table class="almt"><thead><tr><th>TIME</th><th>PRIO</th><th>ID</th><th>MESSAGE</th><th>STATE</th><th></th></tr></thead><tbody id="almBody"></tbody></table></div>
+      </div>
+      <div class="hcell c5">
+        <h3>EVENT LOG <span>NEWEST FIRST</span></h3>
+        <ol class="log" id="log" aria-label="Event log"></ol>
+      </div>
+    </div>
+  </article>
+</section>
+
+<!-- ===================== CONTACT ===================== -->
+<section class="view" data-view="contact" aria-labelledby="h-ct" hidden>
+  <div class="view-hd"><span class="vnum">06</span><h1 id="h-ct">Contact</h1><p>The quickest way to reach me is by email or LinkedIn.</p></div>
+  <div class="grid">
+    <article class="panel c6">
+      <div class="panel-hd"><h2>Get in touch</h2></div>
+      <div id="contactBox"></div>
+      <form id="msgForm" novalidate hidden>
+        <p class="note" style="margin:0">This form only prepares an email in your own mail app. Nothing is sent from this page.</p>
+        <label>Your name<input id="fName" autocomplete="name" required></label>
+        <label>Company or role (optional)<input id="fCo" autocomplete="organization"></label>
+        <label>Message<textarea id="fMsg" required></textarea></label>
+        <button class="btn btn-pri" type="submit">Prepare email</button>
+        <p class="out" id="formOut" aria-live="polite"></p>
+      </form>
+    </article>
+    <article class="panel c6">
+      <div class="panel-hd"><h2>Education and languages</h2></div>
+      <table class="stacked">
+        <thead><tr><th>Item</th><th>Details</th></tr></thead>
+        <tbody id="specBody">
+          <tr><td class="nm" data-l="Item">Degree</td><td data-l="Details"><b>Bachelor of Science in Applied Electrical Engineering (VI/2)</b><br><span class="mute">Fakulteta za elektrotehniko · 2017–2022</span></td></tr>
+          <tr><td class="nm" data-l="Item">Secondary</td><td data-l="Details"><b>Mechatronics Technician</b><br><span class="mute">Srednja šola tehniških strok Šiška · 2013–2017</span></td></tr>
+          <tr><td class="nm" data-l="Item">Leadership</td><td data-l="Details">Leads a group of students and junior engineers that grew from one to four people, within a project team of about 20</td></tr>
+          <tr><td class="nm" data-l="Item">Languages</td><td data-l="Details">Slovenian (native) · English (B2) · Croatian (B1) · Serbian (B1)</td></tr>
+          <tr><td class="nm" data-l="Item">Location</td><td data-l="Details">Ljubljana region, Slovenia (EU)</td></tr>
+        </tbody>
+      </table>
+    </article>
+  </div>
+</section>
+
+<footer class="page-ft"><span>Erik Židanek · Lead Engineer, INEA</span><span>Ljubljana region, Slovenia</span><span>Slovenian (native) · English (B2) · Croatian (B1) · Serbian (B1)</span></footer>
+</main>
+
+<!-- ===================== PROJECT DETAILS MODAL ===================== -->
+<div class="modal" id="modal" hidden>
+  <div class="fp" role="dialog" aria-modal="true" aria-labelledby="fpTitle">
+    <div class="fp-hd"><span id="fpTag"></span><button class="btn btn-sm" type="button" id="fpClose">Close</button></div>
+    <div class="fp-bd" id="fpBody"></div>
+  </div>
+</div>
+
+
+<script>
+/* ============================================================
+   CONFIG – contact details. Empty values are simply not shown.
+   ============================================================ */
+const CONFIG = {
+  email:    'erik.zidanek@hotmail.com',
+  linkedin: 'https://www.linkedin.com/in/erik-%C5%BEidanek-7678a0345/',
+  cvUrl:    'Erik_Zidanek_CV.pdf'    // link to the separately prepared, general PDF CV (file name next to this page, or a full https URL). Empty = no Download CV button.
+};
+
+/* ============================================================
+   PORTFOLIO (runs first, independent of the simulator)
+   ============================================================ */
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let simHooks = null;   // set by the simulator once it starts
+
+/* ---------- Routing (#overview, #experience, ...) ---------- */
+const VIEWS = ['overview','experience','tools','projects','simulator','contact'];
+const ALIAS = { 'plc-hardware':'experience', 'networks-scada':'experience', 'commissioning':'projects', 'tooling':'simulator' };
+function show(v) {
+  v = ALIAS[v] || v;
+  if (!VIEWS.includes(v)) v = 'overview';
+  $$('.view').forEach(s => s.hidden = s.dataset.view !== v);
+  $$('.rail button').forEach(b => b.setAttribute('aria-current', b.dataset.view === v ? 'page' : 'false'));
+  window.scrollTo(0, 0);
+  if (simHooks) simHooks.visible(v === 'simulator');
+}
+function go(v) {
+  show(v);
+  try { if (location.hash !== '#' + v) history.replaceState(null, '', '#' + v); } catch (e) {}
+}
+function highlight(el) {
+  if (!el) return;
+  el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+  el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+}
+$$('.rail button').forEach(b => b.addEventListener('click', () => go(b.dataset.view)));
+$$('[data-goto]').forEach(b => b.addEventListener('click', () => { go(b.dataset.goto); if (b.dataset.target) setTimeout(() => highlight($(b.dataset.target)), 30); }));
+window.addEventListener('hashchange', () => show(location.hash.slice(1)));
+
+/* ---------- Experience: career timeline ---------- */
+const G0 = 2013, G1 = 2027, gx = y => ((y - G0) / (G1 - G0) * 100).toFixed(2);
+const NOW = 2026.88;
+const GANTT = [
+  ['Lead Engineer', 'INEA d.o.o.', 2026.08, NOW, 'now'],
+  ['Senior Engineer', 'INEA d.o.o.', 2024.75, 2026.08, ''],
+  ['Application Engineer', 'INEA d.o.o.', 2021.75, 2024.75, ''],
+  ['Student work', 'INEA d.o.o.', 2020.0, 2021.75, ''],
+  ['Assembly Technician (summers)', 'Total Mont', 2017.0, 2018.95, ''],
+  ['B.Sc. Applied Electrical Engineering', 'Fakulteta za elektrotehniko', 2017.0, 2022.75, 'edu'],
+  ['Mechatronics Technician', 'Srednja šola tehniških strok Šiška', 2013.7, 2017.45, 'edu']
+];
+const gridLines = [2015, 2017, 2019, 2021, 2023, 2025].map(y => `<i class="gl" style="left:${gx(y)}%"></i>`).join('');
+$('#gantt').innerHTML = GANTT.map(([t, o, a, b, cls]) =>
+  `<div class="g-row"><div class="g-lbl"><b>${esc(t)}</b><span>${esc(o)}</span></div><div class="g-trk" role="img" aria-label="${esc(t)}: ${Math.floor(a)} to ${cls === 'now' ? 'present' : Math.floor(b)}">${gridLines}<div class="g-bar ${cls}" style="left:${gx(a)}%;width:${gx(G0 + b - a)}%"></div></div></div>`).join('') +
+  `<div class="g-row"><span></span><div class="g-axis" aria-hidden="true">${[2013, 2015, 2017, 2019, 2021, 2023, 2025, 2027].map(y => `<span style="left:${gx(y)}%">${y}</span>`).join('')}</div></div>`;
+
+/* ---------- Experience: skills tree + table ---------- */
+const LV = { Advanced: 5, Proficient: 4, Basic: 2 };
+const HW = [
+  { id:'s7',     cat:'siemens', name:'S7-1200 / S7-1500', env:'TIA Portal V15–V21', lvl:'Advanced', rec:'Automotive assembly and test lines (single stations up to 25 stations) and display-testing machines.' },
+  { id:'hmi',    cat:'siemens', name:'WinCC HMI panels', env:'Basic · Comfort · Unified', lvl:'Advanced', rec:'HMIs for display assembly, catalytic-converter inspection/transport and ABS-module assembly lines.' },
+  { id:'plcsim', cat:'siemens', name:'PLCSIM Advanced', env:'TIA Portal', lvl:'Proficient', rec:'Simulated S7-1500 for the personal PLC data service.' },
+  { id:'s7300',  cat:'siemens', name:'S7-300 / SIMATIC Manager', env:'Step 7', lvl:'Basic', rec:'Basic working knowledge.' },
+  { id:'sl5k',   cat:'rockwell', name:'Studio 5000 V37', env:'PlantPAx template', lvl:'Proficient', rec:'Refinery: ISA-88 phase and state logic across eight plant sections, from customer Process Control Narratives.' },
+  { id:'l5x',    cat:'rockwell', name:'L5X / Logix XML', env:'Python', lvl:'Advanced', rec:'Generating, auditing and correcting L5X exports across eight plant sections.' },
+  { id:'drv',    cat:'drives', name:'Servo drives & VFDs', env:'Siemens · Festo', lvl:'Proficient', rec:'Integrated into station logic on automotive lines and test machines.' },
+  { id:'vis',    cat:'drives', name:'Keyence / Cognex', env:'Vision · code readers', lvl:'Proficient', rec:'Vision and code reading on assembly and test stations.' },
+  { id:'rfid',   cat:'drives', name:'Balluff RFID', env:'—', lvl:'Proficient', rec:'RFID integrated into station logic on automotive lines.' },
+  { id:'valve',  cat:'drives', name:'Festo / SMC valve terminals', env:'—', lvl:'Proficient', rec:'Pneumatics integrated into station logic.' },
+  { id:'safe',   cat:'drives', name:'Pilz / Sick safety devices', env:'—', lvl:'Proficient', rec:'Safety devices integrated into station logic.' },
+  { id:'kuka',   cat:'drives', name:'KUKA robots', env:'—', lvl:'Basic', rec:'Robot-fed ABS-module assembly and testing line.' },
+  { id:'ilk',    cat:'drives', name:'Interlocks & permissives', env:'C&E matrices · Excel', lvl:'Advanced', rec:'Interlocks, permissives and cause-and-effect matrices; lists generated from specifications and checked against code.' },
+  { id:'lad',    cat:'lang', name:'LAD', env:'TIA · Studio 5000', lvl:'Advanced', rec:'Step sequences on Siemens; generated LAD for Logix routines.' },
+  { id:'scl',    cat:'lang', name:'SCL / ST', env:'TIA Portal', lvl:'Advanced', rec:'Support blocks, data handling, calculations, state logic.' },
+  { id:'graph',  cat:'lang', name:'GRAPH', env:'TIA Portal', lvl:'Proficient', rec:'Siemens sequence programming.' },
+  { id:'py',     cat:'lang', name:'Python', env:'openpyxl · python-docx · XML · snap7', lvl:'Advanced', rec:'Code generation and logic auditing; Word, Excel and L5X processing; HTML HMIs via python-snap7.' },
+  { id:'js',     cat:'lang', name:'JavaScript / Node.js', env:'WebSocket · HTML', lvl:'Proficient', rec:'inTime project tracker; custom web HMIs.' }
+];
+const CATS = { all:'All skills', siemens:'Siemens SIMATIC', rockwell:'Rockwell', drives:'Devices & integration', lang:'Programming languages' };
+$('#tree').innerHTML = '<ul><li><button type="button" class="grp" data-c="all">All skills</button><ul>' +
+  Object.keys(CATS).filter(c => c !== 'all').map(c =>
+    `<li><button type="button" class="grp" data-c="${c}">${esc(CATS[c])}</button><ul>` +
+    HW.filter(h => h.cat === c).map(h => `<li><button type="button" data-c="${c}" data-row="${h.id}">${esc(h.name)}</button></li>`).join('') +
+    '</ul></li>').join('') + '</ul></li></ul>';
+function setHwFilter(c) {
+  const rows = HW.filter(h => c === 'all' || h.cat === c);
+  $('#hwBody').innerHTML = rows.map(h => {
+    const n = LV[h.lvl];
+    return `<tr id="row-${h.id}"><td class="nm" data-l="Component">${esc(h.name)}</td><td class="env" data-l="Environment">${esc(h.env)}</td>` +
+      `<td data-l="Proficiency"><div class="lvl">${h.lvl}<span class="bar ${n === 5 ? 'max' : ''}" aria-hidden="true">${[1,2,3,4,5].map(i => `<i class="${i <= n ? 'on' : ''}"></i>`).join('')}</span></div></td>` +
+      `<td data-l="Where used">${esc(h.rec)}</td></tr>`;
+  }).join('');
+  $('#hwCount').textContent = `${CATS[c]} · ${rows.length}`;
+  $$('#tree button').forEach(b => b.setAttribute('aria-pressed', String(b.classList.contains('grp') && b.dataset.c === c)));
+}
+$('#tree').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  setHwFilter(b.dataset.c);
+  if (b.dataset.row) { b.setAttribute('aria-pressed', 'true'); highlight($('#row-' + b.dataset.row)); }
+});
+setHwFilter('all');
+
+/* ---------- Experience: protocol nodes + detail drawer ---------- */
+const IC = {
+  profinet:'<path d="M3 12h18M7 8v8M12 8v8M17 8v8"/>',
+  modbus:'<rect x="3" y="6" width="18" height="12" rx="1"/><path d="M7 10h4M7 14h10"/>',
+  opcua:'<ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
+  wincc:'<rect x="3" y="4" width="18" height="12" rx="1"/><path d="M8 20h8M12 16v4M6 12l3-3 3 2 4-4"/>',
+  s88:'<circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8.5 6h7M7.3 8.2l3.4 7.6M16.7 8.2l-3.4 7.6"/>'
+};
+const NODES = [
+  { id:'profinet', name:'PROFINET', layer:'Field devices ↔ PLC', used:'Siemens automotive lines and test machines',
+    impl:['Lines with servo drives, VFDs, vision systems, code readers, RFID, valve terminals, robots and safety devices integrated into station logic',
+          'Device diagnostics during FAT, SAT and on-site commissioning'] },
+  { id:'modbus', name:'Modbus', layer:'PLC ↔ custom HMI', used:'Custom HTML HMIs for Siemens PLCs',
+    impl:['Custom HTML HMIs for Siemens PLCs built with python-snap7 and Modbus'] },
+  { id:'opcua', name:'OPC UA', layer:'PLC ↔ IT', used:'Personal project outside work, in development',
+    impl:['Implemented: a simulated S7-1500 (PLCSIM Advanced) connected over OPC UA, values logged to SQLite and shown on a web-based HMI',
+          'Planned: Node-RED reports and downtime alerts by e-mail'] },
+  { id:'wincc', name:'Siemens WinCC', layer:'Operator level', used:'Basic, Comfort and Unified panels',
+    impl:['HMIs for display assembly, catalytic-converter inspection/transport and robot-fed ABS-module assembly and testing',
+          'Systems from single stations to 25 stations, with cycle times of 7–30 seconds'] },
+  { id:'s88', name:'ISA-88 phase logic', layer:'Process control model', used:'Refinery project (Studio 5000 V37, PlantPAx template)',
+    impl:['Programmed, modified and reviewed phase and state logic across eight plant sections, working from customer Process Control Narratives',
+          'Equipment modules, interlocks, permissives and cause-and-effect matrices',
+          'Python toolchain generates L5X routines and equipment-module/unit programs; an audit suite checks the code against the specifications'] }
+];
+$('#nodes').innerHTML = NODES.map(n =>
+  `<button class="node" type="button" data-id="${n.id}" aria-expanded="false" aria-controls="drawer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">${IC[n.id]}</svg><span class="nn">${esc(n.name)}</span><span class="nl">${esc(n.layer)}</span></button>`).join('');
+let openId = null;
+function openNode(id) {
+  const n = NODES.find(x => x.id === id);
+  if (!n) return;
+  openId = id;
+  $$('.node').forEach(b => b.setAttribute('aria-expanded', String(b.dataset.id === id)));
+  $('#drTitle').textContent = n.name;
+  $('#drBody').innerHTML = `<ul>${n.impl.map(i => `<li>${esc(i)}</li>`).join('')}</ul>` +
+    `<dl class="kv"><dt>Level</dt><dd>${esc(n.layer)}</dd><dt>Used on</dt><dd>${esc(n.used)}</dd></dl>`;
+  $('#drawer').hidden = false;
+}
+function closeNode() { openId = null; $('#drawer').hidden = true; $$('.node').forEach(b => b.setAttribute('aria-expanded', 'false')); }
+$('#nodes').addEventListener('click', e => {
+  const b = e.target.closest('.node'); if (!b) return;
+  if (openId === b.dataset.id) closeNode(); else openNode(b.dataset.id);
+});
+$('#drClose').addEventListener('click', closeNode);
+
+/* ---------- Engineering tools ---------- */
+const TOOLS = [
+  { n:'PCN-to-L5X toolchain', d:'Converts customer Process Control Narratives (Word) and sequence workbooks (Excel) into Rockwell L5X routines, equipment-module and unit programs, and interlock/permissive lists. Used across eight plant sections.',
+    items:['<code>pcn_parser.py</code> / <code>word_to_excel.py</code> – process narrative (Word) → structured Excel',
+           '<code>generate_ems.py</code> – equipment-module and unit program generation',
+           '<code>l5x_parser_gui.py</code> – desktop GUI for browsing L5X exports',
+           '<code>file_comparator.py</code> – compares generated and reference programs'],
+    st:['Python','python-docx','openpyxl','L5X'] },
+  { n:'Specification-to-code audit suite', d:'Checks Logix code against the specifications: interlock coverage and numbering, step messages, device commands/status, cross-phase consistency and specification typos.',
+    items:['<code>l5x_excel_compare.py</code> – interlock specifications vs. L5X, numbering and coverage',
+           '<code>l5x_step_message_audit.py</code> – step messages, device command/status, cross-phase consistency, typos',
+           '<code>find_similar_sequences.py</code> – finds similar sequences for reuse and review'],
+    st:['Python','XML / CDATA','openpyxl'] },
+  { n:'L5X correction tools', d:'Propose-then-apply workflow for changing L5X files safely, with the process documented for colleagues.',
+    items:['<code>l5x_fix.py</code> – proposes corrections, then applies the approved ones (CDATA-safe text matching)',
+           '<code>fix_holding_conditions.py</code> – targeted edits of holding/aborting logic',
+           'Packaged with uv / PyInstaller and batch launchers for colleagues who do not use Python'],
+    st:['Python','L5X','PyInstaller'] },
+  { n:'Custom HTML HMIs', d:'Lightweight web HMIs for Siemens PLCs.',
+    items:['Data access via python-snap7 and Modbus'],
+    st:['Python','python-snap7','Modbus','HTML'] },
+  { n:'inTime', d:'Web-based tracker for PLC project status and tasks.',
+    items:['Node.js WebSocket server with a browser client','Hosted on the local network, reachable by name via mDNS'],
+    st:['Node.js','WebSocket'] },
+  { n:'TIA Portal Openness', d:'Exploring code generation in TIA Portal V21 that follows the company programming standard.',
+    items:['Target: sequences in LAD, support blocks in SCL, company library blocks reused'],
+    st:['TIA Openness','V21'], tag:'Exploring' }
+];
+$('#toolGrid').innerHTML = TOOLS.map(t =>
+  `<article class="panel tool"><h3>${esc(t.n)} ${t.tag ? `<span class="badge warn">${esc(t.tag)}</span>` : ''}</h3><p class="mute" style="margin:0">${esc(t.d)}</p><ul>${t.items.map(i => `<li>${i}</li>`).join('')}</ul>` +
+  `<div class="badges">${t.st.map(s => `<span class="badge">${esc(s)}</span>`).join('')}</div></article>`).join('');
+
+/* ---------- Projects + details modal ---------- */
+const PRJ = [
+  { tag:'PRJ_REFINERY', cat:['plc','int'], title:'Precious-metals refinery – ISA-88 process control', role:'PLC engineer; leads a group of students and juniors (1 → 4 people)',
+    badges:['Studio 5000 V37','PlantPAx','ISA-88','L5X','Python'],
+    c:'A batch process plant specified through customer Process Control Narratives; phases must behave consistently in every state across eight plant sections.',
+    a:'Programmed, modified and reviewed ISA-88 phase and state logic in Studio 5000 V37 using a PlantPAx template; my Python toolchain converts the specifications into L5X code and the audit suite checks the result.',
+    r:'The group of students and junior engineers I lead grew from one to four people, within a project team of about 20.',
+    fp:{ scope:'Eight plant sections: phases, equipment modules, units, interlocks and permissives', phase:'Engineering, ongoing',
+         out:['Phase and state logic programmed, modified and reviewed from customer Process Control Narratives','Interlock numbering and coverage checked against the specifications with the audit suite','Holding/aborting logic corrected across phases with scripted L5X edits'] } },
+  { tag:'PRJ_DISPLAY_TEST', cat:['plc'], title:'Display-testing machines – two subcontracted projects, five machines', role:'Programming and electronics on INEA\u2019s side',
+    badges:['S7-1200','S7-1500','TIA Portal','FAT/SAT'],
+    c:'Machine building was subcontracted; INEA remained responsible for programming, electronics and delivery to the end customer.',
+    a:'Siemens S7-1200/1500 display-testing machines, including foil application and flat-cable connection processes.',
+    r:'Prepared and executed FAT/SAT test lists, logged equipment defects, and commissioned the machines at end-customer sites.',
+    fp:{ scope:'Two subcontracted projects, five machines (one 3-machine and one 2-machine project)', phase:'FAT at INEA → defect logging → SAT and commissioning at end-customer sites',
+         out:['FAT/SAT test lists prepared and executed','Equipment defects logged for the subcontractor','Machines commissioned at end-customer sites'] } },
+  { tag:'PRJ_AUTO_LINES', cat:['plc','scada'], title:'Automotive assembly and test lines', role:'PLC/HMI programming and commissioning; at times the sole PLC engineer',
+    badges:['S7-1200/1500','TIA Portal','Basic · Comfort · Unified','Vision','RFID','Robots'],
+    c:'Automated lines for display assembly, catalytic-converter inspection and transport, and robot-fed ABS-module assembly and testing.',
+    a:'Siemens S7-1200/1500 PLCs and Basic, Comfort and Unified HMIs, with servo drives, VFDs, vision systems, code readers, RFID, valve terminals, robots and safety devices integrated into station logic.',
+    r:'Lines commissioned in Slovenia, Serbia, Poland, the Czech Republic and Romania, in teams of 2–15 people and as the sole PLC engineer.',
+    fp:{ scope:'From single stations to 25 stations, cycle times 7–30 seconds; additional equipment included Montratec transport, Plasmatreat and Scheugenpflug systems', phase:'Programming and on-site commissioning',
+         out:['Commissioning in five countries','Teams of 2–15 people, and projects as the sole PLC engineer','Device integration across vision, code readers, RFID, valve terminals, robots and safety'] } },
+  { tag:'LAB_PLC_DATA', cat:['scada','int'], title:'PLC data service', role:'Personal IT/OT project · outside work', status:'In development',
+    badges:['PLCSIM Advanced','OPC UA','SQLite','Web HMI'],
+    c:'Learning how to bring PLC data into IT systems for production reporting.',
+    a:'A simulated S7-1500 (PLCSIM Advanced) connected over OPC UA to SQLite data logging and a web-based HMI.',
+    r:'Implemented: OPC UA connection, SQLite logging, web HMI. Planned next: Node-RED reports and downtime alerts by e-mail.',
+    fp:{ scope:'Simulated S7-1500; selected values over OPC UA', phase:'Personal project outside work, in development',
+         out:['Implemented: OPC UA connection to the simulated PLC','Implemented: SQLite data logging','Implemented: web-based HMI'],
+         planned:['Node-RED reports','Downtime alerts by e-mail'] } }
+];
+let prjF = 'all';
+function renderCards() {
+  $('#cards').innerHTML = PRJ.map((p, i) => ({ p, i })).filter(({ p }) => prjF === 'all' || p.cat.includes(prjF)).map(({ p, i }) =>
+    `<article class="panel card"><span class="ptag">${esc(p.tag)}</span><h3>${esc(p.title)} ${p.status ? `<span class="badge warn">${esc(p.status)}</span>` : ''}</h3><span class="rl">${esc(p.role)}</span>` +
+    `<div class="badges">${p.badges.map(b => `<span class="badge">${esc(b)}</span>`).join('')}</div>` +
+    `<dl class="cra"><div><dt>Challenge</dt><dd>${esc(p.c)}</dd></div><div><dt>Approach</dt><dd>${esc(p.a)}</dd></div><div><dt>Result</dt><dd>${esc(p.r)}</dd></div></dl>` +
+    `<button class="btn btn-sm" type="button" data-i="${i}">Details</button></article>`).join('');
+}
+$('#prjFilter').addEventListener('click', e => {
+  const b = e.target.closest('.chip'); if (!b) return;
+  prjF = b.dataset.f;
+  $$('#prjFilter .chip').forEach(c => c.setAttribute('aria-pressed', String(c === b)));
+  renderCards();
+});
+let lastFocus = null;
+$('#cards').addEventListener('click', e => {
+  const b = e.target.closest('button[data-i]'); if (!b) return;
+  const p = PRJ[+b.dataset.i];
+  lastFocus = b;
+  $('#fpTag').textContent = p.tag;
+  $('#fpBody').innerHTML = `<h3 id="fpTitle">${esc(p.title)}</h3><p class="mute">${esc(p.role)}</p>` +
+    `<div class="badges">${p.badges.map(x => `<span class="badge">${esc(x)}</span>`).join('')}</div>` +
+    `<h4>Scope</h4><p>${esc(p.fp.scope)}</p><h4>Phase</h4><p>${esc(p.fp.phase)}</p>` +
+    `<h4>${p.fp.planned ? 'What works today' : 'Key outcomes'}</h4><ul>${p.fp.out.map(o => `<li>${esc(o)}</li>`).join('')}</ul>` +
+    (p.fp.planned ? `<h4>Planned</h4><ul>${p.fp.planned.map(o => `<li>${esc(o)}</li>`).join('')}</ul>` : '');
+  $('#modal').hidden = false;
+  $('#fpClose').focus();
+});
+function closeModal() { $('#modal').hidden = true; if (lastFocus) lastFocus.focus(); }
+$('#fpClose').addEventListener('click', closeModal);
+$('#modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+renderCards();
+
+/* ---------- Contact ---------- */
+const liTxt = CONFIG.linkedin ? CONFIG.linkedin.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '') : '';
+(function renderContact() {
+  const box = $('#contactBox');
+  if (!CONFIG.email && !CONFIG.linkedin) {
+    box.innerHTML = '<p class="cfg-missing">Contact links have not been added yet (set <code>email</code> and <code>linkedin</code> in the CONFIG block of this file).</p>';
+    return;
+  }
+  box.innerHTML = '<div class="contact-actions">' +
+    (CONFIG.email ? `<a class="btn btn-pri" href="mailto:${esc(CONFIG.email)}">Email Erik</a>` : '') +
+    (CONFIG.linkedin ? `<a class="btn" href="${esc(CONFIG.linkedin)}" target="_blank" rel="noopener">LinkedIn</a>` : '') + '</div>' +
+    (CONFIG.email ? `<p class="addr">${esc(CONFIG.email)} <button class="btn btn-sm" type="button" id="btnCopyMail">Copy address</button></p><p class="out" id="copyOut" aria-live="polite"></p>` : '');
+  if (CONFIG.email) {
+    $('#msgForm').hidden = false;
+    $('#btnCopyMail').addEventListener('click', async () => {
+      const out = $('#copyOut');
+      try { await navigator.clipboard.writeText(CONFIG.email); out.textContent = 'Address copied.'; out.className = 'out ok'; }
+      catch (e) { out.textContent = 'Copying is blocked here – select the address above instead.'; out.className = 'out warn'; }
+    });
+  }
+})();
+$('#msgForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const out = $('#formOut');
+  const name = $('#fName').value.trim(), co = $('#fCo').value.trim(), msg = $('#fMsg').value.trim();
+  if (!name || !msg) { out.textContent = 'Please fill in your name and a message.'; out.className = 'out warn'; return; }
+  const body = `${msg}\n\n— ${name}${co ? ', ' + co : ''}`;
+  const href = `mailto:${CONFIG.email}?subject=${encodeURIComponent('Contact via CV – ' + name)}&body=${encodeURIComponent(body)}`;
+  out.innerHTML = `Email prepared. <a href="${esc(href)}">Open it in your mail app</a> and press send there. If the link does nothing, write to ${esc(CONFIG.email)}.`;
+  out.className = 'out ok';
+});
+
+/* ---------- CV download (links to the separately prepared PDF only) ---------- */
+$$('[data-cv]').forEach(a => { if (CONFIG.cvUrl) { a.href = CONFIG.cvUrl; a.hidden = false; } else { a.remove(); } });
+
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (!$('#modal').hidden) closeModal();
+  else if (openId) closeNode();
+});
+
+show(location.hash.slice(1));
+
+/* ============================================================
+   SIMULATOR – display-test line (simulated data only)
+   infeed → ST10 code reader → ST20 servo test → ST30 diverter → outfeed bin
+   Simplified S88/PackML-style unit states, AUTO/MANUAL, recipes, alarms, trends, OEE.
+   Wrapped so a failure here never breaks the rest of the portfolio.
+   ============================================================ */
+function initSim() {
+  const RECIPES = {
+    DSP_07IN:{ spd:14, test:0.7, spawn:1.8, tag:'07' },
+    DSP_10IN:{ spd:12, test:1.0, spawn:2.4, tag:'10' },
+    DSP_12IN:{ spd:9,  test:1.4, spawn:3.0, tag:'12' }
+  };
+  const POS = { scan:300, test:520, div:742, exit:908 };
+  const DUR = { RESETTING:1.2, STARTING:1.0, UNHOLDING:0.8, ABORTING:0.4, CLEARING:1.2 };
+  const STATES = [['STOPPED','RESETTING','IDLE'],['STARTING','RUNNING','STOPPING'],['HOLDING','HELD','UNHOLDING'],['ABORTING','ABORTED','CLEARING']];
+  const KIND = s => s === 'RUNNING' ? 'run' : ['HOLDING','HELD','UNHOLDING'].includes(s) ? 'hold' : ['ABORTING','ABORTED','CLEARING'].includes(s) ? 'abort' : '';
+  const L = {
+    state:'STOPPED', mode:'AUTO', recipe:'DSP_10IN', t:0, v:0, z:0, zT:0, flap:0, scan:0,
+    parts:[], nextId:1, serial:4100, spawnT:0, cnt:{ in:0, good:0, rej:0, nr:0, fail:0 }, bin:0, binCap:24,
+    tRun:0, tDown:0, started:false, done:[], noreadRun:0, lastCode:'—', lastRes:'—',
+    st10:{ part:null, t:0, flash:0, ok:true }, st20:{ part:null, phase:'', t:0 },
+    f:{ estop:false, guard:false, dirty:false, jamArm:false, jam:false, servo:false },
+    man:{ jog:false, div:false, z:false }
+  };
+  const R = () => RECIPES[L.recipe];
+
+  /* event log */
+  const logEl = $('#log');
+  const ts = () => { const d = new Date(); return d.toTimeString().slice(0, 8) + '.' + String(d.getMilliseconds()).padStart(3, '0'); };
+  function log(lv, msg) {
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="ts">${ts()}</span><span class="lv ${lv}">${lv}</span><span>${esc(msg)}</span>`;
+    logEl.prepend(li);
+    while (logEl.children.length > 80) logEl.lastChild.remove();
+  }
+
+  /* alarms */
+  const ALM = {
+    ALM_001:{ p:'HIGH', m:'Emergency stop pressed' },
+    ALM_010:{ p:'MED',  m:'ST20 guard door open' },
+    ALM_020:{ p:'MED',  m:'Part jam at ST10 code reader' },
+    ALM_030:{ p:'HIGH', m:'ST20 servo Z: drive fault' },
+    ALM_040:{ p:'LOW',  m:'3 consecutive NOREADs – check reader window' },
+    ALM_050:{ p:'MED',  m:'Outfeed bin full' }
+  };
+  const PR = { HIGH:3, MED:2, LOW:1 };
+  const alarms = new Map();
+  let almDirty = true;
+  function raise(id) {
+    const a = alarms.get(id);
+    if (a && a.act) return;
+    alarms.set(id, { id, ...ALM[id], act:true, ack:false, t:ts().slice(0, 8) });
+    log('ALM', `${id} ${ALM[id].m}`); almDirty = true;
+  }
+  function clearAlm(id) {
+    const a = alarms.get(id);
+    if (!a || !a.act) return;
+    a.act = false; if (a.ack) alarms.delete(id);
+    log('EVT', `${id} cleared`); almDirty = true;
+  }
+  function ackAlm(id) {
+    const a = alarms.get(id); if (!a || a.ack) return;
+    a.ack = true; if (!a.act) alarms.delete(id);
+    log('EVT', `${id} acknowledged`); almDirty = true;
+  }
+  const setAlm = (id, on) => on ? raise(id) : clearAlm(id);
+
+  /* state handling */
+  const abortCause = () => L.f.estop ? 'E-stop pressed' : L.f.servo ? 'servo fault active' : '';
+  const holdCause  = () => L.f.guard ? 'guard door ST20 open' : L.f.jam ? 'part jam at ST10' : L.bin >= L.binCap ? 'outfeed bin full' : '';
+  function goState(s, why) {
+    if (L.state === s) return;
+    log(s === 'RUNNING' ? 'RUN' : 'EVT', `${L.state} → ${s}${why ? ' · ' + why : ''}`);
+    L.state = s; L.t = 0;
+  }
+  function why(cmd) {
+    const s = L.state, ab = abortCause(), hc = holdCause();
+    switch (cmd) {
+      case 'RESET':  return s !== 'STOPPED' ? 'only from STOPPED' : L.mode !== 'AUTO' ? 'mode is MANUAL' : ab;
+      case 'START':  return s !== 'IDLE' ? 'only from IDLE' : L.mode !== 'AUTO' ? 'mode is MANUAL' : ab || hc;
+      case 'HOLD':   return s === 'RUNNING' ? '' : 'only from RUNNING';
+      case 'UNHOLD': return s !== 'HELD' ? 'only from HELD' : ab || hc;
+      case 'STOP':   return ['IDLE','STARTING','RUNNING','HELD'].includes(s) ? '' : 'not allowed in ' + s;
+      case 'ABORT':  return ['ABORTING','ABORTED'].includes(s) ? 'already aborted' : '';
+      case 'CLEAR':  return s !== 'ABORTED' ? 'only from ABORTED' : L.f.estop ? 'E-stop still pressed' : [...alarms.values()].some(a => !a.ack) ? 'acknowledge all alarms first' : '';
+    }
+    return 'unknown';
+  }
+  function nextHint() {
+    const s = L.state, ab = abortCause(), hc = holdCause();
+    if (L.mode === 'MANUAL') return ['STOPPED','IDLE'].includes(s) ? 'Manual mode: use the jog switches, or switch back to AUTO.' : 'Manual mode.';
+    switch (s) {
+      case 'STOPPED': return ab ? `Clear the cause first: ${ab}.` : 'Next: press RESET to prepare the line.';
+      case 'IDLE': return hc ? `Start is blocked: ${hc}.` : 'Next: press START.';
+      case 'RUNNING': return 'Running. Try the Fault injection panel, or press HOLD / STOP.';
+      case 'HELD': return hc ? `Held: ${hc}. Fix it, then press UNHOLD.` : 'Held. Press UNHOLD to continue, or STOP.';
+      case 'ABORTED': return L.f.estop ? 'Aborted. Release the E-stop, then ACK ALL and CLEAR.' : [...alarms.values()].some(a => !a.ack) ? 'Aborted. Press ACK ALL, then CLEAR.' : 'Aborted. Press CLEAR.';
+      default: return s.charAt(0) + s.slice(1).toLowerCase() + '…';
+    }
+  }
+  const NEXT = { RESET:'RESETTING', START:'STARTING', HOLD:'HOLDING', UNHOLD:'UNHOLDING', STOP:'STOPPING', ABORT:'ABORTING', CLEAR:'CLEARING' };
+  function command(cmd) {
+    const w = why(cmd);
+    if (w) { log('WRN', `CMD ${cmd} rejected: ${w}`); return; }
+    log('CMD', cmd);
+    if (cmd === 'START') L.started = true;
+    if (cmd === 'CLEAR' && L.f.servo) { L.f.servo = false; log('EVT', 'ST20 servo drive fault reset'); }
+    goState(NEXT[cmd], 'Cmd_' + cmd);
+  }
+  $('#cmdbar').addEventListener('click', e => { const b = e.target.closest('[data-cmd]'); if (b) command(b.dataset.cmd); });
+
+  /* mode + recipe (only when STOPPED or IDLE) */
+  function setSw(b, on) { b.setAttribute('aria-checked', String(on)); b.querySelector('span').textContent = on ? 'ON' : 'OFF'; }
+  $$('.seg [data-mode]').forEach(b => b.addEventListener('click', () => {
+    const m = b.dataset.mode; if (m === L.mode) return;
+    if (!['STOPPED','IDLE'].includes(L.state)) { log('WRN', `Mode change rejected: unit is ${L.state}`); return; }
+    L.mode = m; if (m === 'MANUAL' && L.state === 'IDLE') goState('STOPPED', 'mode MANUAL');
+    if (m === 'AUTO') { L.man = { jog:false, div:false, z:false }; $$('#manual .sw').forEach(s => setSw(s, false)); }
+    $$('.seg [data-mode]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.mode === m)));
+    log('CMD', 'Mode → ' + m);
+  }));
+  $('#recipe').addEventListener('change', e => {
+    if (!['STOPPED','IDLE'].includes(L.state)) { log('WRN', `Recipe change rejected: unit is ${L.state}`); e.target.value = L.recipe; return; }
+    L.recipe = e.target.value; log('CMD', 'Recipe → ' + L.recipe);
+  });
+
+  /* fault injection + manual switches */
+  const FNAME = { estop:['E-stop','PRESSED','RELEASED'], guard:['Guard door ST20','OPEN','CLOSED'], dirty:['Reader window ST10','DIRTY','CLEAN'] };
+  $$('#simPanel [data-f]').forEach(b => b.addEventListener('click', () => {
+    const k = b.dataset.f; L.f[k] = !L.f[k]; setSw(b, L.f[k]);
+    log('IN', `${FNAME[k][0]} = ${L.f[k] ? FNAME[k][1] : FNAME[k][2]}`);
+  }));
+  $$('#simPanel [data-act]').forEach(b => b.addEventListener('click', () => {
+    const a = b.dataset.act;
+    if (a === 'jam')   { L.f.jamArm = true; log('IN', 'Next part at ST10 will jam'); }
+    if (a === 'servo') { if (!L.f.servo) { L.f.servo = true; log('IN', 'ST20 servo drive reports fault'); } }
+    if (a === 'unjam') {
+      if (!L.f.jam) { log('WRN', 'No jammed part at ST10'); return; }
+      L.parts = L.parts.filter(p => !p.jam); L.f.jam = false; L.st10.part = null; log('IN', 'Operator removed jammed part from ST10');
+    }
+    if (a === 'empty') { L.bin = 0; log('IN', 'Operator emptied the good-part bin'); }
+  }));
+  $$('#manual [data-m]').forEach(b => b.addEventListener('click', () => {
+    const k = b.dataset.m;
+    if (L.mode !== 'MANUAL' || !['STOPPED','IDLE'].includes(L.state)) { log('WRN', 'Manual control needs MANUAL mode and unit STOPPED'); return; }
+    if (k === 'z' && (L.f.guard || L.f.estop)) { log('WRN', 'Servo jog inhibited: guard open or E-stop'); return; }
+    L.man[k] = !L.man[k]; setSw(b, L.man[k]);
+    log('CMD', `Manual ${k === 'jog' ? 'M1 jog' : k === 'div' ? 'diverter' : 'servo Z'} = ${L.man[k] ? 'ON' : 'OFF'}`);
+  }));
+  $('#ackAll').addEventListener('click', () => [...alarms.keys()].forEach(ackAlm));
+  $('#almBody').addEventListener('click', e => { const b = e.target.closest('[data-ack]'); if (b) ackAlm(b.dataset.ack); });
+
+  /* process */
+  const bad = p => p.scan === 'NOREAD' || p.test === 'FAIL';
+  function stopFor(p) {
+    if (L.mode !== 'AUTO') return null;
+    if (p.scan === null) return POS.scan;
+    if (L.st20.part === p) return POS.test;
+    if (p.scan === 'OK' && p.test === null) return POS.test;
+    if (bad(p)) return POS.div;
+    if (L.flap > 0.08) return POS.div - 40;   // good part waits until the flap is closed
+    return null;
+  }
+  const FAILS = ['PIXEL_DEFECT','BACKLIGHT_FAIL','TOUCH_NO_RESPONSE'];
+  function tick(dt) {
+    L.t += dt; L.scan++;
+    const rec = R(), ab = abortCause(), hc = holdCause();
+    setAlm('ALM_001', L.f.estop); setAlm('ALM_010', L.f.guard); setAlm('ALM_020', L.f.jam);
+    setAlm('ALM_030', L.f.servo); setAlm('ALM_040', L.noreadRun >= 3); setAlm('ALM_050', L.bin >= L.binCap);
+    if (ab && !['ABORTING','ABORTED'].includes(L.state)) goState('ABORTING', 'interlock: ' + ab);
+    else if (hc && ['STARTING','RUNNING','UNHOLDING'].includes(L.state)) goState('HOLDING', 'interlock: ' + hc);
+
+    const setV = rec.spd * 1000 / 60;   // m/min → mm/s (1 px = 1 mm)
+    let vT = 0;
+    switch (L.state) {
+      case 'RESETTING': if (L.t >= DUR.RESETTING) goState('IDLE', 'reset done'); break;
+      case 'STARTING':  vT = setV; if (L.t >= DUR.STARTING) goState('RUNNING', 'speed at setpoint'); break;
+      case 'RUNNING':   vT = setV; break;
+      case 'HOLDING':   if (L.v === 0 && L.t >= 0.5) goState('HELD', 'conveyor stopped'); break;
+      case 'UNHOLDING': vT = setV; if (L.t >= DUR.UNHOLDING) goState('RUNNING', 'unhold done'); break;
+      case 'STOPPING':  if (L.v === 0 && L.t >= 0.8) goState('STOPPED', 'conveyor stopped'); break;
+      case 'ABORTING':  if (L.t >= DUR.ABORTING) goState('ABORTED', 'outputs off'); break;
+      case 'CLEARING':  L.zT = 0; if (L.t >= DUR.CLEARING) { L.f.servo = false; L.st20 = { part:null, phase:'', t:0 }; goState('STOPPED', 'faults cleared'); } break;
+    }
+    if (L.mode === 'MANUAL' && ['STOPPED','IDLE'].includes(L.state) && !ab) {
+      vT = L.man.jog ? setV * 0.5 : 0;
+      if (!L.f.guard) L.zT = L.man.z ? 40 : 0;
+    }
+    if (L.started) { if (L.state === 'RUNNING') L.tRun += dt; else if (['HOLDING','HELD','UNHOLDING','ABORTING','ABORTED','CLEARING'].includes(L.state)) L.tDown += dt; }
+
+    const acc = (L.state === 'ABORTING' || L.state === 'ABORTED' || ab) ? 6000 : 380;
+    L.v = L.v < vT ? Math.min(vT, L.v + acc * dt) : Math.max(vT, L.v - acc * dt);
+    const working = ['STARTING','RUNNING','HOLDING','UNHOLDING','STOPPING'].includes(L.state) && L.mode === 'AUTO';
+
+    if (L.state === 'RUNNING' && L.mode === 'AUTO') {
+      L.spawnT += dt;
+      const first = L.parts.filter(p => !p.drop).reduce((m, p) => Math.min(m, p.x), Infinity);
+      if (L.spawnT >= rec.spawn && first > 80) {
+        L.spawnT = 0; L.cnt.in++;
+        L.parts.push({ id:L.nextId++, x:24, y:0, vy:0, scan:null, test:null, code:'', jam:false, drop:false });
+      }
+    }
+
+    const st10 = L.st10;
+    st10.flash = Math.max(0, st10.flash - dt);
+    const atScan = L.parts.find(p => !p.drop && p.scan === null && Math.abs(p.x - POS.scan) < 0.5);
+    if (atScan && working) {
+      if (st10.part !== atScan) {
+        st10.part = atScan; st10.t = 0;
+        if (L.f.jamArm) { L.f.jamArm = false; L.f.jam = true; atScan.jam = true; log('EVT', 'ST10: part jammed in reader station'); }
+      }
+      if (!atScan.jam) {
+        st10.t += dt;
+        if (st10.t >= 0.5) {
+          const ok = Math.random() < (L.f.dirty ? 0.3 : 0.96);
+          if (ok) { atScan.scan = 'OK'; atScan.code = `DSP${rec.tag}-${String(L.serial++).padStart(6, '0')}`; L.lastCode = atScan.code; L.noreadRun = 0; }
+          else { atScan.scan = 'NOREAD'; L.lastCode = 'NOREAD'; L.noreadRun++; }
+          st10.part = null; st10.flash = 0.35; st10.ok = ok;
+        }
+      }
+    }
+
+    const st20 = L.st20, servoOk = !L.f.servo && !L.f.estop && !L.f.guard;
+    const atTest = L.parts.find(p => !p.drop && p.scan === 'OK' && p.test === null && Math.abs(p.x - POS.test) < 0.5);
+    if (atTest && working && !st20.part) { st20.part = atTest; st20.phase = 'DOWN'; st20.t = 0; }
+    if (st20.part && working && servoOk) {
+      if (st20.phase === 'DOWN') { L.zT = 40; if (L.z >= 39.9) { st20.phase = 'TEST'; st20.t = 0; } }
+      else if (st20.phase === 'TEST') {
+        st20.t += dt;
+        if (st20.t >= rec.test) {
+          const pass = Math.random() < 0.93, p = st20.part;
+          p.test = pass ? 'PASS' : 'FAIL'; if (!pass) p.reason = FAILS[Math.floor(Math.random() * FAILS.length)];
+          L.lastRes = pass ? 'PASS' : p.reason; st20.phase = 'UP';
+        }
+      } else if (st20.phase === 'UP') { L.zT = 0; if (L.z <= 0.1) { st20.part = null; st20.phase = ''; } }
+    }
+    if (servoOk || L.state === 'CLEARING') { const dz = 120 * dt; L.z = L.z < L.zT ? Math.min(L.zT, L.z + dz) : Math.max(L.zT, L.z - dz); }
+
+    let flapT = 0;
+    if (L.mode === 'AUTO') flapT = L.parts.some(p => !p.drop && bad(p) && p.x > POS.div - 140 && p.x <= POS.div) ? 1 : 0;
+    else flapT = L.man.div ? 1 : 0;
+    if (!ab) L.flap = L.flap < flapT ? Math.min(flapT, L.flap + 5 * dt) : Math.max(flapT, L.flap - 5 * dt);
+
+    if (L.v > 0) {
+      let ahead = Infinity;
+      L.parts.filter(p => !p.drop).sort((a, b) => b.x - a.x).forEach(p => {
+        let nx = p.x + L.v * dt;
+        const st = stopFor(p);
+        if (st !== null && p.x <= st && nx >= st) nx = st;
+        if (st !== null && p.x >= st && st !== POS.div - 40) nx = p.x;
+        nx = Math.min(nx, ahead - 44);
+        p.x = Math.max(p.x, nx);
+        ahead = p.x;
+        if (p.x >= POS.div - 0.5 && p.x < POS.div + 20 && L.flap > 0.9 && (bad(p) || L.mode !== 'AUTO')) { p.drop = 'rej'; p.vy = 0; }
+        if (p.x >= POS.exit) { p.drop = 'good'; p.vy = 0; }
+      });
+    }
+    L.parts.forEach(p => {
+      if (!p.drop) return;
+      p.vy += 900 * dt; p.y += p.vy * dt; p.x += (p.drop === 'rej' ? 30 : 20) * dt;
+      if (p.drop === 'rej' && p.y > 78) { p.gone = true; L.cnt.rej++; if (p.scan === 'NOREAD') L.cnt.nr++; else if (p.test === 'FAIL') L.cnt.fail++; L.done.push(performance.now()); }
+      if (p.drop === 'good' && p.y > 60) { p.gone = true; L.bin++; if (L.mode === 'AUTO') { L.cnt.good++; L.done.push(performance.now()); } }
+    });
+    L.parts = L.parts.filter(p => !p.gone);
+  }
+
+  /* SVG rendering */
+  const partsG = $('#parts'), partEls = new Map();
+  const PCOL = p => p.test === 'PASS' ? '#A6E3A1' : bad(p) ? (p.scan === 'NOREAD' ? '#F9E2AF' : '#F38BA8') : p.scan === 'OK' ? '#89B4FA' : '#45475a';
+  let beltOff = 0;
+  const E = id => document.getElementById(id);
+  function renderPG(dt) {
+    beltOff -= L.v * dt;
+    E('belt1').setAttribute('stroke-dashoffset', beltOff.toFixed(1));
+    E('belt2').setAttribute('stroke-dashoffset', beltOff.toFixed(1));
+    const seen = new Set();
+    L.parts.forEach(p => {
+      seen.add(p.id);
+      let g = partEls.get(p.id);
+      if (!g) {
+        g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.innerHTML = '<rect x="-18" y="-21" width="36" height="21" rx="3" fill="#585b70" stroke="#8A8FA8"/><rect x="-14" y="-18" width="28" height="13" rx="1"/>';
+        partsG.appendChild(g); partEls.set(p.id, g);
+      }
+      const tilt = p.drop === 'rej' ? Math.min(40, p.y) : 0;
+      g.setAttribute('transform', `translate(${p.x.toFixed(1)} ${(180 + p.y).toFixed(1)}) rotate(${tilt})`);
+      g.lastChild.setAttribute('fill', PCOL(p));
+    });
+    partEls.forEach((g, id) => { if (!seen.has(id)) { g.remove(); partEls.delete(id); } });
+    const run = L.v > 0.5;
+    E('m1').setAttribute('class', 'mot' + (run ? ' on' : ''));
+    E('m1Txt').textContent = `M1 ${(L.v * 0.06).toFixed(1)} m/min`;
+    E('m1Sub').textContent = 'VFD · ' + (run ? 'RUNNING' : L.f.estop ? 'STO ACTIVE' : 'STOPPED');
+    const near = x => L.parts.some(p => !p.drop && Math.abs(p.x - x) < 18);
+    E('pe1').setAttribute('class', 'pe' + (near(POS.scan) ? ' on' : ''));
+    E('pe2').setAttribute('class', 'pe' + (near(POS.test) ? ' on' : ''));
+    E('pe3').setAttribute('class', 'pe' + (near(POS.div - 20) ? ' on' : ''));
+    const reading = L.st10.part && !L.st10.part.jam;
+    E('rdrBeam').setAttribute('fill', L.st10.flash > 0 ? (L.st10.ok ? 'rgba(166,227,161,.35)' : 'rgba(249,226,175,.35)') : reading ? 'rgba(137,180,250,.22)' : 'rgba(137,180,250,0)');
+    E('st10Txt').textContent = L.f.jam ? 'JAMMED' : reading ? 'READING…' : L.f.dirty ? 'IDLE · WINDOW DIRTY' : 'IDLE';
+    E('st10Txt').setAttribute('fill', L.f.jam ? '#F9E2AF' : '#A6ADC8');
+    E('codeTxt').textContent = L.lastCode;
+    const zp = L.z * 1.7;
+    E('head').setAttribute('transform', `translate(0 ${zp.toFixed(1)})`);
+    E('rod').setAttribute('height', (6 + zp).toFixed(1));
+    E('zTxt').textContent = `Z ${L.z.toFixed(1)} mm`;
+    E('st20Txt').textContent = L.f.servo ? 'SERVO FAULT' : L.st20.phase ? L.st20.phase + (L.st20.phase === 'TEST' ? '…' : '') : 'IDLE · ' + L.lastRes;
+    E('st20Txt').setAttribute('fill', L.f.servo ? '#F38BA8' : '#8A8FA8');
+    E('zGuard').setAttribute('class', 'zone' + (L.f.guard ? ' guard' : ''));
+    E('flap').setAttribute('transform', `rotate(${(L.flap * 42).toFixed(1)} 742 181)`);
+    E('st30Txt').textContent = L.flap > 0.5 ? 'Y30 → REJECT' : 'Y30 → GOOD';
+    E('rejTxt').textContent = 'REJ ' + L.cnt.rej;
+    const fill = Math.min(1, L.bin / L.binCap) * 64;
+    E('binFill').setAttribute('y', (263 - fill).toFixed(1)); E('binFill').setAttribute('height', fill.toFixed(1));
+    E('binFill').setAttribute('fill', L.bin >= L.binCap ? 'rgba(249,226,175,.45)' : 'rgba(166,227,161,.35)');
+    E('binTxt').textContent = `${L.bin}/${L.binCap}`;
+  }
+
+  /* state chips */
+  $('#sm').innerHTML = STATES.map(r => `<div class="row">${r.map(s => `<div class="s" data-s="${s}">${s}<i></i></div>`).join('')}</div>`).join('');
+  function renderState() {
+    const s = L.state, trans = DUR[s] || ['HOLDING','STOPPING'].includes(s);
+    $$('#sm .s').forEach(d => {
+      const on = d.dataset.s === s;
+      d.className = 's' + (on ? ' on ' + (trans ? 'trans' : KIND(s)) : '');
+      d.lastChild.style.width = on && DUR[s] ? Math.min(100, L.t / DUR[s] * 100) + '%' : '0';
+    });
+    E('stBig').textContent = s;
+    E('stBig').style.color = s === 'RUNNING' ? 'var(--ok)' : KIND(s) === 'abort' ? 'var(--hi)' : KIND(s) === 'hold' ? 'var(--focus)' : 'var(--ink)';
+    E('modeTxt').textContent = `${L.mode} · ${L.recipe}`;
+    E('tInState').textContent = L.t.toFixed(1) + ' s';
+    $$('#cmdbar [data-cmd]').forEach(b => { const w = why(b.dataset.cmd); b.classList.toggle('off', !!w); b.title = w ? 'Not available: ' + w : 'Send ' + b.dataset.cmd; b.setAttribute('aria-disabled', String(!!w)); });
+    $$('#manual .ctl-row').forEach(r => r.classList.toggle('dis', !(L.mode === 'MANUAL' && ['STOPPED','IDLE'].includes(L.state))));
+    E('scanTxt').textContent = `SCAN ${L.scan}`;
+    const h = nextHint(); if (E('nextHint').textContent !== h) E('nextHint').textContent = h;
+  }
+
+  /* KPI rings + counters */
+  const RINGS = [['AVAIL','#CDD6F4'],['PERF','#CDD6F4'],['QUAL','#CDD6F4'],['OEE','#89B4FA']];
+  $('#rings').innerHTML = RINGS.map(([n, c]) => `<div class="ring"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="26" fill="none" stroke="#313244" stroke-width="6"/><circle class="ra" cx="32" cy="32" r="26" fill="none" stroke="${c}" stroke-width="6" stroke-linecap="round" stroke-dasharray="0 163.4" transform="rotate(-90 32 32)"/><text class="rv" x="32" y="36.5" text-anchor="middle">—</text></svg>${n}</div>`).join('');
+  const ringEls = $$('#rings .ring');
+  function renderKpi() {
+    const now = performance.now();
+    L.done = L.done.filter(t => now - t < 60000);
+    const out = L.cnt.good + L.cnt.rej;
+    const A = L.tRun + L.tDown > 0 ? L.tRun / (L.tRun + L.tDown) : null;
+    const P = L.tRun > 2 ? Math.min(1, out / (L.tRun / R().spawn)) : null;
+    const Q = out ? L.cnt.good / out : null;
+    const O = A !== null && P !== null && Q !== null ? A * P * Q : null;
+    [A, P, Q, O].forEach((v, i) => {
+      ringEls[i].querySelector('.ra').setAttribute('stroke-dasharray', `${((v || 0) * 163.4).toFixed(1)} 163.4`);
+      ringEls[i].querySelector('.rv').textContent = v === null ? '—' : Math.round(v * 100) + '%';
+    });
+    E('cIn').textContent = L.cnt.in; E('cGood').textContent = L.cnt.good; E('cRej').textContent = L.cnt.rej;
+    E('cNr').textContent = L.cnt.nr; E('cFail').textContent = L.cnt.fail;
+    E('cYield').textContent = Q === null ? '—' : (Q * 100).toFixed(1) + '%';
+    E('ppmTxt').textContent = L.done.length + ' PPM';
+  }
+
+  /* watch table */
+  const WATCH = [
+    ['"Line".State', () => L.state], ['"Line".Mode', () => L.mode], ['"Line".Recipe', () => L.recipe],
+    ['"M1".SpeedSet', () => (R().spd).toFixed(1)], ['"M1".SpeedAct', () => (L.v * 0.06).toFixed(1)],
+    ['"B10".PartPresent', () => L.parts.some(p => !p.drop && Math.abs(p.x - POS.scan) < 18)],
+    ['"ST10".LastCode', () => L.lastCode], ['"ST10".NoReadRun', () => L.noreadRun],
+    ['"ST20".Z_ActPos', () => L.z.toFixed(1)], ['"ST20".Result', () => L.lastRes],
+    ['"Y30".ToReject', () => L.flap > 0.5], ['"Cnt".Good', () => L.cnt.good], ['"Cnt".Reject', () => L.cnt.rej],
+    ['"Sim".EStopOK', () => !L.f.estop], ['"Sim".GuardClosed', () => !L.f.guard]
+  ];
+  $('#watch').innerHTML = WATCH.map(([n], i) => `<tr><td>${esc(n)}</td><td id="w${i}"></td></tr>`).join('');
+  function renderWatch() {
+    WATCH.forEach(([, f], i) => {
+      const v = f(), td = E('w' + i);
+      if (typeof v === 'boolean') { td.textContent = v ? 'TRUE' : 'FALSE'; td.className = v ? 'tr' : 'fa'; }
+      else { td.textContent = v; td.className = ''; }
+    });
+  }
+
+  /* alarm table + banner */
+  function renderAlarms() {
+    const list = [...alarms.values()].sort((a, b) => (b.act - a.act) || (PR[b.p] - PR[a.p]));
+    E('almBody').innerHTML = list.length ? list.map(a =>
+      `<tr class="${a.ack ? '' : 'un'}"><td>${a.t}</td><td class="pr ${a.p}">${a.p}</td><td>${a.id}</td><td style="font-family:var(--sans);white-space:normal">${esc(a.m)}</td><td>${a.act ? 'ACT' : 'CLR'} · ${a.ack ? 'ACK' : 'UNACK'}</td><td>${a.ack ? '' : `<button class="btn btn-sm" type="button" data-ack="${a.id}">ACK</button>`}</td></tr>`).join('')
+      : '<tr><td colspan="6" class="empty">No active or unacknowledged alarms</td></tr>';
+    const act = list.filter(a => a.act), top = act[0];
+    E('banner').className = 'banner' + (top ? ' ' + top.p : '');
+    E('bannerTxt').textContent = top ? `${act.length} ACTIVE · ${top.id} ${top.m}` : list.length ? 'ALARMS CLEARED – ACKNOWLEDGE REMAINING ENTRIES' : 'NO ACTIVE ALARMS';
+    E('navDot').hidden = !act.length;
+    almDirty = false;
+  }
+
+  /* trend (canvas, simulated data) */
+  const TR = [], TRN = 300;
+  const PENS = [['#89B4FA', 20, s => s.v], ['#CBA6F7', 50, s => s.z], ['#FAB387', 40, s => s.q]];
+  const cv = E('trend');
+  function drawTrend() {
+    const w = cv.clientWidth, h = cv.clientHeight; if (!w || !h) return;
+    const dpr = window.devicePixelRatio || 1;
+    if (cv.width !== Math.round(w * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+    const c = cv.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, w, h);
+    const pl = 8, pr = 8, pt = 10, pb = 18, W = w - pl - pr, H = h - pt - pb;
+    c.strokeStyle = 'rgba(205,214,244,.06)'; c.lineWidth = 1; c.font = '10px Consolas, monospace'; c.fillStyle = '#8A8FA8';
+    for (let i = 0; i <= 4; i++) { const y = pt + H * i / 4; c.beginPath(); c.moveTo(pl, y); c.lineTo(pl + W, y); c.stroke(); }
+    for (let i = 0; i <= 6; i++) { const x = pl + W * i / 6; c.beginPath(); c.moveTo(x, pt); c.lineTo(x, pt + H); c.stroke(); c.fillText(i === 6 ? 'now' : `-${60 - i * 10}s`, Math.min(x - 8, w - 24), h - 5); }
+    PENS.forEach(([col, max, f]) => {
+      c.strokeStyle = col; c.lineWidth = 1.8; c.beginPath();
+      TR.forEach((s, i) => { const x = pl + W * (i + TRN - TR.length) / (TRN - 1), y = pt + H * (1 - Math.min(1, f(s) / max)); i ? c.lineTo(x, y) : c.moveTo(x, y); });
+      c.stroke();
+    });
+  }
+  if (window.ResizeObserver) new ResizeObserver(drawTrend).observe(cv);
+
+  /* main loop: runs only while the Simulator is open (no background animation) */
+  let last = 0, acc5 = 0, accUi = 0, running = false;
+  function loop(now) {
+    if (!running) return;
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    const steps = Math.max(1, Math.ceil(dt / 0.02)), h = dt / steps;
+    for (let i = 0; i < steps; i++) tick(h);
+    renderPG(dt);
+    acc5 += dt; accUi += dt;
+    if (acc5 >= 0.2) {
+      acc5 = 0;
+      TR.push({ v:L.v * 0.06, z:L.z, q:L.done.length }); if (TR.length > TRN) TR.shift();
+      E('pv1').textContent = (L.v * 0.06).toFixed(1); E('pv2').textContent = L.z.toFixed(1); E('pv3').textContent = L.done.length;
+      drawTrend();
+    }
+    if (accUi >= 0.1) { accUi = 0; renderState(); renderKpi(); renderWatch(); if (almDirty) renderAlarms(); }
+    requestAnimationFrame(loop);
+  }
+  log('EVT', 'Simulator ready · unit STOPPED · press RESET, then START');
+  renderAlarms(); renderState(); renderKpi(); renderWatch();
+  return {
+    visible(on) {
+      if (on && !running) { running = true; last = performance.now(); requestAnimationFrame(loop); requestAnimationFrame(drawTrend); }
+      if (!on) running = false;
+    }
+  };
+}
+
+try {
+  simHooks = initSim();
+  simHooks.visible(!$('[data-view="simulator"]').hidden);
+} catch (err) {
+  const p = document.getElementById('simPanel');
+  if (p) p.insertAdjacentHTML('afterbegin', '<p class="sim-fail">The simulator could not start in this browser. The rest of the portfolio is unaffected.</p>');
+  if (window.console) console.warn('Simulator failed to start:', err);
+}
+</script>
+</body>
+</html>
