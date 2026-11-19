@@ -9,7 +9,7 @@
 /*
   VOICE   : a calm engineering portfolio first (~70%), with HMI character (~30%) concentrated in the simulator
   IDEA    : readable CV on an engineering-canvas ground; the live line simulator is the one signature piece
-  PICTURE : the interactive display-test line (Simulator); elsewhere plain panels, a timeline and a workflow strip
+  PICTURE : the interactive vial filling line (Simulator); elsewhere plain panels, a timeline and a workflow strip
   COLOUR  : #1E1E2E canvas, #252536 panels, blue = selection/focus, green/amber/rose only for real states
   TYPE    : system sans (Inter if installed) for prose and headings, mono for identifiers, code and live values
   LAYOUT  : fixed header + left rail (bottom tab bar under 820px); one heading per section; simulator scrolls inside its panel
@@ -322,6 +322,20 @@ select{min-height:38px;padding:6px 10px;border:1px solid var(--line-2);border-ra
 .hcell details summary{cursor:pointer;font-size:12px;color:var(--mute);min-height:32px;display:flex;align-items:center}
 .hcell pre{margin:0;overflow-x:auto;padding:12px;font:12px/1.6 var(--mono);background:var(--bg-2);border:1px solid var(--line);border-radius:var(--r)}
 .k{color:var(--k)}.cm{color:var(--c);font-style:italic}
+.rabs{fill:none;stroke:#4b6390;stroke-dasharray:6 4}
+.rabs.bad{stroke:#F9E2AF;stroke-dasharray:none}
+.pump{fill:#2a2a3e;stroke:#8A8FA8;stroke-width:2}
+.pump.on{fill:#22304a;stroke:#89B4FA}
+.pump.bad{stroke:#F38BA8}
+.chk{display:grid;gap:5px}
+.chk label{display:flex;align-items:center;gap:8px;font-family:var(--sans);font-size:12.5px;color:var(--ink);padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--bg-2);cursor:pointer}
+.chk input{width:18px;height:18px;min-height:0;padding:0;margin:0;accent-color:#89B4FA;flex:none}
+.bkv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:11.5px;margin:0}
+.bkv dt{color:var(--mute)}
+.bkv dd{margin:0;text-align:right;color:var(--ink)}
+.btnrow .btn.off{opacity:.4}
+.badge.okb{color:var(--ok);border-color:#3c5a45}
+.bnote{font-family:var(--sans);font-size:12px;color:var(--mute);margin:0}
 .sim-fail{padding:18px;color:var(--warn);font-family:var(--sans)}
 
 /* ---------- Contact ---------- */
@@ -467,7 +481,7 @@ input:focus,textarea:focus{border-color:var(--focus);outline:none}
     </div>
 
     <article class="panel c12 teaser">
-      <div><span class="lbl">Interactive engineering demo — simulated data</span><p>A small display-test line runs in your browser, with unit states, fault injection, alarms and trends you can try yourself.</p></div>
+      <div><span class="lbl">Interactive engineering demo — simulated data</span><p>A small vial filling line runs in your browser, with unit states, line clearance, fill-weight checks, fault injection, alarms and trends you can try yourself.</p></div>
       <button class="btn" type="button" data-goto="simulator">Open the simulator</button>
     </article>
   </div>
@@ -543,21 +557,21 @@ input:focus,textarea:focus{border-color:var(--focus);outline:none}
   <div class="view-hd"><span class="vnum">05</span><h1 id="h-sim">Simulator</h1><p>Interactive engineering demo — simulated data.</p></div>
   <div class="panel sim-intro">
     <div>
-      <p>A display-test line like the machines I commission: parts pass a code reader, a servo test station and a reject diverter. It runs entirely in your browser.</p>
+      <p>An aseptic vial filling line: vials are filled and weighed, stoppered and capped, inspected and given a serial code, and rejects are diverted automatically. It runs entirely in your browser.</p>
       <ol>
-        <li>Press <b>Reset</b>, then <b>Start</b>, and watch parts flow.</li>
-        <li>In the Fault injection panel, open the guard door or press the E-stop to see Hold and Abort.</li>
-        <li>Acknowledge the alarms, then <b>Clear</b> and <b>Reset</b> to recover.</li>
+        <li>Tick the <b>line clearance</b> checklist in the Batch panel, then press <b>Reset</b> and <b>Start</b>.</li>
+        <li>In the Fault injection panel, open the RABS door or let the filling pump drift, and watch the hold or the fill-weight rejects.</li>
+        <li>Acknowledge the alarms, recover with <b>Unhold</b> or <b>Clear</b> and <b>Reset</b>, then stop and <b>close the batch</b> to see its summary.</li>
       </ol>
     </div>
-    <p class="disclaimer">Simulation only. It does not connect to or control any equipment and is not a validated production or safety system. The state model is a simplified example in the style of S88/PackML.</p>
+    <p class="disclaimer">Simulation only. It does not connect to or control any equipment and is not a validated production, safety or GMP system. Terms such as line clearance, batch record and audit trail are shown in simplified form, and the state model is a simplified example in the style of S88/PackML.</p>
   </div>
 
   <article class="panel hmi" id="simPanel">
-    <div class="panel-hd"><h2>DISPLAY-TEST LINE · SIMULATED</h2><span id="scanTxt" style="white-space:nowrap">SCAN 0</span></div>
+    <div class="panel-hd"><h2>VIAL FILLING LINE · SIMULATED</h2><span id="scanTxt" style="white-space:nowrap">SCAN 0</span></div>
     <div class="hbar">
       <div class="seg" role="group" aria-label="Operating mode"><button type="button" data-mode="AUTO" aria-pressed="true">AUTO</button><button type="button" data-mode="MANUAL" aria-pressed="false">MANUAL</button></div>
-      <label class="fld">RECIPE <select id="recipe"><option value="DSP_07IN">DSP_07IN</option><option value="DSP_10IN" selected>DSP_10IN</option><option value="DSP_12IN">DSP_12IN</option></select></label>
+      <label class="fld">RECIPE <select id="recipe"><option value="VIAL_2ML" selected>VIAL_2ML</option><option value="VIAL_5ML">VIAL_5ML</option><option value="VIAL_10ML">VIAL_10ML</option></select></label>
       <div class="cmdbar" id="cmdbar">
         <button class="btn go" type="button" data-cmd="RESET">RESET</button>
         <button class="btn go" type="button" data-cmd="START">START</button>
@@ -567,55 +581,74 @@ input:focus,textarea:focus{border-color:var(--focus);outline:none}
         <button class="btn ab" type="button" data-cmd="ABORT">ABORT</button>
         <button class="btn" type="button" data-cmd="CLEAR">CLEAR</button>
       </div>
-      <span class="next" id="nextHint" aria-live="polite">Next: press RESET to prepare the line.</span>
+      <span class="next" id="nextHint" aria-live="polite">Next: complete the line clearance in the Batch panel.</span>
     </div>
     <div class="banner" id="banner" role="status"><i class="bi"></i><span id="bannerTxt">NO ACTIVE ALARMS</span></div>
 
     <div class="pg-wrap">
-      <svg id="pg" viewBox="0 0 1000 300" role="img" aria-label="Process graphic of the simulated display-test line">
+      <svg id="pg" viewBox="0 0 1000 300" role="img" aria-label="Process graphic of the simulated vial filling line">
         <defs>
           <linearGradient id="gBelt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3a52"/><stop offset="1" stop-color="#26263a"/></linearGradient>
           <linearGradient id="gEq" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3a52"/><stop offset="1" stop-color="#2a2a3e"/></linearGradient>
           <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#3a3a52" stroke-width="2.5"/></pattern>
         </defs>
-        <rect class="zone" x="14" y="30" width="190" height="240" rx="6"/><text class="z-lbl" x="24" y="48">ST00 INFEED</text>
-        <rect class="zone" x="226" y="30" width="150" height="240" rx="6"/><text class="z-lbl" x="236" y="48">ST10 CODE READ</text>
-        <rect class="zone" id="zGuard" x="440" y="30" width="160" height="240" rx="6"/><text class="z-lbl" x="450" y="48">ST20 DISPLAY TEST</text>
-        <rect class="zone" x="690" y="30" width="140" height="240" rx="6"/><text class="z-lbl" x="700" y="48">ST30 SORT</text>
+        <rect class="zone" x="14" y="30" width="176" height="240" rx="6"/><text class="z-lbl" x="24" y="48">ST00 INFEED</text>
+        <rect class="zone" x="200" y="30" width="180" height="240" rx="6"/><text class="z-lbl" x="210" y="48">ST10 FILL &amp; WEIGH</text>
+        <rect class="zone" x="390" y="30" width="150" height="240" rx="6"/><text class="z-lbl" x="400" y="48">ST20 STOPPER &amp; CAP</text>
+        <rect class="zone" x="550" y="30" width="130" height="240" rx="6"/><text class="z-lbl" x="560" y="48">ST30 INSPECT</text>
+        <rect class="zone" x="690" y="30" width="140" height="240" rx="6"/><text class="z-lbl" x="700" y="48">ST40 REJECT</text>
         <rect class="zone" x="852" y="30" width="140" height="240" rx="6"/><text class="z-lbl" x="862" y="48">OUTFEED</text>
+        <rect id="rabs" class="rabs" x="204" y="54" width="332" height="160" rx="8"/>
+        <text id="rabsTxt" class="z-lbl" x="214" y="68">RABS · GRADE A</text>
+        <text id="dpTxt" class="z-st" x="530" y="68" text-anchor="end">ΔP 15.0 Pa</text>
         <path d="M110 206v58M420 206v58M640 206v58M880 206v58" stroke="#313244" stroke-width="3"/>
         <rect x="24" y="180" width="714" height="26" rx="13" fill="url(#gBelt)" stroke="#45475a"/>
         <rect x="802" y="180" width="112" height="26" rx="13" fill="url(#gBelt)" stroke="#45475a"/>
         <line id="belt1" x1="38" y1="193" x2="726" y2="193" stroke="#4d4f66" stroke-width="16" stroke-dasharray="3 17"/>
         <line id="belt2" x1="814" y1="193" x2="902" y2="193" stroke="#4d4f66" stroke-width="16" stroke-dasharray="3 17"/>
         <circle cx="37" cy="193" r="9" fill="#2a2a3e" stroke="#8A8FA8"/><circle cx="725" cy="193" r="9" fill="#2a2a3e" stroke="#8A8FA8"/><circle cx="901" cy="193" r="9" fill="#2a2a3e" stroke="#8A8FA8"/>
+        <!-- ST10: product tank, pump, filling needle on servo Z, load cell -->
+        <rect class="eq" x="214" y="80" width="30" height="40" rx="6"/><text x="229" y="104" text-anchor="middle" font-size="10" fill="#A6ADC8">T1</text>
+        <path d="M244 92h10M266 92h14v-14h10" stroke="#585b70" stroke-width="2" fill="none"/>
+        <circle id="p1" class="pump" cx="260" cy="92" r="8"/><path d="M256 96l4-8 4 8z" fill="#A6ADC8"/>
+        <rect class="eq" x="274" y="70" width="32" height="8" rx="2"/>
+        <rect id="rod" x="287" y="78" width="6" height="4" fill="#8A8FA8"/>
+        <g id="head"><rect class="eq" x="282" y="82" width="16" height="14" rx="2"/><line x1="290" y1="96" x2="290" y2="112" stroke="#CDD6F4" stroke-width="2"/></g>
+        <rect id="scale" x="270" y="207" width="40" height="5" rx="1" fill="#45475a"/>
+        <text id="wTxt" class="z-st" x="210" y="230">0.000 g</text>
+        <text id="st10Txt" class="z-lbl" x="210" y="246">IDLE</text>
+        <!-- ST20: stopper bowl + crimp head -->
+        <polygon id="bowl" points="440,74 490,74 478,100 452,100" fill="#2a2a3e" stroke="#585b70"/>
+        <path d="M465 100v18" stroke="#585b70" stroke-width="3"/>
+        <rect class="eq" x="453" y="118" width="24" height="14" rx="2"/>
+        <text id="st20Txt" class="z-st" x="400" y="230">IDLE</text>
+        <text id="bowlTxt" class="z-lbl" x="400" y="246">BOWL OK</text>
+        <!-- ST30: camera / code reader -->
+        <path d="M615 58v12" stroke="#585b70" stroke-width="3"/>
+        <rect class="eq" x="590" y="70" width="50" height="28" rx="5"/><text x="615" y="88" text-anchor="middle" font-size="10" fill="#A6ADC8">CAM</text>
+        <polygon id="camBeam" points="608,98 622,98 634,140 596,140" fill="rgba(137,180,250,0)"/>
+        <text id="st30Txt" class="z-st" x="560" y="230">IDLE</text>
+        <text id="snTxt" class="z-lbl" x="560" y="246">SN —</text>
+        <!-- photo eyes -->
+        <g class="pe" id="pe1"><rect x="298" y="128" width="8" height="10" rx="2"/><line x1="302" y1="138" x2="302" y2="180"/></g>
+        <g class="pe" id="pe2"><rect x="473" y="138" width="8" height="10" rx="2"/><line x1="477" y1="148" x2="477" y2="180"/></g>
+        <g class="pe" id="pe3"><rect x="623" y="146" width="8" height="10" rx="2"/><line x1="627" y1="156" x2="627" y2="180"/></g>
+        <!-- ST40: diverter flap, reject chute and bin -->
         <polygon points="742,190 800,190 792,262 752,262" fill="url(#hatch)" stroke="#45475a"/>
         <rect x="728" y="262" width="88" height="30" rx="4" fill="#2a2a3e" stroke="#585b70"/>
         <text id="rejTxt" class="z-st" x="772" y="282" text-anchor="middle">REJ 0</text>
         <line id="flap" x1="742" y1="181" x2="800" y2="181" stroke="#CDD6F4" stroke-width="5" stroke-linecap="round"/>
         <circle cx="742" cy="181" r="4" fill="#CDD6F4"/>
+        <text id="st40Txt" class="z-st" x="700" y="230">Y40 → GOOD</text>
+        <!-- outfeed tray -->
         <rect x="918" y="196" width="68" height="70" rx="4" fill="#232335" stroke="#585b70"/>
         <rect id="binFill" x="921" y="263" width="62" height="0" fill="rgba(166,227,161,.35)"/>
-        <text id="binTxt" class="z-st" x="952" y="284" text-anchor="middle">0/24</text>
+        <text id="binTxt" class="z-st" x="952" y="284" text-anchor="middle">0/30</text>
+        <!-- conveyor motor -->
         <path d="M60 206v28" stroke="#45475a" stroke-width="2"/>
         <circle id="m1" class="mot" cx="60" cy="250" r="16"/><text x="60" y="255" text-anchor="middle" font-size="13" font-weight="700" fill="#CDD6F4">M</text>
         <text id="m1Txt" class="z-st" x="84" y="248">M1 0.0 m/min</text>
         <text id="m1Sub" class="z-lbl" x="84" y="262">VFD · STOPPED</text>
-        <g class="pe" id="pe1"><rect x="308" y="136" width="8" height="12" rx="2"/><line x1="312" y1="148" x2="312" y2="180"/></g>
-        <g class="pe" id="pe2"><rect x="528" y="136" width="8" height="12" rx="2"/><line x1="532" y1="148" x2="532" y2="180"/></g>
-        <g class="pe" id="pe3"><rect x="716" y="136" width="8" height="12" rx="2"/><line x1="720" y1="148" x2="720" y2="180"/></g>
-        <path d="M300 56v14" stroke="#585b70" stroke-width="3"/>
-        <rect class="eq" x="268" y="70" width="64" height="34" rx="5"/><text x="300" y="91" text-anchor="middle" font-size="10" fill="#A6ADC8">READER</text>
-        <polygon id="rdrBeam" points="292,104 308,104 322,158 278,158" fill="rgba(137,180,250,0)"/>
-        <text id="st10Txt" class="z-st" x="236" y="230">IDLE</text>
-        <text id="codeTxt" class="z-lbl" x="236" y="246">—</text>
-        <rect x="474" y="58" width="8" height="122" fill="#2f2f45" stroke="#45475a"/><rect x="558" y="58" width="8" height="122" fill="#2f2f45" stroke="#45475a"/>
-        <rect class="eq" x="466" y="56" width="108" height="14" rx="3"/>
-        <rect id="rod" x="516" y="70" width="8" height="6" fill="#8A8FA8"/>
-        <g id="head"><rect class="eq" x="500" y="76" width="40" height="22" rx="3"/><rect x="508" y="98" width="24" height="4" rx="1" fill="#94E2D5"/></g>
-        <text id="zTxt" class="z-st" x="450" y="230">Z 0.0 mm</text>
-        <text id="st20Txt" class="z-lbl" x="450" y="246">IDLE</text>
-        <text id="st30Txt" class="z-st" x="700" y="230">GOOD</text>
         <g id="parts"></g>
       </svg>
     </div>
@@ -624,72 +657,85 @@ input:focus,textarea:focus{border-color:var(--focus);outline:none}
     <div class="hgrid">
       <div class="hcell c4">
         <h3>UNIT STATE <span id="tInState">0.0 s</span></h3>
-        <div class="stbig"><b id="stBig">STOPPED</b><span id="modeTxt">AUTO · DSP_10IN</span></div>
+        <div class="stbig"><b id="stBig">STOPPED</b><span id="modeTxt">AUTO · VIAL_2ML</span></div>
         <div class="sm" id="sm"></div>
         <details><summary>View state logic (SCL sketch)</summary>
 <pre><code><span class="cm">// Abort and hold causes are evaluated every scan</span>
-<span class="k">IF</span> #EStop <span class="k">OR</span> #ServoFault <span class="k">THEN</span> #State := ABORTING;
-<span class="k">ELSIF</span> (#GuardOpen <span class="k">OR</span> #Jam <span class="k">OR</span> #BinFull)
+<span class="k">IF</span> #EStop <span class="k">OR</span> #PumpFault <span class="k">THEN</span> #State := ABORTING;
+<span class="k">ELSIF</span> (#RabsDoorOpen <span class="k">OR</span> #DpLow <span class="k">OR</span> #StopperEmpty <span class="k">OR</span> #TrayFull)
       <span class="k">AND</span> #State = RUNNING <span class="k">THEN</span> #State := HOLDING;
 <span class="k">END_IF</span>;
 <span class="k">CASE</span> #State <span class="k">OF</span>
+  STOPPED:  <span class="k">IF</span> #Cmd.Reset <span class="k">AND</span> #LineClearanceOK <span class="k">THEN</span> #State := RESETTING; <span class="k">END_IF</span>;
   IDLE:     <span class="k">IF</span> #Cmd.Start <span class="k">AND</span> #Auto <span class="k">THEN</span> #State := STARTING; <span class="k">END_IF</span>;
-  STARTING: <span class="k">IF</span> #SpeedAtSetpoint <span class="k">THEN</span> #State := RUNNING; <span class="k">END_IF</span>;
-  HOLDING:  <span class="k">IF</span> #ConveyorStopped <span class="k">THEN</span> #State := HELD; <span class="k">END_IF</span>;
   HELD:     <span class="k">IF</span> #Cmd.Unhold <span class="k">AND NOT</span> #HoldCause <span class="k">THEN</span> #State := UNHOLDING; <span class="k">END_IF</span>;
   ABORTED:  <span class="k">IF</span> #Cmd.Clear <span class="k">AND</span> #AllAcked <span class="k">THEN</span> #State := CLEARING; <span class="k">END_IF</span>;
-  <span class="cm">// ... RESETTING, STOPPING, UNHOLDING, CLEARING</span>
+  <span class="cm">// ... STARTING, HOLDING, UNHOLDING, STOPPING, CLEARING</span>
 <span class="k">END_CASE</span>;</code></pre>
         </details>
       </div>
       <div class="hcell c4">
-        <h3>PRODUCTION <span id="ppmTxt">0 PPM</span></h3>
-        <div class="rings" id="rings"></div>
-        <div class="cnt">
-          <div><span>PARTS IN</span><b id="cIn">0</b></div>
-          <div><span>GOOD</span><b id="cGood" style="color:var(--ok)">0</b></div>
-          <div><span>REJECT</span><b id="cRej">0</b></div>
-          <div><span>NOREAD</span><b id="cNr">0</b></div>
-          <div><span>TEST FAIL</span><b id="cFail">0</b></div>
-          <div><span>YIELD</span><b id="cYield">—</b></div>
+        <h3>BATCH <span class="badge" id="batchStat">CLEARANCE PENDING</span></h3>
+        <dl class="bkv" id="batchKv"></dl>
+        <div class="chk" id="clearance">
+          <label><input type="checkbox" data-lc> Previous batch material removed</label>
+          <label><input type="checkbox" data-lc> Line cleaned, cleaning record complete</label>
+          <label><input type="checkbox" data-lc> Correct vials, stoppers and caps loaded</label>
         </div>
+        <div class="btnrow">
+          <button class="btn" type="button" id="lcConfirm">CONFIRM CLEARANCE (OP1)</button>
+          <button class="btn" type="button" id="batchClose">CLOSE BATCH</button>
+        </div>
+        <p class="bnote" id="lastBatch"></p>
       </div>
       <div class="hcell c4 wide-md">
         <h3>FAULT INJECTION</h3>
         <div class="ctl">
           <div class="ctl-row"><div><div class="tn">E-STOP</div><div class="td">Latching emergency stop</div></div><button class="sw hi" type="button" role="switch" aria-checked="false" data-f="estop" aria-label="E-stop pressed"><span>OFF</span></button></div>
-          <div class="ctl-row"><div><div class="tn">GUARD DOOR ST20</div><div class="td">Door open</div></div><button class="sw wn" type="button" role="switch" aria-checked="false" data-f="guard" aria-label="Guard door open"><span>OFF</span></button></div>
-          <div class="ctl-row"><div><div class="tn">READER WINDOW ST10</div><div class="td">Dirty lens, more NOREADs</div></div><button class="sw wn" type="button" role="switch" aria-checked="false" data-f="dirty" aria-label="Reader window dirty"><span>OFF</span></button></div>
+          <div class="ctl-row"><div><div class="tn">RABS DOOR</div><div class="td">Door opened, pressure drops</div></div><button class="sw wn" type="button" role="switch" aria-checked="false" data-f="door" aria-label="RABS door open"><span>OFF</span></button></div>
+          <div class="ctl-row"><div><div class="tn">PUMP P1 DRIFT</div><div class="td">Fill weights run high</div></div><button class="sw wn" type="button" role="switch" aria-checked="false" data-f="drift" aria-label="Filling pump drift"><span>OFF</span></button></div>
           <div class="btnrow">
-            <button class="btn" type="button" data-act="jam">JAM NEXT PART</button>
-            <button class="btn" type="button" data-act="servo">SERVO FAULT</button>
-            <button class="btn" type="button" data-act="unjam">REMOVE JAMMED PART</button>
-            <button class="btn" type="button" data-act="empty">EMPTY GOOD BIN</button>
+            <button class="btn" type="button" data-act="bowl">STOPPER BOWL EMPTY</button>
+            <button class="btn" type="button" data-act="pump">PUMP DRIVE FAULT</button>
+            <button class="btn" type="button" data-act="refill">REFILL STOPPER BOWL</button>
+            <button class="btn" type="button" data-act="tray">EMPTY OUTFEED TRAY</button>
           </div>
         </div>
         <h3>MANUAL MODE <span>needs MANUAL + STOPPED</span></h3>
         <div class="ctl" id="manual">
           <div class="ctl-row"><div class="tn">M1 JOG (50 %)</div><button class="sw" type="button" role="switch" aria-checked="false" data-m="jog" aria-label="Jog conveyor"><span>OFF</span></button></div>
           <div class="ctl-row"><div class="tn">DIVERTER → REJECT</div><button class="sw" type="button" role="switch" aria-checked="false" data-m="div" aria-label="Diverter to reject"><span>OFF</span></button></div>
-          <div class="ctl-row"><div class="tn">SERVO Z → TEST POS</div><button class="sw" type="button" role="switch" aria-checked="false" data-m="z" aria-label="Servo to test position"><span>OFF</span></button></div>
+          <div class="ctl-row"><div class="tn">NEEDLE Z → FILL POS</div><button class="sw" type="button" role="switch" aria-checked="false" data-m="z" aria-label="Filling needle to fill position"><span>OFF</span></button></div>
         </div>
       </div>
       <div class="hcell c8">
         <h3>TREND · LAST 60 S <span>5 Hz</span></h3>
-        <div class="trend"><canvas id="trend" aria-label="Trend of conveyor speed, servo position and throughput"></canvas></div>
-        <div class="pens"><span style="--c:#89B4FA">M1 speed <b id="pv1">0.0</b> m/min (0–20)</span><span style="--c:#CBA6F7">Servo Z <b id="pv2">0.0</b> mm (0–50)</span><span style="--c:#FAB387">Throughput <b id="pv3">0</b> ppm (0–40)</span></div>
+        <div class="trend"><canvas id="trend" aria-label="Trend of line speed, fill weight and RABS differential pressure"></canvas></div>
+        <div class="pens"><span style="--c:#89B4FA">M1 speed <b id="pv1">0.0</b> m/min (0–20)</span><span style="--c:#FAB387">Last fill <b id="pv2">—</b> % of target (90–110, limits ±2 %)</span><span style="--c:#CBA6F7">RABS ΔP <b id="pv3">15.0</b> Pa (0–20)</span></div>
       </div>
       <div class="hcell c4 wide-md">
-        <h3>WATCH TABLE · DB_LINE</h3>
-        <table class="watch"><tbody id="watch"></tbody></table>
+        <h3>PRODUCTION <span id="ppmTxt">0 VIALS/MIN</span></h3>
+        <div class="rings" id="rings"></div>
+        <div class="cnt">
+          <div><span>VIALS IN</span><b id="cIn">0</b></div>
+          <div><span>ACCEPTED</span><b id="cGood" style="color:var(--ok)">0</b></div>
+          <div><span>REJECTED</span><b id="cRej">0</b></div>
+          <div><span>FILL OOT</span><b id="cFill">0</b></div>
+          <div><span>CAP FAULT</span><b id="cCap">0</b></div>
+          <div><span>CODE NOREAD</span><b id="cNr">0</b></div>
+        </div>
       </div>
       <div class="hcell c7">
         <h3>ALARMS <button class="btn btn-sm" type="button" id="ackAll">ACK ALL</button></h3>
         <div style="overflow-x:auto"><table class="almt"><thead><tr><th>TIME</th><th>PRIO</th><th>ID</th><th>MESSAGE</th><th>STATE</th><th></th></tr></thead><tbody id="almBody"></tbody></table></div>
       </div>
       <div class="hcell c5">
-        <h3>EVENT LOG <span>NEWEST FIRST</span></h3>
-        <ol class="log" id="log" aria-label="Event log"></ol>
+        <h3>WATCH TABLE · DB_LINE</h3>
+        <table class="watch"><tbody id="watch"></tbody></table>
+      </div>
+      <div class="hcell c12">
+        <h3>AUDIT TRAIL &amp; EVENTS <span>NEWEST FIRST · OP1 = OPERATOR</span></h3>
+        <ol class="log" id="log" aria-label="Audit trail and event log"></ol>
       </div>
     </div>
   </article>
@@ -1031,49 +1077,57 @@ document.addEventListener('keydown', e => {
 show(location.hash.slice(1));
 
 /* ============================================================
-   SIMULATOR – display-test line (simulated data only)
-   infeed → ST10 code reader → ST20 servo test → ST30 diverter → outfeed bin
+   SIMULATOR – aseptic vial filling line (simulated data only)
+   infeed → ST10 fill & weigh → ST20 stopper & cap → ST30 inspect & serialize → ST40 reject → outfeed tray
    Simplified S88/PackML-style unit states, AUTO/MANUAL, recipes, alarms, trends, OEE.
    Wrapped so a failure here never breaks the rest of the portfolio.
    ============================================================ */
 function initSim() {
   const RECIPES = {
-    DSP_07IN:{ spd:14, test:0.7, spawn:1.8, tag:'07' },
-    DSP_10IN:{ spd:12, test:1.0, spawn:2.4, tag:'10' },
-    DSP_12IN:{ spd:9,  test:1.4, spawn:3.0, tag:'12' }
+    VIAL_2ML: { spd:12, target:2.00, fillT:0.8, spawn:1.6, prod:'Product A · 2 mL', gtin:'2' },
+    VIAL_5ML: { spd:10, target:5.00, fillT:1.2, spawn:2.0, prod:'Product A · 5 mL', gtin:'5' },
+    VIAL_10ML:{ spd:8,  target:10.0, fillT:1.8, spawn:2.6, prod:'Product A · 10 mL', gtin:'X' }
   };
-  const POS = { scan:300, test:520, div:742, exit:908 };
+  const TOL = 0.02;                                   // ±2 % fill-weight tolerance
+  const POS = { fill:290, cap:465, insp:615, div:742, exit:908 };
   const DUR = { RESETTING:1.2, STARTING:1.0, UNHOLDING:0.8, ABORTING:0.4, CLEARING:1.2 };
   const STATES = [['STOPPED','RESETTING','IDLE'],['STARTING','RUNNING','STOPPING'],['HOLDING','HELD','UNHOLDING'],['ABORTING','ABORTED','CLEARING']];
   const KIND = s => s === 'RUNNING' ? 'run' : ['HOLDING','HELD','UNHOLDING'].includes(s) ? 'hold' : ['ABORTING','ABORTED','CLEARING'].includes(s) ? 'abort' : '';
+  const newCnt = () => ({ in:0, good:0, rej:0, fill:0, cap:0, nr:0 });
   const L = {
-    state:'STOPPED', mode:'AUTO', recipe:'DSP_10IN', t:0, v:0, z:0, zT:0, flap:0, scan:0,
-    parts:[], nextId:1, serial:4100, spawnT:0, cnt:{ in:0, good:0, rej:0, nr:0, fail:0 }, bin:0, binCap:24,
-    tRun:0, tDown:0, started:false, done:[], noreadRun:0, lastCode:'—', lastRes:'—',
-    st10:{ part:null, t:0, flash:0, ok:true }, st20:{ part:null, phase:'', t:0 },
-    f:{ estop:false, guard:false, dirty:false, jamArm:false, jam:false, servo:false },
-    man:{ jog:false, div:false, z:false }
+    state:'STOPPED', mode:'AUTO', recipe:'VIAL_2ML', t:0, v:0, z:0, zT:0, flap:0, scan:0, dp:15,
+    parts:[], nextId:1, serial:41270, spawnT:0, cnt:newCnt(), tray:0, trayCap:30,
+    tRun:0, tDown:0, started:false, done:[], ootRun:0, nrRun:0, lastW:null, lastSn:'—', fills:[],
+    st10:{ part:null, phase:'', t:0, fv:0 }, st20:{ part:null, t:0 }, st30:{ part:null, t:0, flash:0, ok:true },
+    f:{ estop:false, door:false, drift:false, bowl:false, pump:false },
+    man:{ jog:false, div:false, z:false },
+    batch:{ no:41, cleared:false, start:null }, lastBatch:''
   };
   const R = () => RECIPES[L.recipe];
+  const batchId = () => `B2611-${String(L.batch.no).padStart(4, '0')}`;
+  const lotId = () => `L2611${String(L.batch.no).padStart(3, '0')}`;
 
-  /* event log */
+  /* audit trail + event log */
   const logEl = $('#log');
   const ts = () => { const d = new Date(); return d.toTimeString().slice(0, 8) + '.' + String(d.getMilliseconds()).padStart(3, '0'); };
   function log(lv, msg) {
     const li = document.createElement('li');
     li.innerHTML = `<span class="ts">${ts()}</span><span class="lv ${lv}">${lv}</span><span>${esc(msg)}</span>`;
     logEl.prepend(li);
-    while (logEl.children.length > 80) logEl.lastChild.remove();
+    while (logEl.children.length > 120) logEl.lastChild.remove();
   }
+  const op = (lv, msg) => log(lv, 'OP1 · ' + msg);   // operator actions are attributed in the audit trail
 
   /* alarms */
   const ALM = {
     ALM_001:{ p:'HIGH', m:'Emergency stop pressed' },
-    ALM_010:{ p:'MED',  m:'ST20 guard door open' },
-    ALM_020:{ p:'MED',  m:'Part jam at ST10 code reader' },
-    ALM_030:{ p:'HIGH', m:'ST20 servo Z: drive fault' },
-    ALM_040:{ p:'LOW',  m:'3 consecutive NOREADs – check reader window' },
-    ALM_050:{ p:'MED',  m:'Outfeed bin full' }
+    ALM_010:{ p:'MED',  m:'RABS door open' },
+    ALM_011:{ p:'MED',  m:'RABS differential pressure low (< 10 Pa)' },
+    ALM_020:{ p:'MED',  m:'Stopper bowl empty' },
+    ALM_030:{ p:'HIGH', m:'Filling pump P1: drive fault' },
+    ALM_040:{ p:'LOW',  m:'3 consecutive fill weights out of tolerance' },
+    ALM_041:{ p:'LOW',  m:'3 consecutive serial code NOREADs' },
+    ALM_050:{ p:'MED',  m:'Outfeed tray full' }
   };
   const PR = { HIGH:3, MED:2, LOW:1 };
   const alarms = new Map();
@@ -1093,13 +1147,13 @@ function initSim() {
   function ackAlm(id) {
     const a = alarms.get(id); if (!a || a.ack) return;
     a.ack = true; if (!a.act) alarms.delete(id);
-    log('EVT', `${id} acknowledged`); almDirty = true;
+    op('EVT', `${id} acknowledged`); almDirty = true;
   }
   const setAlm = (id, on) => on ? raise(id) : clearAlm(id);
 
   /* state handling */
-  const abortCause = () => L.f.estop ? 'E-stop pressed' : L.f.servo ? 'servo fault active' : '';
-  const holdCause  = () => L.f.guard ? 'guard door ST20 open' : L.f.jam ? 'part jam at ST10' : L.bin >= L.binCap ? 'outfeed bin full' : '';
+  const abortCause = () => L.f.estop ? 'E-stop pressed' : L.f.pump ? 'filling pump fault' : '';
+  const holdCause  = () => L.f.door ? 'RABS door open' : L.dp < 12 && (L.dp < 10 || ['HELD','HOLDING'].includes(L.state)) ? 'RABS pressure not recovered' : L.f.bowl ? 'stopper bowl empty' : L.tray >= L.trayCap ? 'outfeed tray full' : '';
   function goState(s, why) {
     if (L.state === s) return;
     log(s === 'RUNNING' ? 'RUN' : 'EVT', `${L.state} → ${s}${why ? ' · ' + why : ''}`);
@@ -1108,7 +1162,7 @@ function initSim() {
   function why(cmd) {
     const s = L.state, ab = abortCause(), hc = holdCause();
     switch (cmd) {
-      case 'RESET':  return s !== 'STOPPED' ? 'only from STOPPED' : L.mode !== 'AUTO' ? 'mode is MANUAL' : ab;
+      case 'RESET':  return s !== 'STOPPED' ? 'only from STOPPED' : L.mode !== 'AUTO' ? 'mode is MANUAL' : !L.batch.cleared ? 'line clearance not confirmed' : ab;
       case 'START':  return s !== 'IDLE' ? 'only from IDLE' : L.mode !== 'AUTO' ? 'mode is MANUAL' : ab || hc;
       case 'HOLD':   return s === 'RUNNING' ? '' : 'only from RUNNING';
       case 'UNHOLD': return s !== 'HELD' ? 'only from HELD' : ab || hc;
@@ -1122,7 +1176,10 @@ function initSim() {
     const s = L.state, ab = abortCause(), hc = holdCause();
     if (L.mode === 'MANUAL') return ['STOPPED','IDLE'].includes(s) ? 'Manual mode: use the jog switches, or switch back to AUTO.' : 'Manual mode.';
     switch (s) {
-      case 'STOPPED': return ab ? `Clear the cause first: ${ab}.` : 'Next: press RESET to prepare the line.';
+      case 'STOPPED':
+        if (ab) return `Clear the cause first: ${ab}.`;
+        if (!L.batch.cleared) return L.cnt.in ? 'Stopped. Close the batch, or complete line clearance to continue.' : 'Next: tick the line clearance checklist in the Batch panel and confirm it.';
+        return L.cnt.in ? 'Stopped. Press RESET to continue this batch, or CLOSE BATCH to finish it.' : 'Next: press RESET to prepare the line.';
       case 'IDLE': return hc ? `Start is blocked: ${hc}.` : 'Next: press START.';
       case 'RUNNING': return 'Running. Try the Fault injection panel, or press HOLD / STOP.';
       case 'HELD': return hc ? `Held: ${hc}. Fix it, then press UNHOLD.` : 'Held. Press UNHOLD to continue, or STOP.';
@@ -1133,72 +1190,102 @@ function initSim() {
   const NEXT = { RESET:'RESETTING', START:'STARTING', HOLD:'HOLDING', UNHOLD:'UNHOLDING', STOP:'STOPPING', ABORT:'ABORTING', CLEAR:'CLEARING' };
   function command(cmd) {
     const w = why(cmd);
-    if (w) { log('WRN', `CMD ${cmd} rejected: ${w}`); return; }
-    log('CMD', cmd);
-    if (cmd === 'START') L.started = true;
-    if (cmd === 'CLEAR' && L.f.servo) { L.f.servo = false; log('EVT', 'ST20 servo drive fault reset'); }
+    if (w) { op('WRN', `CMD ${cmd} rejected: ${w}`); return; }
+    op('CMD', cmd);
+    if (cmd === 'START') { L.started = true; if (!L.batch.start) L.batch.start = new Date(); }
+    if (cmd === 'CLEAR' && L.f.pump) { L.f.pump = false; log('EVT', 'Filling pump P1 drive fault reset'); }
     goState(NEXT[cmd], 'Cmd_' + cmd);
   }
   $('#cmdbar').addEventListener('click', e => { const b = e.target.closest('[data-cmd]'); if (b) command(b.dataset.cmd); });
 
-  /* mode + recipe (only when STOPPED or IDLE) */
+  /* mode + recipe */
   function setSw(b, on) { b.setAttribute('aria-checked', String(on)); b.querySelector('span').textContent = on ? 'ON' : 'OFF'; }
-  $$('.seg [data-mode]').forEach(b => b.addEventListener('click', () => {
+  $$('#simPanel .seg [data-mode]').forEach(b => b.addEventListener('click', () => {
     const m = b.dataset.mode; if (m === L.mode) return;
-    if (!['STOPPED','IDLE'].includes(L.state)) { log('WRN', `Mode change rejected: unit is ${L.state}`); return; }
+    if (!['STOPPED','IDLE'].includes(L.state)) { op('WRN', `Mode change rejected: unit is ${L.state}`); return; }
     L.mode = m; if (m === 'MANUAL' && L.state === 'IDLE') goState('STOPPED', 'mode MANUAL');
     if (m === 'AUTO') { L.man = { jog:false, div:false, z:false }; $$('#manual .sw').forEach(s => setSw(s, false)); }
-    $$('.seg [data-mode]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.mode === m)));
-    log('CMD', 'Mode → ' + m);
+    $$('#simPanel .seg [data-mode]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.mode === m)));
+    op('CMD', 'Mode → ' + m);
   }));
   $('#recipe').addEventListener('change', e => {
-    if (!['STOPPED','IDLE'].includes(L.state)) { log('WRN', `Recipe change rejected: unit is ${L.state}`); e.target.value = L.recipe; return; }
-    L.recipe = e.target.value; log('CMD', 'Recipe → ' + L.recipe);
+    const why2 = !['STOPPED','IDLE'].includes(L.state) ? `unit is ${L.state}` : L.cnt.in ? 'close the current batch first' : '';
+    if (why2) { op('WRN', `Recipe change rejected: ${why2}`); e.target.value = L.recipe; return; }
+    op('CMD', `Recipe ${L.recipe} → ${e.target.value}`); L.recipe = e.target.value;
   });
 
-  /* fault injection + manual switches */
-  const FNAME = { estop:['E-stop','PRESSED','RELEASED'], guard:['Guard door ST20','OPEN','CLOSED'], dirty:['Reader window ST10','DIRTY','CLEAN'] };
+  /* line clearance + batch close */
+  const lcBoxes = $$('#clearance [data-lc]');
+  $('#lcConfirm').addEventListener('click', () => {
+    if (L.batch.cleared) { op('WRN', 'Line clearance already confirmed for ' + batchId()); return; }
+    if (L.state !== 'STOPPED') { op('WRN', 'Line clearance needs the unit STOPPED'); return; }
+    if (!lcBoxes.every(c => c.checked)) { op('WRN', 'Line clearance rejected: checklist incomplete'); return; }
+    L.batch.cleared = true; lcBoxes.forEach(c => c.disabled = true);
+    op('CMD', `Line clearance confirmed and signed for ${batchId()} (${R().prod}, lot ${lotId()})`);
+  });
+  $('#batchClose').addEventListener('click', () => {
+    if (L.state !== 'STOPPED') { op('WRN', 'Close batch rejected: unit must be STOPPED'); return; }
+    if (!L.cnt.in) { op('WRN', 'Close batch rejected: no vials produced in this batch'); return; }
+    const st = fillStats();
+    L.lastBatch = `${batchId()} closed: ${L.cnt.good} accepted, ${L.cnt.rej} rejected, yield ${(L.cnt.good / Math.max(1, L.cnt.good + L.cnt.rej) * 100).toFixed(1)} %, mean fill ${st ? st.mean.toFixed(3) + ' g' : '—'}.`;
+    op('CMD', 'Batch closed and signed · ' + L.lastBatch);
+    L.batch = { no:L.batch.no + 1, cleared:false, start:null };
+    L.cnt = newCnt(); L.fills = []; L.tRun = 0; L.tDown = 0; L.started = false; L.done = []; L.ootRun = 0; L.nrRun = 0; L.lastW = null;
+    L.parts = []; L.st10 = { part:null, phase:'', t:0, fv:0 }; L.st20 = { part:null, t:0 }; L.st30.part = null;
+    lcBoxes.forEach(c => { c.checked = false; c.disabled = false; });
+  });
+
+  /* fault injection + manual */
+  const FNAME = { estop:['E-stop','PRESSED','RELEASED'], door:['RABS door','OPEN','CLOSED'], drift:['Pump P1 calibration','DRIFTING','NORMAL'] };
   $$('#simPanel [data-f]').forEach(b => b.addEventListener('click', () => {
     const k = b.dataset.f; L.f[k] = !L.f[k]; setSw(b, L.f[k]);
-    log('IN', `${FNAME[k][0]} = ${L.f[k] ? FNAME[k][1] : FNAME[k][2]}`);
+    op('IN', `${FNAME[k][0]} = ${L.f[k] ? FNAME[k][1] : FNAME[k][2]}`);
   }));
   $$('#simPanel [data-act]').forEach(b => b.addEventListener('click', () => {
     const a = b.dataset.act;
-    if (a === 'jam')   { L.f.jamArm = true; log('IN', 'Next part at ST10 will jam'); }
-    if (a === 'servo') { if (!L.f.servo) { L.f.servo = true; log('IN', 'ST20 servo drive reports fault'); } }
-    if (a === 'unjam') {
-      if (!L.f.jam) { log('WRN', 'No jammed part at ST10'); return; }
-      L.parts = L.parts.filter(p => !p.jam); L.f.jam = false; L.st10.part = null; log('IN', 'Operator removed jammed part from ST10');
-    }
-    if (a === 'empty') { L.bin = 0; log('IN', 'Operator emptied the good-part bin'); }
+    if (a === 'bowl')   { if (!L.f.bowl) { L.f.bowl = true; op('IN', 'Stopper bowl ran empty'); } }
+    if (a === 'pump')   { if (!L.f.pump) { L.f.pump = true; op('IN', 'Filling pump P1 drive reports fault'); } }
+    if (a === 'refill') { if (!L.f.bowl) { op('WRN', 'Stopper bowl is not empty'); return; } L.f.bowl = false; op('IN', 'Stopper bowl refilled'); }
+    if (a === 'tray')   { L.tray = 0; op('IN', 'Outfeed tray exchanged'); }
   }));
   $$('#manual [data-m]').forEach(b => b.addEventListener('click', () => {
     const k = b.dataset.m;
-    if (L.mode !== 'MANUAL' || !['STOPPED','IDLE'].includes(L.state)) { log('WRN', 'Manual control needs MANUAL mode and unit STOPPED'); return; }
-    if (k === 'z' && (L.f.guard || L.f.estop)) { log('WRN', 'Servo jog inhibited: guard open or E-stop'); return; }
+    if (L.mode !== 'MANUAL' || !['STOPPED','IDLE'].includes(L.state)) { op('WRN', 'Manual control needs MANUAL mode and unit STOPPED'); return; }
+    if (k === 'z' && (L.f.door || L.f.estop)) { op('WRN', 'Needle jog inhibited: RABS door open or E-stop'); return; }
     L.man[k] = !L.man[k]; setSw(b, L.man[k]);
-    log('CMD', `Manual ${k === 'jog' ? 'M1 jog' : k === 'div' ? 'diverter' : 'servo Z'} = ${L.man[k] ? 'ON' : 'OFF'}`);
+    op('CMD', `Manual ${k === 'jog' ? 'M1 jog' : k === 'div' ? 'diverter' : 'needle Z'} = ${L.man[k] ? 'ON' : 'OFF'}`);
   }));
   $('#ackAll').addEventListener('click', () => [...alarms.keys()].forEach(ackAlm));
   $('#almBody').addEventListener('click', e => { const b = e.target.closest('[data-ack]'); if (b) ackAlm(b.dataset.ack); });
 
-  /* process */
-  const bad = p => p.scan === 'NOREAD' || p.test === 'FAIL';
+  /* process model */
+  const gauss = () => { let u = 0, v = 0; while (!u) u = Math.random(); while (!v) v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
+  const bad = p => p.fillOk === false || p.cap === 'MISSING' || p.code === 'NOREAD';
+  function fillStats() {
+    const a = L.fills; if (!a.length) return null;
+    const mean = a.reduce((s, x) => s + x, 0) / a.length;
+    const sd = Math.sqrt(a.reduce((s, x) => s + (x - mean) ** 2, 0) / Math.max(1, a.length - 1));
+    return { mean, sd, min:Math.min(...a), max:Math.max(...a), n:a.length };
+  }
   function stopFor(p) {
     if (L.mode !== 'AUTO') return null;
-    if (p.scan === null) return POS.scan;
-    if (L.st20.part === p) return POS.test;
-    if (p.scan === 'OK' && p.test === null) return POS.test;
+    if (p.fillOk === null) return POS.fill;
+    if (L.st10.part === p) return POS.fill;
+    if (p.cap === null) return POS.cap;
+    if (p.code === null) return POS.insp;
     if (bad(p)) return POS.div;
-    if (L.flap > 0.08) return POS.div - 40;   // good part waits until the flap is closed
+    if (L.flap > 0.08) return POS.div - 40;
     return null;
   }
-  const FAILS = ['PIXEL_DEFECT','BACKLIGHT_FAIL','TOUCH_NO_RESPONSE'];
   function tick(dt) {
     L.t += dt; L.scan++;
-    const rec = R(), ab = abortCause(), hc = holdCause();
-    setAlm('ALM_001', L.f.estop); setAlm('ALM_010', L.f.guard); setAlm('ALM_020', L.f.jam);
-    setAlm('ALM_030', L.f.servo); setAlm('ALM_040', L.noreadRun >= 3); setAlm('ALM_050', L.bin >= L.binCap);
+    const rec = R(), ab = abortCause();
+    // RABS differential pressure: collapses with the door open, recovers when closed
+    L.dp = L.f.door ? Math.max(2, L.dp - 8 * dt) : Math.min(15, L.dp + 4 * dt);
+    const hc = holdCause();
+    setAlm('ALM_001', L.f.estop); setAlm('ALM_010', L.f.door); setAlm('ALM_011', L.dp < 10);
+    setAlm('ALM_020', L.f.bowl); setAlm('ALM_030', L.f.pump); setAlm('ALM_040', L.ootRun >= 3);
+    setAlm('ALM_041', L.nrRun >= 3); setAlm('ALM_050', L.tray >= L.trayCap);
     if (ab && !['ABORTING','ABORTED'].includes(L.state)) goState('ABORTING', 'interlock: ' + ab);
     else if (hc && ['STARTING','RUNNING','UNHOLDING'].includes(L.state)) goState('HOLDING', 'interlock: ' + hc);
 
@@ -1212,11 +1299,11 @@ function initSim() {
       case 'UNHOLDING': vT = setV; if (L.t >= DUR.UNHOLDING) goState('RUNNING', 'unhold done'); break;
       case 'STOPPING':  if (L.v === 0 && L.t >= 0.8) goState('STOPPED', 'conveyor stopped'); break;
       case 'ABORTING':  if (L.t >= DUR.ABORTING) goState('ABORTED', 'outputs off'); break;
-      case 'CLEARING':  L.zT = 0; if (L.t >= DUR.CLEARING) { L.f.servo = false; L.st20 = { part:null, phase:'', t:0 }; goState('STOPPED', 'faults cleared'); } break;
+      case 'CLEARING':  L.zT = 0; if (L.t >= DUR.CLEARING) { L.st10 = { part:null, phase:'', t:0, fv:0 }; goState('STOPPED', 'faults cleared'); } break;
     }
     if (L.mode === 'MANUAL' && ['STOPPED','IDLE'].includes(L.state) && !ab) {
       vT = L.man.jog ? setV * 0.5 : 0;
-      if (!L.f.guard) L.zT = L.man.z ? 40 : 0;
+      if (!L.f.door) L.zT = L.man.z ? 30 : 0;
     }
     if (L.started) { if (L.state === 'RUNNING') L.tRun += dt; else if (['HOLDING','HELD','UNHOLDING','ABORTING','ABORTED','CLEARING'].includes(L.state)) L.tDown += dt; }
 
@@ -1224,55 +1311,71 @@ function initSim() {
     L.v = L.v < vT ? Math.min(vT, L.v + acc * dt) : Math.max(vT, L.v - acc * dt);
     const working = ['STARTING','RUNNING','HOLDING','UNHOLDING','STOPPING'].includes(L.state) && L.mode === 'AUTO';
 
+    // infeed
     if (L.state === 'RUNNING' && L.mode === 'AUTO') {
       L.spawnT += dt;
       const first = L.parts.filter(p => !p.drop).reduce((m, p) => Math.min(m, p.x), Infinity);
-      if (L.spawnT >= rec.spawn && first > 80) {
+      if (L.spawnT >= rec.spawn && first > 70) {
         L.spawnT = 0; L.cnt.in++;
-        L.parts.push({ id:L.nextId++, x:24, y:0, vy:0, scan:null, test:null, code:'', jam:false, drop:false });
+        L.parts.push({ id:L.nextId++, x:24, y:0, vy:0, fillOk:null, w:null, level:0, cap:null, code:null, sn:'', drop:false });
       }
     }
 
-    const st10 = L.st10;
-    st10.flash = Math.max(0, st10.flash - dt);
-    const atScan = L.parts.find(p => !p.drop && p.scan === null && Math.abs(p.x - POS.scan) < 0.5);
-    if (atScan && working) {
-      if (st10.part !== atScan) {
-        st10.part = atScan; st10.t = 0;
-        if (L.f.jamArm) { L.f.jamArm = false; L.f.jam = true; atScan.jam = true; log('EVT', 'ST10: part jammed in reader station'); }
-      }
-      if (!atScan.jam) {
+    // ST10 fill & weigh: needle DOWN → DOSE → UP, net weight on the load cell
+    const st10 = L.st10, needleOk = !L.f.pump && !L.f.estop && !L.f.door;
+    const atFill = L.parts.find(p => !p.drop && p.fillOk === null && Math.abs(p.x - POS.fill) < 0.5);
+    if (atFill && working && !st10.part) { st10.part = atFill; st10.phase = 'DOWN'; st10.t = 0; }
+    if (st10.part && working && needleOk) {
+      const p = st10.part;
+      if (st10.phase === 'DOWN') { L.zT = 30; if (L.z >= 29.9) { st10.phase = 'DOSE'; st10.t = 0; st10.fv = rec.target * (1 + (L.f.drift ? 0.035 : 0) + gauss() * 0.006); } }
+      else if (st10.phase === 'DOSE') {
         st10.t += dt;
-        if (st10.t >= 0.5) {
-          const ok = Math.random() < (L.f.dirty ? 0.3 : 0.96);
-          if (ok) { atScan.scan = 'OK'; atScan.code = `DSP${rec.tag}-${String(L.serial++).padStart(6, '0')}`; L.lastCode = atScan.code; L.noreadRun = 0; }
-          else { atScan.scan = 'NOREAD'; L.lastCode = 'NOREAD'; L.noreadRun++; }
-          st10.part = null; st10.flash = 0.35; st10.ok = ok;
+        const k = Math.min(1, st10.t / rec.fillT);
+        p.level = k * st10.fv / rec.target; L.lastWLive = k * st10.fv;
+        if (k >= 1) {
+          p.w = st10.fv; p.fillOk = Math.abs(st10.fv / rec.target - 1) <= TOL;
+          L.lastW = st10.fv; L.fills.push(st10.fv);
+          L.ootRun = p.fillOk ? 0 : L.ootRun + 1;
+          if (!p.fillOk) log('EVT', `Vial ${p.id}: fill ${st10.fv.toFixed(3)} g out of tolerance (${(rec.target * (1 - TOL)).toFixed(3)}–${(rec.target * (1 + TOL)).toFixed(3)} g)`);
+          st10.phase = 'UP';
         }
+      } else if (st10.phase === 'UP') { L.zT = 0; if (L.z <= 0.1) { st10.part = null; st10.phase = ''; } }
+    }
+    if (needleOk || L.state === 'CLEARING') { const dz = 100 * dt; L.z = L.z < L.zT ? Math.min(L.zT, L.z + dz) : Math.max(L.zT, L.z - dz); }
+
+    // ST20 stopper & cap
+    const st20 = L.st20;
+    const atCap = L.parts.find(p => !p.drop && p.fillOk !== null && p.cap === null && Math.abs(p.x - POS.cap) < 0.5);
+    if (atCap && working) {
+      if (st20.part !== atCap) { st20.part = atCap; st20.t = 0; }
+      if (!L.f.bowl) {
+        st20.t += dt;
+        if (st20.t >= 0.5) { atCap.cap = Math.random() < 0.99 ? 'OK' : 'MISSING'; if (atCap.cap === 'MISSING') log('EVT', `Vial ${atCap.id}: stopper not seated`); st20.part = null; }
       }
     }
 
-    const st20 = L.st20, servoOk = !L.f.servo && !L.f.estop && !L.f.guard;
-    const atTest = L.parts.find(p => !p.drop && p.scan === 'OK' && p.test === null && Math.abs(p.x - POS.test) < 0.5);
-    if (atTest && working && !st20.part) { st20.part = atTest; st20.phase = 'DOWN'; st20.t = 0; }
-    if (st20.part && working && servoOk) {
-      if (st20.phase === 'DOWN') { L.zT = 40; if (L.z >= 39.9) { st20.phase = 'TEST'; st20.t = 0; } }
-      else if (st20.phase === 'TEST') {
-        st20.t += dt;
-        if (st20.t >= rec.test) {
-          const pass = Math.random() < 0.93, p = st20.part;
-          p.test = pass ? 'PASS' : 'FAIL'; if (!pass) p.reason = FAILS[Math.floor(Math.random() * FAILS.length)];
-          L.lastRes = pass ? 'PASS' : p.reason; st20.phase = 'UP';
-        }
-      } else if (st20.phase === 'UP') { L.zT = 0; if (L.z <= 0.1) { st20.part = null; st20.phase = ''; } }
+    // ST30 inspect: stopper/cap presence + 2D serial code
+    const st30 = L.st30;
+    st30.flash = Math.max(0, st30.flash - dt);
+    const atInsp = L.parts.find(p => !p.drop && p.cap !== null && p.code === null && Math.abs(p.x - POS.insp) < 0.5);
+    if (atInsp && working) {
+      if (st30.part !== atInsp) { st30.part = atInsp; st30.t = 0; }
+      st30.t += dt;
+      if (st30.t >= 0.4) {
+        const ok = Math.random() < 0.98;
+        if (ok) { atInsp.code = 'OK'; atInsp.sn = String(L.serial++).padStart(9, '0'); L.lastSn = atInsp.sn; L.nrRun = 0; }
+        else { atInsp.code = 'NOREAD'; L.lastSn = 'NOREAD'; L.nrRun++; }
+        st30.part = null; st30.flash = 0.35; st30.ok = ok && atInsp.cap === 'OK';
+      }
     }
-    if (servoOk || L.state === 'CLEARING') { const dz = 120 * dt; L.z = L.z < L.zT ? Math.min(L.zT, L.z + dz) : Math.max(L.zT, L.z - dz); }
 
+    // ST40 diverter
     let flapT = 0;
-    if (L.mode === 'AUTO') flapT = L.parts.some(p => !p.drop && bad(p) && p.x > POS.div - 140 && p.x <= POS.div) ? 1 : 0;
+    if (L.mode === 'AUTO') flapT = L.parts.some(p => !p.drop && bad(p) && p.code !== null && p.x > POS.div - 140 && p.x <= POS.div) ? 1 : 0;
     else flapT = L.man.div ? 1 : 0;
     if (!ab) L.flap = L.flap < flapT ? Math.min(flapT, L.flap + 5 * dt) : Math.max(flapT, L.flap - 5 * dt);
 
+    // conveyor transport with station stops and spacing
     if (L.v > 0) {
       let ahead = Infinity;
       L.parts.filter(p => !p.drop).sort((a, b) => b.x - a.x).forEach(p => {
@@ -1280,7 +1383,7 @@ function initSim() {
         const st = stopFor(p);
         if (st !== null && p.x <= st && nx >= st) nx = st;
         if (st !== null && p.x >= st && st !== POS.div - 40) nx = p.x;
-        nx = Math.min(nx, ahead - 44);
+        nx = Math.min(nx, ahead - 40);
         p.x = Math.max(p.x, nx);
         ahead = p.x;
         if (p.x >= POS.div - 0.5 && p.x < POS.div + 20 && L.flap > 0.9 && (bad(p) || L.mode !== 'AUTO')) { p.drop = 'rej'; p.vy = 0; }
@@ -1290,17 +1393,30 @@ function initSim() {
     L.parts.forEach(p => {
       if (!p.drop) return;
       p.vy += 900 * dt; p.y += p.vy * dt; p.x += (p.drop === 'rej' ? 30 : 20) * dt;
-      if (p.drop === 'rej' && p.y > 78) { p.gone = true; L.cnt.rej++; if (p.scan === 'NOREAD') L.cnt.nr++; else if (p.test === 'FAIL') L.cnt.fail++; L.done.push(performance.now()); }
-      if (p.drop === 'good' && p.y > 60) { p.gone = true; L.bin++; if (L.mode === 'AUTO') { L.cnt.good++; L.done.push(performance.now()); } }
+      if (p.drop === 'rej' && p.y > 78) {
+        p.gone = true;
+        if (L.mode === 'AUTO') { L.cnt.rej++; if (p.fillOk === false) L.cnt.fill++; else if (p.cap === 'MISSING') L.cnt.cap++; else if (p.code === 'NOREAD') L.cnt.nr++; L.done.push(performance.now()); }
+      }
+      if (p.drop === 'good' && p.y > 60) { p.gone = true; L.tray++; if (L.mode === 'AUTO') { L.cnt.good++; L.done.push(performance.now()); } }
     });
     L.parts = L.parts.filter(p => !p.gone);
   }
 
   /* SVG rendering */
-  const partsG = $('#parts'), partEls = new Map();
-  const PCOL = p => p.test === 'PASS' ? '#A6E3A1' : bad(p) ? (p.scan === 'NOREAD' ? '#F9E2AF' : '#F38BA8') : p.scan === 'OK' ? '#89B4FA' : '#45475a';
-  let beltOff = 0;
   const E = id => document.getElementById(id);
+  const partsG = E('parts'), partEls = new Map();
+  const NS = 'http://www.w3.org/2000/svg';
+  let beltOff = 0;
+  function vialEl() {
+    const g = document.createElementNS(NS, 'g');
+    g.innerHTML = '<rect class="vb" x="-11" y="-34" width="22" height="34" rx="4" fill="rgba(205,214,244,.07)" stroke="#A6ADC8" stroke-width="1.5"/>' +
+      '<rect class="vq" x="-9" y="-2" width="18" height="0" rx="2" fill="#94E2D5" opacity=".75"/>' +
+      '<rect x="-6" y="-40" width="12" height="7" fill="rgba(205,214,244,.07)" stroke="#A6ADC8" stroke-width="1.2"/>' +
+      '<rect class="vs" x="-8" y="-44" width="16" height="6" rx="1" fill="#8A8FA8" visibility="hidden"/>' +
+      '<rect class="vc" x="-9" y="-45" width="18" height="5" rx="1" fill="#CDD6F4" visibility="hidden"/>' +
+      '<rect class="vl" x="-7" y="-26" width="14" height="10" rx="1" fill="#CDD6F4" visibility="hidden"/>';
+    return g;
+  }
   function renderPG(dt) {
     beltOff -= L.v * dt;
     E('belt1').setAttribute('stroke-dashoffset', beltOff.toFixed(1));
@@ -1309,47 +1425,65 @@ function initSim() {
     L.parts.forEach(p => {
       seen.add(p.id);
       let g = partEls.get(p.id);
-      if (!g) {
-        g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        g.innerHTML = '<rect x="-18" y="-21" width="36" height="21" rx="3" fill="#585b70" stroke="#8A8FA8"/><rect x="-14" y="-18" width="28" height="13" rx="1"/>';
-        partsG.appendChild(g); partEls.set(p.id, g);
-      }
+      if (!g) { g = vialEl(); partsG.appendChild(g); partEls.set(p.id, g); }
       const tilt = p.drop === 'rej' ? Math.min(40, p.y) : 0;
       g.setAttribute('transform', `translate(${p.x.toFixed(1)} ${(180 + p.y).toFixed(1)}) rotate(${tilt})`);
-      g.lastChild.setAttribute('fill', PCOL(p));
+      const lvl = Math.min(1.15, p.level) * 22;
+      const q = g.querySelector('.vq'); q.setAttribute('height', lvl.toFixed(1)); q.setAttribute('y', (-2 - lvl).toFixed(1));
+      g.querySelector('.vs').setAttribute('visibility', p.cap === 'OK' ? 'visible' : 'hidden');
+      g.querySelector('.vc').setAttribute('visibility', p.cap === 'OK' ? 'visible' : 'hidden');
+      g.querySelector('.vl').setAttribute('visibility', p.code === 'OK' ? 'visible' : 'hidden');
+      const col = bad(p) ? (p.fillOk === false ? '#F38BA8' : '#F9E2AF') : p.code === 'OK' ? '#A6E3A1' : '#A6ADC8';
+      g.querySelector('.vb').setAttribute('stroke', col);
     });
     partEls.forEach((g, id) => { if (!seen.has(id)) { g.remove(); partEls.delete(id); } });
     const run = L.v > 0.5;
     E('m1').setAttribute('class', 'mot' + (run ? ' on' : ''));
     E('m1Txt').textContent = `M1 ${(L.v * 0.06).toFixed(1)} m/min`;
     E('m1Sub').textContent = 'VFD · ' + (run ? 'RUNNING' : L.f.estop ? 'STO ACTIVE' : 'STOPPED');
-    const near = x => L.parts.some(p => !p.drop && Math.abs(p.x - x) < 18);
-    E('pe1').setAttribute('class', 'pe' + (near(POS.scan) ? ' on' : ''));
-    E('pe2').setAttribute('class', 'pe' + (near(POS.test) ? ' on' : ''));
-    E('pe3').setAttribute('class', 'pe' + (near(POS.div - 20) ? ' on' : ''));
-    const reading = L.st10.part && !L.st10.part.jam;
-    E('rdrBeam').setAttribute('fill', L.st10.flash > 0 ? (L.st10.ok ? 'rgba(166,227,161,.35)' : 'rgba(249,226,175,.35)') : reading ? 'rgba(137,180,250,.22)' : 'rgba(137,180,250,0)');
-    E('st10Txt').textContent = L.f.jam ? 'JAMMED' : reading ? 'READING…' : L.f.dirty ? 'IDLE · WINDOW DIRTY' : 'IDLE';
-    E('st10Txt').setAttribute('fill', L.f.jam ? '#F9E2AF' : '#A6ADC8');
-    E('codeTxt').textContent = L.lastCode;
-    const zp = L.z * 1.7;
+    const near = x => L.parts.some(p => !p.drop && Math.abs(p.x - x) < 16);
+    E('pe1').setAttribute('class', 'pe' + (near(POS.fill) ? ' on' : ''));
+    E('pe2').setAttribute('class', 'pe' + (near(POS.cap) ? ' on' : ''));
+    E('pe3').setAttribute('class', 'pe' + (near(POS.insp) ? ' on' : ''));
+    // RABS + pressure
+    const dpBad = L.f.door || L.dp < 10;
+    E('rabs').setAttribute('class', 'rabs' + (dpBad ? ' bad' : ''));
+    E('dpTxt').textContent = `ΔP ${L.dp.toFixed(1)} Pa`;
+    E('dpTxt').setAttribute('fill', dpBad ? '#F9E2AF' : '#A6ADC8');
+    E('rabsTxt').textContent = L.f.door ? 'RABS · DOOR OPEN' : 'RABS · GRADE A';
+    // ST10
+    const dosing = L.st10.phase === 'DOSE';
+    E('p1').setAttribute('class', 'pump' + (dosing ? ' on' : '') + (L.f.pump ? ' bad' : ''));
+    const zp = L.z * 1.5;
     E('head').setAttribute('transform', `translate(0 ${zp.toFixed(1)})`);
-    E('rod').setAttribute('height', (6 + zp).toFixed(1));
-    E('zTxt').textContent = `Z ${L.z.toFixed(1)} mm`;
-    E('st20Txt').textContent = L.f.servo ? 'SERVO FAULT' : L.st20.phase ? L.st20.phase + (L.st20.phase === 'TEST' ? '…' : '') : 'IDLE · ' + L.lastRes;
-    E('st20Txt').setAttribute('fill', L.f.servo ? '#F38BA8' : '#8A8FA8');
-    E('zGuard').setAttribute('class', 'zone' + (L.f.guard ? ' guard' : ''));
+    E('rod').setAttribute('height', (4 + zp).toFixed(1));
+    E('scale').setAttribute('fill', L.st10.part ? '#94E2D5' : '#45475a');
+    E('wTxt').textContent = dosing ? `${(L.lastWLive || 0).toFixed(3)} g` : L.lastW === null ? '0.000 g' : `${L.lastW.toFixed(3)} g`;
+    E('wTxt').setAttribute('fill', L.lastW !== null && !dosing && Math.abs(L.lastW / R().target - 1) > TOL ? '#F38BA8' : '#A6ADC8');
+    E('st10Txt').textContent = L.f.pump ? 'PUMP FAULT' : L.st10.phase ? L.st10.phase + (dosing ? '…' : '') : `IDLE · TARGET ${R().target.toFixed(2)} g ±2 %`;
+    E('st10Txt').setAttribute('fill', L.f.pump ? '#F38BA8' : '#8A8FA8');
+    // ST20
+    E('bowl').setAttribute('stroke', L.f.bowl ? '#F9E2AF' : '#585b70');
+    E('bowlTxt').textContent = L.f.bowl ? 'BOWL EMPTY' : 'BOWL OK';
+    E('bowlTxt').setAttribute('fill', L.f.bowl ? '#F9E2AF' : '#8A8FA8');
+    E('st20Txt').textContent = L.st20.part ? (L.f.bowl ? 'WAITING FOR STOPPERS' : 'STOPPER + CRIMP…') : 'IDLE';
+    // ST30
+    const insp = !!L.st30.part;
+    E('camBeam').setAttribute('fill', L.st30.flash > 0 ? (L.st30.ok ? 'rgba(166,227,161,.35)' : 'rgba(249,226,175,.35)') : insp ? 'rgba(137,180,250,.22)' : 'rgba(137,180,250,0)');
+    E('st30Txt').textContent = insp ? 'INSPECTING…' : 'IDLE';
+    E('snTxt').textContent = 'SN ' + L.lastSn;
+    // ST40 + outfeed
     E('flap').setAttribute('transform', `rotate(${(L.flap * 42).toFixed(1)} 742 181)`);
-    E('st30Txt').textContent = L.flap > 0.5 ? 'Y30 → REJECT' : 'Y30 → GOOD';
+    E('st40Txt').textContent = L.flap > 0.5 ? 'Y40 → REJECT' : 'Y40 → GOOD';
     E('rejTxt').textContent = 'REJ ' + L.cnt.rej;
-    const fill = Math.min(1, L.bin / L.binCap) * 64;
+    const fill = Math.min(1, L.tray / L.trayCap) * 64;
     E('binFill').setAttribute('y', (263 - fill).toFixed(1)); E('binFill').setAttribute('height', fill.toFixed(1));
-    E('binFill').setAttribute('fill', L.bin >= L.binCap ? 'rgba(249,226,175,.45)' : 'rgba(166,227,161,.35)');
-    E('binTxt').textContent = `${L.bin}/${L.binCap}`;
+    E('binFill').setAttribute('fill', L.tray >= L.trayCap ? 'rgba(249,226,175,.45)' : 'rgba(166,227,161,.35)');
+    E('binTxt').textContent = `${L.tray}/${L.trayCap}`;
   }
 
   /* state chips */
-  $('#sm').innerHTML = STATES.map(r => `<div class="row">${r.map(s => `<div class="s" data-s="${s}">${s}<i></i></div>`).join('')}</div>`).join('');
+  E('sm').innerHTML = STATES.map(r => `<div class="row">${r.map(s => `<div class="s" data-s="${s}">${s}<i></i></div>`).join('')}</div>`).join('');
   function renderState() {
     const s = L.state, trans = DUR[s] || ['HOLDING','STOPPING'].includes(s);
     $$('#sm .s').forEach(d => {
@@ -1367,9 +1501,27 @@ function initSim() {
     const h = nextHint(); if (E('nextHint').textContent !== h) E('nextHint').textContent = h;
   }
 
+  /* batch panel */
+  function renderBatch() {
+    const st = fillStats(), rec = R(), out = L.cnt.good + L.cnt.rej;
+    const exp = new Date(); exp.setFullYear(exp.getFullYear() + 2);
+    const status = !L.batch.cleared && !L.cnt.in ? 'CLEARANCE PENDING' : L.cnt.in ? (L.state === 'STOPPED' ? 'IN PROGRESS · STOPPED' : 'IN PROGRESS') : 'READY';
+    const b = E('batchStat'); b.textContent = status; b.className = 'badge' + (status === 'CLEARANCE PENDING' ? ' warn' : status === 'READY' ? ' okb' : '');
+    E('batchKv').innerHTML = [
+      ['Batch', batchId()], ['Product', rec.prod], ['Lot / expiry', `${lotId()} · ${exp.toISOString().slice(0, 7)}`],
+      ['Fill target', `${rec.target.toFixed(3)} g ±2 %`],
+      ['Mean fill', st ? `${st.mean.toFixed(3)} g (n=${st.n})` : '—'], ['Std dev', st ? `${(st.sd * 1000).toFixed(1)} mg` : '—'],
+      ['Min / max', st ? `${st.min.toFixed(3)} / ${st.max.toFixed(3)} g` : '—'],
+      ['Yield', out ? `${(L.cnt.good / out * 100).toFixed(1)} %` : '—']
+    ].map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('');
+    E('lcConfirm').classList.toggle('off', L.batch.cleared || L.state !== 'STOPPED');
+    E('batchClose').classList.toggle('off', L.state !== 'STOPPED' || !L.cnt.in);
+    E('lastBatch').textContent = L.lastBatch ? 'Last batch: ' + L.lastBatch : '';
+  }
+
   /* KPI rings + counters */
   const RINGS = [['AVAIL','#CDD6F4'],['PERF','#CDD6F4'],['QUAL','#CDD6F4'],['OEE','#89B4FA']];
-  $('#rings').innerHTML = RINGS.map(([n, c]) => `<div class="ring"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="26" fill="none" stroke="#313244" stroke-width="6"/><circle class="ra" cx="32" cy="32" r="26" fill="none" stroke="${c}" stroke-width="6" stroke-linecap="round" stroke-dasharray="0 163.4" transform="rotate(-90 32 32)"/><text class="rv" x="32" y="36.5" text-anchor="middle">—</text></svg>${n}</div>`).join('');
+  E('rings').innerHTML = RINGS.map(([n, c]) => `<div class="ring"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="26" fill="none" stroke="#313244" stroke-width="6"/><circle class="ra" cx="32" cy="32" r="26" fill="none" stroke="${c}" stroke-width="6" stroke-linecap="round" stroke-dasharray="0 163.4" transform="rotate(-90 32 32)"/><text class="rv" x="32" y="36.5" text-anchor="middle">—</text></svg>${n}</div>`).join('');
   const ringEls = $$('#rings .ring');
   function renderKpi() {
     const now = performance.now();
@@ -1384,22 +1536,20 @@ function initSim() {
       ringEls[i].querySelector('.rv').textContent = v === null ? '—' : Math.round(v * 100) + '%';
     });
     E('cIn').textContent = L.cnt.in; E('cGood').textContent = L.cnt.good; E('cRej').textContent = L.cnt.rej;
-    E('cNr').textContent = L.cnt.nr; E('cFail').textContent = L.cnt.fail;
-    E('cYield').textContent = Q === null ? '—' : (Q * 100).toFixed(1) + '%';
-    E('ppmTxt').textContent = L.done.length + ' PPM';
+    E('cFill').textContent = L.cnt.fill; E('cCap').textContent = L.cnt.cap; E('cNr').textContent = L.cnt.nr;
+    E('ppmTxt').textContent = L.done.length + ' VIALS/MIN';
   }
 
   /* watch table */
   const WATCH = [
-    ['"Line".State', () => L.state], ['"Line".Mode', () => L.mode], ['"Line".Recipe', () => L.recipe],
-    ['"M1".SpeedSet', () => (R().spd).toFixed(1)], ['"M1".SpeedAct', () => (L.v * 0.06).toFixed(1)],
-    ['"B10".PartPresent', () => L.parts.some(p => !p.drop && Math.abs(p.x - POS.scan) < 18)],
-    ['"ST10".LastCode', () => L.lastCode], ['"ST10".NoReadRun', () => L.noreadRun],
-    ['"ST20".Z_ActPos', () => L.z.toFixed(1)], ['"ST20".Result', () => L.lastRes],
-    ['"Y30".ToReject', () => L.flap > 0.5], ['"Cnt".Good', () => L.cnt.good], ['"Cnt".Reject', () => L.cnt.rej],
-    ['"Sim".EStopOK', () => !L.f.estop], ['"Sim".GuardClosed', () => !L.f.guard]
+    ['"Line".State', () => L.state], ['"Line".Mode', () => L.mode], ['"Batch".ID', () => batchId()], ['"Batch".LineClearanceOK', () => L.batch.cleared],
+    ['"M1".SpeedAct', () => (L.v * 0.06).toFixed(1)], ['"P1".FillSet', () => R().target.toFixed(3)],
+    ['"P1".FillLast', () => L.lastW === null ? '—' : L.lastW.toFixed(3)], ['"ST10".OOT_Run', () => L.ootRun],
+    ['"ST10".NeedleZ', () => L.z.toFixed(1)], ['"ST20".StopperBowlOK', () => !L.f.bowl], ['"ST30".LastSerial', () => L.lastSn],
+    ['"RABS".DP_Pa', () => L.dp.toFixed(1)], ['"RABS".DoorClosed', () => !L.f.door], ['"Y40".ToReject', () => L.flap > 0.5],
+    ['"Sim".EStopOK', () => !L.f.estop]
   ];
-  $('#watch').innerHTML = WATCH.map(([n], i) => `<tr><td>${esc(n)}</td><td id="w${i}"></td></tr>`).join('');
+  E('watch').innerHTML = WATCH.map(([n], i) => `<tr><td>${esc(n)}</td><td id="w${i}"></td></tr>`).join('');
   function renderWatch() {
     WATCH.forEach(([, f], i) => {
       const v = f(), td = E('w' + i);
@@ -1423,7 +1573,8 @@ function initSim() {
 
   /* trend (canvas, simulated data) */
   const TR = [], TRN = 300;
-  const PENS = [['#89B4FA', 20, s => s.v], ['#CBA6F7', 50, s => s.z], ['#FAB387', 40, s => s.q]];
+  const fillPct = s => s.f === null ? null : (s.f - 90) / 20;            // 90–110 % → 0–1
+  const PENS = [['#89B4FA', s => s.v / 20], ['#FAB387', fillPct], ['#CBA6F7', s => s.dp / 20]];
   const cv = E('trend');
   function drawTrend() {
     const w = cv.clientWidth, h = cv.clientHeight; if (!w || !h) return;
@@ -1434,15 +1585,23 @@ function initSim() {
     c.strokeStyle = 'rgba(205,214,244,.06)'; c.lineWidth = 1; c.font = '10px Consolas, monospace'; c.fillStyle = '#8A8FA8';
     for (let i = 0; i <= 4; i++) { const y = pt + H * i / 4; c.beginPath(); c.moveTo(pl, y); c.lineTo(pl + W, y); c.stroke(); }
     for (let i = 0; i <= 6; i++) { const x = pl + W * i / 6; c.beginPath(); c.moveTo(x, pt); c.lineTo(x, pt + H); c.stroke(); c.fillText(i === 6 ? 'now' : `-${60 - i * 10}s`, Math.min(x - 8, w - 24), h - 5); }
-    PENS.forEach(([col, max, f]) => {
-      c.strokeStyle = col; c.lineWidth = 1.8; c.beginPath();
-      TR.forEach((s, i) => { const x = pl + W * (i + TRN - TR.length) / (TRN - 1), y = pt + H * (1 - Math.min(1, f(s) / max)); i ? c.lineTo(x, y) : c.moveTo(x, y); });
+    // fill-weight tolerance limits (98 % and 102 %)
+    c.setLineDash([5, 4]); c.strokeStyle = 'rgba(250,179,135,.45)';
+    [98, 102].forEach(v => { const y = pt + H * (1 - (v - 90) / 20); c.beginPath(); c.moveTo(pl, y); c.lineTo(pl + W, y); c.stroke(); });
+    c.setLineDash([]);
+    PENS.forEach(([col, f]) => {
+      c.strokeStyle = col; c.lineWidth = 1.8; c.beginPath(); let started = false;
+      TR.forEach((s, i) => {
+        const val = f(s); if (val === null) { started = false; return; }
+        const x = pl + W * (i + TRN - TR.length) / (TRN - 1), y = pt + H * (1 - Math.max(0, Math.min(1, val)));
+        started ? c.lineTo(x, y) : c.moveTo(x, y); started = true;
+      });
       c.stroke();
     });
   }
   if (window.ResizeObserver) new ResizeObserver(drawTrend).observe(cv);
 
-  /* main loop: runs only while the Simulator is open (no background animation) */
+  /* main loop: runs only while the Simulator is open */
   let last = 0, acc5 = 0, accUi = 0, running = false;
   function loop(now) {
     if (!running) return;
@@ -1453,15 +1612,16 @@ function initSim() {
     acc5 += dt; accUi += dt;
     if (acc5 >= 0.2) {
       acc5 = 0;
-      TR.push({ v:L.v * 0.06, z:L.z, q:L.done.length }); if (TR.length > TRN) TR.shift();
-      E('pv1').textContent = (L.v * 0.06).toFixed(1); E('pv2').textContent = L.z.toFixed(1); E('pv3').textContent = L.done.length;
+      const fp = L.lastW === null ? null : L.lastW / R().target * 100;
+      TR.push({ v:L.v * 0.06, f:fp, dp:L.dp }); if (TR.length > TRN) TR.shift();
+      E('pv1').textContent = (L.v * 0.06).toFixed(1); E('pv2').textContent = fp === null ? '—' : fp.toFixed(1); E('pv3').textContent = L.dp.toFixed(1);
       drawTrend();
     }
-    if (accUi >= 0.1) { accUi = 0; renderState(); renderKpi(); renderWatch(); if (almDirty) renderAlarms(); }
+    if (accUi >= 0.1) { accUi = 0; renderState(); renderKpi(); renderWatch(); renderBatch(); if (almDirty) renderAlarms(); }
     requestAnimationFrame(loop);
   }
-  log('EVT', 'Simulator ready · unit STOPPED · press RESET, then START');
-  renderAlarms(); renderState(); renderKpi(); renderWatch();
+  log('EVT', 'Simulator ready · unit STOPPED · line clearance pending for ' + batchId());
+  renderAlarms(); renderState(); renderKpi(); renderWatch(); renderBatch(); renderPG(0);
   return {
     visible(on) {
       if (on && !running) { running = true; last = performance.now(); requestAnimationFrame(loop); requestAnimationFrame(drawTrend); }
