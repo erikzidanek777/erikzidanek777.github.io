@@ -139,8 +139,11 @@ main{padding:calc(var(--hdr) + 24px) 28px 40px calc(var(--rail) + 28px);max-widt
 .g-legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:8px;font-size:12.5px;color:var(--mute)}
 .g-legend span::before{content:"";display:inline-block;width:14px;height:8px;border-radius:2px;margin-right:6px;vertical-align:middle;background:var(--c)}
 .roles{list-style:none;margin:18px 0 0;padding:0;border-top:1px solid var(--line)}
-.roles li{display:grid;grid-template-columns:170px minmax(0,1fr);gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
-.roles li:last-child{border:0}
+.roles>li{display:grid;grid-template-columns:170px minmax(0,1fr);gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.roles>li:last-child{border:0}
+.roles h4{font-size:14px;font-weight:600;color:var(--ink);margin:12px 0 4px}
+.roles ul{margin:4px 0 0;padding-left:18px;color:var(--mute);font-size:14.5px}
+.roles ul li{margin-bottom:4px}
 .roles .when{font-family:var(--mono);font-size:12.5px;color:var(--mute);white-space:nowrap;padding-top:2px}
 .roles h3{font-size:15.5px}
 .roles h3 span{font-weight:400;color:var(--mute)}
@@ -338,17 +341,6 @@ select{min-height:38px;padding:6px 10px;border:1px solid var(--line-2);border-ra
 .bnote{font-family:var(--sans);font-size:12px;color:var(--mute);margin:0}
 .sim-fail{padding:18px;color:var(--warn);font-family:var(--sans)}
 
-/* ---------- Contact ---------- */
-.contact-actions{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
-.addr{font-family:var(--mono);font-size:14px;color:var(--mute);margin:0 0 6px}
-form{display:grid;gap:12px;margin-top:8px}
-label{display:grid;gap:4px;font-size:13.5px;color:var(--mute)}
-input,textarea{font:16px/1.4 var(--sans);color:var(--ink);background:var(--bg-2);border:1px solid var(--line-2);border-radius:var(--r);padding:10px;min-height:44px}
-textarea{min-height:120px;resize:vertical}
-input:focus,textarea:focus{border-color:var(--focus);outline:none}
-.out{font-size:13.5px;color:var(--mute);min-height:1.4em;margin:0}
-.out.ok{color:var(--ok)}.out.warn{color:var(--warn)}
-.cfg-missing{font-size:13.5px;color:var(--warn);border:1px dashed #5d5640;border-radius:var(--r);padding:10px 12px;margin:0 0 12px}
 .page-ft{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--dim);display:flex;flex-wrap:wrap;gap:6px 18px}
 
 /* ---------- Printable CV overlay ---------- */
@@ -377,7 +369,7 @@ input:focus,textarea:focus{border-color:var(--focus);outline:none}
   .tree>ul>li>ul{display:flex;flex-wrap:wrap;gap:4px;border:0;padding:0}
   .tree>ul>li>ul>li>ul{display:none}
   .drawer-bd,.sim-intro{grid-template-columns:1fr}
-  .roles li{grid-template-columns:1fr;gap:2px}
+  .roles>li{grid-template-columns:1fr;gap:2px}
   .g-row{grid-template-columns:1fr;gap:3px}
   .hgrid .c4{grid-column:span 12}
   .hint{display:block}
@@ -412,7 +404,6 @@ input:focus,textarea:focus{border-color:var(--focus);outline:none}
     <svg class="logo" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2l16 9v18l-16 9-16-9V11z" fill="#22304a" stroke="#89B4FA" stroke-width="1.5"/><text x="20" y="25" text-anchor="middle" font-family="Consolas,monospace" font-size="13" font-weight="700" fill="#CDD6F4">EZ</text></svg>
     <div><span class="hn">Erik Židanek</span><span class="hr">Lead Engineer · Industrial Automation &amp; Process Control</span></div>
   </div>
-  <a class="btn btn-sm" data-cv hidden target="_blank" rel="noopener">Download CV</a>
 </header>
 
 <!-- ===================== NAVIGATION ===================== -->
@@ -422,7 +413,6 @@ input:focus,textarea:focus{border-color:var(--focus);outline:none}
   <button type="button" data-view="tools"><span class="num">03</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 6l-6 6 6 6M16 6l6 6-6 6M14 4l-4 16"/></svg><span>Tools</span></button>
   <button type="button" data-view="projects"><span class="num">04</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="5" y="4" width="14" height="18" rx="1"/><path d="M9 2h6v4H9zM8 11h8M8 15h8M8 19h5"/></svg><span>Projects</span></button>
   <button type="button" data-view="simulator"><span class="num">05</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 17h20M5 17V9h5v8M14 17v-5h5v5M7.5 9V5"/></svg><span>Simulator</span><i class="ndot" id="navDot" hidden></i></button>
-  <button type="button" data-view="contact"><span class="num">06</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="1"/><path d="M2 7l10 7 10-7"/></svg><span>Contact</span></button>
   <div class="rail-ft">[ID: ERIK_ZIDANEK]</div>
 </nav>
 
@@ -437,13 +427,11 @@ input:focus,textarea:focus{border-color:var(--focus);outline:none}
     <p class="lead">I develop and commission Siemens and Rockwell automation systems and build Python tools for specification-based PLC engineering.</p>
     <div class="actions">
       <button class="btn btn-pri" type="button" data-goto="projects">View projects</button>
-      <a class="btn" data-cv hidden target="_blank" rel="noopener">Download CV</a>
-      <button class="btn" type="button" data-goto="contact">Contact</button>
     </div>
     <ul class="evidence">
       <li><b>6+ years</b> at INEA, including student work</li>
       <li>Commissioning in <b>5 countries</b></li>
-      <li>Engineering tools used across <b>8 plant sections</b></li>
+      <li><b>Engineering tools</b> used across plant sections</li>
     </ul>
     <span class="avail"><i class="dot" aria-hidden="true"></i>Open to opportunities</span>
   </div>
@@ -473,7 +461,7 @@ input:focus,textarea:focus{border-color:var(--focus);outline:none}
         </article>
         <article class="panel">
           <h3>Engineering software</h3>
-          <ul><li>Python: specification-to-L5X toolchain</li><li>Python: specification-to-code audits</li><li>Custom HTML HMIs</li><li>TIA Portal Openness (exploring)</li></ul>
+          <ul><li>Python: specification-to-L5X toolchain</li><li>Python: specification-to-code audits</li><li>Logix Designer SDK</li><li>TIA Portal Openness</li><li>Custom HTML HMIs</li></ul>
           <button class="btn btn-sm" type="button" data-goto="tools">Engineering tools</button>
         </article>
       </div>
@@ -496,11 +484,10 @@ input:focus,textarea:focus{border-color:var(--focus);outline:none}
       <div class="gantt" id="gantt"></div>
       <div class="g-legend"><span style="--c:#8fd189">Current role</span><span style="--c:#5d6080">Earlier roles</span><span style="--c:#3a3a52">Education</span></div>
       <ol class="roles">
-        <li><span class="when">Feb 2026 – present</span><div><h3>Lead Engineer <span>· INEA d.o.o.</span></h3><p>Leads a group of students and junior engineers that grew from one to four people, within a project team of about 20 on a refinery process-control project.</p></div></li>
-        <li><span class="when">Oct 2024 – Feb 2026</span><div><h3>Senior Engineer <span>· INEA d.o.o.</span></h3></div></li>
-        <li><span class="when">Oct 2021 – Oct 2024</span><div><h3>Application Engineer <span>· INEA d.o.o.</span></h3></div></li>
-        <li><span class="when">Jan 2020 – Oct 2021</span><div><h3>Student work <span>· INEA d.o.o.</span></h3></div></li>
-        <li><span class="when">Across INEA roles</span><div><h3>Selected work</h3><p>Siemens automation for automotive assembly and test lines, subcontracted equipment with FAT/SAT and customer-site commissioning, refinery process control in Studio 5000, and reusable Python engineering tools. Details are under Projects and Tools.</p></div></li>
+        <li><span class="when">Feb 2026 – present</span><div><h3>Lead Engineer <span>· INEA d.o.o.</span></h3><p>Process-control engineering for a precious-metals refinery and automation delivery for subcontractor-built display-testing equipment.</p><h4>Precious-metals refinery — Rockwell Studio 5000 / ISA-88</h4><ul><li>Develop and review ISA-88 phase and state logic in Rockwell Studio 5000 / Logix within a project team of approximately 20 people.</li><li>Lead and mentor students and junior engineers; the group grew from one to four people as the project expanded.</li><li>Built a Python toolchain that converts customer Process Control Narratives in Word and sequence workbooks in Excel into Rockwell PLC artifacts, including L5X routines, equipment-module and unit programs, and interlock/permissive lists; used across plant sections.</li><li>Built audit tools that check PLC logic against specifications, covering interlock coverage and numbering, step messages, device commands/status, and cross-phase consistency.</li><li>Developed a propose-then-apply workflow for L5X corrections and documented the process for colleagues.</li></ul><h4>Subcontracted equipment — testing and commissioning</h4><ul><li>Responsible for PLC programming and electrical scope on INEA’s side across two subcontracted projects comprising five display-testing machines.</li><li>Programmed Siemens S7-1200/1500 PLCs in TIA Portal for machines incorporating foil application and flat-cable connection processes.</li><li>Prepared FAT/SAT test documentation, executed factory acceptance tests, and tracked defects with the subcontractor.</li><li>Commissioned the machines at end-customer sites.</li></ul></div></li>
+        <li><span class="when">Oct 2024 – Feb 2026</span><div><h3>Senior Engineer <span>· INEA d.o.o.</span></h3><p>PLC programming and commissioning across process-control and automotive automation projects.</p><ul><li>Developed ISA-88 phase and state logic for a precious-metals refinery in Rockwell Studio 5000 / Logix.</li><li>Developed Siemens S7-1200/1500 machine and sequence logic in TIA Portal using SCL, LAD, and GRAPH.</li><li>Integrated and commissioned field devices, including Festo and Siemens servo drives, Keyence vision and code-reading equipment, Plasmatreat and Scheugenpflug process equipment, and safety devices.</li><li>Commissioned automotive production lines and provided technical support at customer sites and remotely.</li><li>Started developing Python tools for specification-based PLC code generation and auditing.</li></ul></div></li>
+        <li><span class="when">Oct 2021 – Oct 2024</span><div><h3>Application Engineer <span>· INEA d.o.o.</span></h3><p>Siemens PLC programming and commissioning for automotive production lines.</p><ul><li>Developed machine and sequence logic for S7-1200/1500 PLCs in TIA Portal using SCL, LAD, and GRAPH.</li><li>Integrated and commissioned field devices, including Festo and Siemens servo drives, variable-frequency drives, and Keyence and Cognex code readers.</li><li>Commissioned production equipment at customer sites and provided on-site and remote technical support.</li></ul></div></li>
+        <li><span class="when">Jan 2020 – Oct 2021</span><div><h3>Student <span>· INEA d.o.o.</span></h3><p>Supported PLC programming and testing for automotive automation projects in Siemens TIA Portal alongside my electrical engineering studies.</p></div></li>
         <li><span class="when">Summers 2017 – 2018</span><div><h3>Assembly Technician <span>· Total Mont</span></h3><p>Installed and dismantled automotive production cells and lines in Germany and Belgium, including cable disconnection, reconnection and installation.</p></div></li>
       </ol>
     </article>
@@ -511,10 +498,9 @@ input:focus,textarea:focus{border-color:var(--focus);outline:none}
         <nav class="tree" aria-label="Filter skills" id="tree"></nav>
         <div>
           <table class="stacked">
-            <thead><tr><th>Component</th><th>Environment</th><th>Proficiency</th><th>Where I used it</th></tr></thead>
+            <thead><tr><th>Component</th><th>Environment</th><th>Where I used it</th></tr></thead>
             <tbody id="hwBody"></tbody>
           </table>
-          <p class="note">Proficiency is self-assessed. Advanced: works independently on projects. Proficient: has delivered project work with it. Basic: working knowledge.</p>
         </div>
       </div>
     </article>
@@ -536,13 +522,13 @@ input:focus,textarea:focus{border-color:var(--focus);outline:none}
 
 <!-- ===================== ENGINEERING TOOLS ===================== -->
 <section class="view" data-view="tools" aria-labelledby="h-tools" hidden>
-  <div class="view-hd"><span class="vnum">03</span><h1 id="h-tools">Engineering tools</h1><p>Reusable Python and web tools I built for PLC engineering. Script names are the real file names.</p></div>
+  <div class="view-hd"><span class="vnum">03</span><h1 id="h-tools">Engineering tools</h1><p>Reusable Python and web tools I built for PLC engineering.</p></div>
   <div class="cards" id="toolGrid"></div>
 </section>
 
 <!-- ===================== PROJECTS ===================== -->
 <section class="view" data-view="projects" aria-labelledby="h-prj" hidden>
-  <div class="view-hd"><span class="vnum">04</span><h1 id="h-prj">Projects</h1><p>Selected work. Client names are left out.</p></div>
+  <div class="view-hd"><span class="vnum">04</span><h1 id="h-prj">Projects</h1></div>
   <div class="chips" role="group" aria-label="Filter projects" id="prjFilter">
     <button class="chip" type="button" data-f="all" aria-pressed="true">All</button>
     <button class="chip" type="button" data-f="plc" aria-pressed="false">PLC systems</button>
@@ -741,38 +727,6 @@ input:focus,textarea:focus{border-color:var(--focus);outline:none}
   </article>
 </section>
 
-<!-- ===================== CONTACT ===================== -->
-<section class="view" data-view="contact" aria-labelledby="h-ct" hidden>
-  <div class="view-hd"><span class="vnum">06</span><h1 id="h-ct">Contact</h1><p>The quickest way to reach me is by email or LinkedIn.</p></div>
-  <div class="grid">
-    <article class="panel c6">
-      <div class="panel-hd"><h2>Get in touch</h2></div>
-      <div id="contactBox"></div>
-      <form id="msgForm" novalidate hidden>
-        <p class="note" style="margin:0">This form only prepares an email in your own mail app. Nothing is sent from this page.</p>
-        <label>Your name<input id="fName" autocomplete="name" required></label>
-        <label>Company or role (optional)<input id="fCo" autocomplete="organization"></label>
-        <label>Message<textarea id="fMsg" required></textarea></label>
-        <button class="btn btn-pri" type="submit">Prepare email</button>
-        <p class="out" id="formOut" aria-live="polite"></p>
-      </form>
-    </article>
-    <article class="panel c6">
-      <div class="panel-hd"><h2>Education and languages</h2></div>
-      <table class="stacked">
-        <thead><tr><th>Item</th><th>Details</th></tr></thead>
-        <tbody id="specBody">
-          <tr><td class="nm" data-l="Item">Degree</td><td data-l="Details"><b>Bachelor of Science in Applied Electrical Engineering (VI/2)</b><br><span class="mute">Fakulteta za elektrotehniko · 2017–2022</span></td></tr>
-          <tr><td class="nm" data-l="Item">Secondary</td><td data-l="Details"><b>Mechatronics Technician</b><br><span class="mute">Srednja šola tehniških strok Šiška · 2013–2017</span></td></tr>
-          <tr><td class="nm" data-l="Item">Leadership</td><td data-l="Details">Leads a group of students and junior engineers that grew from one to four people, within a project team of about 20</td></tr>
-          <tr><td class="nm" data-l="Item">Languages</td><td data-l="Details">Slovenian (native) · English (B2) · Croatian (B1) · Serbian (B1)</td></tr>
-          <tr><td class="nm" data-l="Item">Location</td><td data-l="Details">Ljubljana region, Slovenia (EU)</td></tr>
-        </tbody>
-      </table>
-    </article>
-  </div>
-</section>
-
 <footer class="page-ft"><span>Erik Židanek · Lead Engineer, INEA</span><span>Ljubljana region, Slovenia</span><span>Slovenian (native) · English (B2) · Croatian (B1) · Serbian (B1)</span></footer>
 </main>
 
@@ -787,15 +741,6 @@ input:focus,textarea:focus{border-color:var(--focus);outline:none}
 
 <script>
 /* ============================================================
-   CONFIG – contact details. Empty values are simply not shown.
-   ============================================================ */
-const CONFIG = {
-  email:    'erik.zidanek@hotmail.com',
-  linkedin: 'https://www.linkedin.com/in/erik-%C5%BEidanek-7678a0345/',
-  cvUrl:    'Erik_Zidanek_CV.pdf'    // link to the separately prepared, general PDF CV (file name next to this page, or a full https URL). Empty = no Download CV button.
-};
-
-/* ============================================================
    PORTFOLIO (runs first, independent of the simulator)
    ============================================================ */
 const $  = (s, r = document) => r.querySelector(s);
@@ -805,7 +750,7 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 let simHooks = null;   // set by the simulator once it starts
 
 /* ---------- Routing (#overview, #experience, ...) ---------- */
-const VIEWS = ['overview','experience','tools','projects','simulator','contact'];
+const VIEWS = ['overview','experience','tools','projects','simulator'];
 const ALIAS = { 'plc-hardware':'experience', 'networks-scada':'experience', 'commissioning':'projects', 'tooling':'simulator' };
 function show(v) {
   v = ALIAS[v] || v;
@@ -835,7 +780,7 @@ const GANTT = [
   ['Lead Engineer', 'INEA d.o.o.', 2026.08, NOW, 'now'],
   ['Senior Engineer', 'INEA d.o.o.', 2024.75, 2026.08, ''],
   ['Application Engineer', 'INEA d.o.o.', 2021.75, 2024.75, ''],
-  ['Student work', 'INEA d.o.o.', 2020.0, 2021.75, ''],
+  ['Student', 'INEA d.o.o.', 2020.0, 2021.75, ''],
   ['Assembly Technician (summers)', 'Total Mont', 2017.0, 2018.95, ''],
   ['B.Sc. Applied Electrical Engineering', 'Fakulteta za elektrotehniko', 2017.0, 2022.75, 'edu'],
   ['Mechatronics Technician', 'Srednja šola tehniških strok Šiška', 2013.7, 2017.45, 'edu']
@@ -846,28 +791,30 @@ $('#gantt').innerHTML = GANTT.map(([t, o, a, b, cls]) =>
   `<div class="g-row"><span></span><div class="g-axis" aria-hidden="true">${[2013, 2015, 2017, 2019, 2021, 2023, 2025, 2027].map(y => `<span style="left:${gx(y)}%">${y}</span>`).join('')}</div></div>`;
 
 /* ---------- Experience: skills tree + table ---------- */
-const LV = { Advanced: 5, Proficient: 4, Basic: 2 };
 const HW = [
-  { id:'s7',     cat:'siemens', name:'S7-1200 / S7-1500', env:'TIA Portal V15–V21', lvl:'Advanced', rec:'Automotive assembly and test lines (single stations up to 25 stations) and display-testing machines.' },
-  { id:'hmi',    cat:'siemens', name:'WinCC HMI panels', env:'Basic · Comfort · Unified', lvl:'Advanced', rec:'HMIs for display assembly, catalytic-converter inspection/transport and ABS-module assembly lines.' },
-  { id:'plcsim', cat:'siemens', name:'PLCSIM Advanced', env:'TIA Portal', lvl:'Proficient', rec:'Simulated S7-1500 for the personal PLC data service.' },
-  { id:'s7300',  cat:'siemens', name:'S7-300 / SIMATIC Manager', env:'Step 7', lvl:'Basic', rec:'Basic working knowledge.' },
-  { id:'sl5k',   cat:'rockwell', name:'Studio 5000 V37', env:'PlantPAx template', lvl:'Proficient', rec:'Refinery: ISA-88 phase and state logic across eight plant sections, from customer Process Control Narratives.' },
-  { id:'l5x',    cat:'rockwell', name:'L5X / Logix XML', env:'Python', lvl:'Advanced', rec:'Generating, auditing and correcting L5X exports across eight plant sections.' },
-  { id:'drv',    cat:'drives', name:'Servo drives & VFDs', env:'Siemens · Festo', lvl:'Proficient', rec:'Integrated into station logic on automotive lines and test machines.' },
-  { id:'vis',    cat:'drives', name:'Keyence / Cognex', env:'Vision · code readers', lvl:'Proficient', rec:'Vision and code reading on assembly and test stations.' },
-  { id:'rfid',   cat:'drives', name:'Balluff RFID', env:'—', lvl:'Proficient', rec:'RFID integrated into station logic on automotive lines.' },
-  { id:'valve',  cat:'drives', name:'Festo / SMC valve terminals', env:'—', lvl:'Proficient', rec:'Pneumatics integrated into station logic.' },
-  { id:'safe',   cat:'drives', name:'Pilz / Sick safety devices', env:'—', lvl:'Proficient', rec:'Safety devices integrated into station logic.' },
-  { id:'kuka',   cat:'drives', name:'KUKA robots', env:'—', lvl:'Basic', rec:'Robot-fed ABS-module assembly and testing line.' },
-  { id:'ilk',    cat:'drives', name:'Interlocks & permissives', env:'C&E matrices · Excel', lvl:'Advanced', rec:'Interlocks, permissives and cause-and-effect matrices; lists generated from specifications and checked against code.' },
-  { id:'lad',    cat:'lang', name:'LAD', env:'TIA · Studio 5000', lvl:'Advanced', rec:'Step sequences on Siemens; generated LAD for Logix routines.' },
-  { id:'scl',    cat:'lang', name:'SCL / ST', env:'TIA Portal', lvl:'Advanced', rec:'Support blocks, data handling, calculations, state logic.' },
-  { id:'graph',  cat:'lang', name:'GRAPH', env:'TIA Portal', lvl:'Proficient', rec:'Siemens sequence programming.' },
-  { id:'py',     cat:'lang', name:'Python', env:'openpyxl · python-docx · XML · snap7', lvl:'Advanced', rec:'Code generation and logic auditing; Word, Excel and L5X processing; HTML HMIs via python-snap7.' },
-  { id:'js',     cat:'lang', name:'JavaScript / Node.js', env:'WebSocket · HTML', lvl:'Proficient', rec:'inTime project tracker; custom web HMIs.' }
+  { id:'s7',     cat:'siemens', name:'S7-1200 / S7-1500', env:'TIA Portal V15–V21', rec:'Automotive assembly and test lines (single stations up to 25 stations) and display-testing machines.' },
+  { id:'hmi',    cat:'siemens', name:'WinCC HMI panels', env:'Basic · Comfort · Unified', rec:'HMIs for display assembly, catalytic-converter inspection/transport and ABS-module assembly lines.' },
+  { id:'plcsim', cat:'siemens', name:'PLCSIM Advanced', env:'TIA Portal', rec:'Simulated S7-1500 for the personal PLC data service.' },
+  { id:'s7300',  cat:'siemens', name:'S7-300 / SIMATIC Manager', env:'Step 7', rec:'Basic working knowledge.' },
+  { id:'sl5k',   cat:'rockwell', name:'Studio 5000 V37', env:'PlantPAx template', rec:'Refinery: ISA-88 phase and state logic from customer Process Control Narratives.' },
+  { id:'l5x',    cat:'rockwell', name:'L5X / Logix XML', env:'Python', rec:'Generating, auditing and correcting L5X exports across plant sections.' },
+  { id:'servo',  cat:'drives', name:'Servo motors and drives', env:'Siemens · Festo · Weiss', rec:'Integrated and commissioned on automotive lines and test machines.' },
+  { id:'vfd',    cat:'drives', name:'VFDs', env:'Siemens', rec:'Integrated and commissioned on automotive lines.' },
+  { id:'vis',    cat:'drives', name:'Vision and code readers', env:'Keyence · Cognex', rec:'Vision and code reading on assembly and test stations.' },
+  { id:'rfid',   cat:'drives', name:'RFID', env:'Balluff', rec:'Integrated into station logic on automotive lines.' },
+  { id:'valve',  cat:'drives', name:'Valve terminals', env:'Festo · SMC', rec:'Pneumatics integrated into station logic.' },
+  { id:'safe',   cat:'drives', name:'Safety devices', env:'Pilz · Sick', rec:'Integrated and commissioned on lines and machines.' },
+  { id:'trans',  cat:'drives', name:'Transport systems', env:'Montratec', rec:'Integrated and commissioned on automotive lines.' },
+  { id:'proc',   cat:'drives', name:'Process equipment', env:'Plasmatreat · Scheugenpflug', rec:'Integrated and commissioned on automotive lines.' },
+  { id:'kuka',   cat:'drives', name:'Robots (basic)', env:'KUKA', rec:'Robot-fed ABS-module assembly and testing line.' },
+  { id:'ilk',    cat:'drives', name:'Interlocks and permissives', env:'C&E matrices · Excel', rec:'Interlocks, permissives and cause-and-effect matrices; lists generated from specifications and checked against code.' },
+  { id:'lad',    cat:'lang', name:'LAD', env:'TIA · Studio 5000', rec:'Step sequences on Siemens; generated LAD for Logix routines.' },
+  { id:'scl',    cat:'lang', name:'SCL / ST', env:'TIA Portal', rec:'Support blocks, data handling, calculations, state logic.' },
+  { id:'graph',  cat:'lang', name:'GRAPH', env:'TIA Portal', rec:'Siemens sequence programming.' },
+  { id:'py',     cat:'lang', name:'Python', env:'openpyxl · python-docx · XML · snap7', rec:'Code generation and logic auditing; Word, Excel and L5X processing; HTML HMIs via python-snap7.' },
+  { id:'js',     cat:'lang', name:'JavaScript / Node.js', env:'WebSocket · HTML', rec:'inTime project tracker; custom web HMIs.' }
 ];
-const CATS = { all:'All skills', siemens:'Siemens SIMATIC', rockwell:'Rockwell', drives:'Devices & integration', lang:'Programming languages' };
+const CATS = { all:'All skills', siemens:'Siemens SIMATIC', rockwell:'Rockwell', drives:'Devices and integration', lang:'Programming languages' };
 $('#tree').innerHTML = '<ul><li><button type="button" class="grp" data-c="all">All skills</button><ul>' +
   Object.keys(CATS).filter(c => c !== 'all').map(c =>
     `<li><button type="button" class="grp" data-c="${c}">${esc(CATS[c])}</button><ul>` +
@@ -876,9 +823,7 @@ $('#tree').innerHTML = '<ul><li><button type="button" class="grp" data-c="all">A
 function setHwFilter(c) {
   const rows = HW.filter(h => c === 'all' || h.cat === c);
   $('#hwBody').innerHTML = rows.map(h => {
-    const n = LV[h.lvl];
     return `<tr id="row-${h.id}"><td class="nm" data-l="Component">${esc(h.name)}</td><td class="env" data-l="Environment">${esc(h.env)}</td>` +
-      `<td data-l="Proficiency"><div class="lvl">${h.lvl}<span class="bar ${n === 5 ? 'max' : ''}" aria-hidden="true">${[1,2,3,4,5].map(i => `<i class="${i <= n ? 'on' : ''}"></i>`).join('')}</span></div></td>` +
       `<td data-l="Where used">${esc(h.rec)}</td></tr>`;
   }).join('');
   $('#hwCount').textContent = `${CATS[c]} · ${rows.length}`;
@@ -912,7 +857,7 @@ const NODES = [
     impl:['HMIs for display assembly, catalytic-converter inspection/transport and robot-fed ABS-module assembly and testing',
           'Systems from single stations to 25 stations, with cycle times of 7–30 seconds'] },
   { id:'s88', name:'ISA-88 phase logic', layer:'Process control model', used:'Refinery project (Studio 5000 V37, PlantPAx template)',
-    impl:['Programmed, modified and reviewed phase and state logic across eight plant sections, working from customer Process Control Narratives',
+    impl:['Programmed, modified and reviewed phase and state logic across plant sections, working from customer Process Control Narratives',
           'Equipment modules, interlocks, permissives and cause-and-effect matrices',
           'Python toolchain generates L5X routines and equipment-module/unit programs; an audit suite checks the code against the specifications'] }
 ];
@@ -938,20 +883,20 @@ $('#drClose').addEventListener('click', closeNode);
 
 /* ---------- Engineering tools ---------- */
 const TOOLS = [
-  { n:'PCN-to-L5X toolchain', d:'Converts customer Process Control Narratives (Word) and sequence workbooks (Excel) into Rockwell L5X routines, equipment-module and unit programs, and interlock/permissive lists. Used across eight plant sections.',
-    items:['<code>pcn_parser.py</code> / <code>word_to_excel.py</code> – process narrative (Word) → structured Excel',
-           '<code>generate_ems.py</code> – equipment-module and unit program generation',
-           '<code>l5x_parser_gui.py</code> – desktop GUI for browsing L5X exports',
-           '<code>file_comparator.py</code> – compares generated and reference programs'],
+  { n:'PCN-to-L5X toolchain', d:'Converts customer Process Control Narratives (Word) and sequence workbooks (Excel) into Rockwell L5X routines, equipment-module and unit programs, and interlock/permissive lists. Used across plant sections.',
+    items:['<b>PCN parser</b> – process narrative (Word) → structured Excel',
+           '<b>EM and unit generator</b> – equipment-module and unit program generation',
+           '<b>L5X browser</b> – desktop GUI for browsing L5X exports',
+           '<b>Program comparator</b> – compares generated and reference programs'],
     st:['Python','python-docx','openpyxl','L5X'] },
   { n:'Specification-to-code audit suite', d:'Checks Logix code against the specifications: interlock coverage and numbering, step messages, device commands/status, cross-phase consistency and specification typos.',
-    items:['<code>l5x_excel_compare.py</code> – interlock specifications vs. L5X, numbering and coverage',
-           '<code>l5x_step_message_audit.py</code> – step messages, device command/status, cross-phase consistency, typos',
-           '<code>find_similar_sequences.py</code> – finds similar sequences for reuse and review'],
+    items:['<b>Interlock checker</b> – interlock specifications vs. L5X, numbering and coverage',
+           '<b>Step and device audit</b> – step messages, device command/status, cross-phase consistency, typos',
+           '<b>Sequence finder</b> – finds similar sequences for reuse and review'],
     st:['Python','XML / CDATA','openpyxl'] },
   { n:'L5X correction tools', d:'Propose-then-apply workflow for changing L5X files safely, with the process documented for colleagues.',
-    items:['<code>l5x_fix.py</code> – proposes corrections, then applies the approved ones (CDATA-safe text matching)',
-           '<code>fix_holding_conditions.py</code> – targeted edits of holding/aborting logic',
+    items:['<b>Correction tool</b> – proposes corrections, then applies the approved ones (CDATA-safe text matching)',
+           '<b>State-logic editor</b> – targeted edits of holding/aborting/stopping/EM logic',
            'Packaged with uv / PyInstaller and batch launchers for colleagues who do not use Python'],
     st:['Python','L5X','PyInstaller'] },
   { n:'Custom HTML HMIs', d:'Lightweight web HMIs for Siemens PLCs.',
@@ -960,30 +905,33 @@ const TOOLS = [
   { n:'inTime', d:'Web-based tracker for PLC project status and tasks.',
     items:['Node.js WebSocket server with a browser client','Hosted on the local network, reachable by name via mDNS'],
     st:['Node.js','WebSocket'] },
-  { n:'TIA Portal Openness', d:'Exploring code generation in TIA Portal V21 that follows the company programming standard.',
-    items:['Target: sequences in LAD, support blocks in SCL, company library blocks reused'],
-    st:['TIA Openness','V21'], tag:'Exploring' }
+  { n:'TIA Portal Openness', d:'Code generation in TIA Portal through the Openness API, following the company programming standard.',
+    items:['Sequences in LAD, support blocks in SCL, company library blocks reused'],
+    st:['TIA Openness'] },
+  { n:'Logix Designer SDK', d:'Automating engineering work in Rockwell Studio 5000 Logix Designer projects through the SDK.',
+    items:['Correcting rungs','Importing routines','Applying changes across projects'],
+    st:['Logix Designer SDK','Studio 5000'] }
 ];
 $('#toolGrid').innerHTML = TOOLS.map(t =>
-  `<article class="panel tool"><h3>${esc(t.n)} ${t.tag ? `<span class="badge warn">${esc(t.tag)}</span>` : ''}</h3><p class="mute" style="margin:0">${esc(t.d)}</p><ul>${t.items.map(i => `<li>${i}</li>`).join('')}</ul>` +
+  `<article class="panel tool"><h3>${esc(t.n)} ${t.tag ? `<span class="badge warn">${esc(t.tag)}</span>` : ''}</h3><p class="mute" style="margin:0">${esc(t.d)}</p>${t.items.length ? `<ul>${t.items.map(i => `<li>${i}</li>`).join('')}</ul>` : ''}` +
   `<div class="badges">${t.st.map(s => `<span class="badge">${esc(s)}</span>`).join('')}</div></article>`).join('');
 
 /* ---------- Projects + details modal ---------- */
 const PRJ = [
   { tag:'PRJ_REFINERY', cat:['plc','int'], title:'Precious-metals refinery – ISA-88 process control', role:'PLC engineer; leads a group of students and juniors (1 → 4 people)',
     badges:['Studio 5000 V37','PlantPAx','ISA-88','L5X','Python'],
-    c:'A batch process plant specified through customer Process Control Narratives; phases must behave consistently in every state across eight plant sections.',
+    c:'A batch process plant specified through customer Process Control Narratives; phases must behave consistently in every state.',
     a:'Programmed, modified and reviewed ISA-88 phase and state logic in Studio 5000 V37 using a PlantPAx template; my Python toolchain converts the specifications into L5X code and the audit suite checks the result.',
     r:'The group of students and junior engineers I lead grew from one to four people, within a project team of about 20.',
-    fp:{ scope:'Eight plant sections: phases, equipment modules, units, interlocks and permissives', phase:'Engineering, ongoing',
-         out:['Phase and state logic programmed, modified and reviewed from customer Process Control Narratives','Interlock numbering and coverage checked against the specifications with the audit suite','Holding/aborting logic corrected across phases with scripted L5X edits'] } },
-  { tag:'PRJ_DISPLAY_TEST', cat:['plc'], title:'Display-testing machines – two subcontracted projects, five machines', role:'Programming and electronics on INEA\u2019s side',
-    badges:['S7-1200','S7-1500','TIA Portal','FAT/SAT'],
-    c:'Machine building was subcontracted; INEA remained responsible for programming, electronics and delivery to the end customer.',
-    a:'Siemens S7-1200/1500 display-testing machines, including foil application and flat-cable connection processes.',
-    r:'Prepared and executed FAT/SAT test lists, logged equipment defects, and commissioned the machines at end-customer sites.',
-    fp:{ scope:'Two subcontracted projects, five machines (one 3-machine and one 2-machine project)', phase:'FAT at INEA → defect logging → SAT and commissioning at end-customer sites',
-         out:['FAT/SAT test lists prepared and executed','Equipment defects logged for the subcontractor','Machines commissioned at end-customer sites'] } },
+    fp:{ scope:'Phases, equipment modules, units, interlocks and permissives', phase:'Engineering, ongoing',
+         out:['Phase and state logic programmed, modified and reviewed from customer Process Control Narratives','Interlock numbering and coverage checked against the specifications with the audit suite','Holding/aborting/stopping/EM logic corrected across phases with scripted L5X edits'] } },
+  { tag:'PRJ_DISPLAY_TEST', cat:['plc'], title:'Display-testing machines – two subcontracted projects, five machines', role:'Responsible on INEA\u2019s side for standards, PLC, HMI and electrical; later also PLC programming',
+    badges:['S7-1200','S7-1500','TIA Portal','HMI','Electrical','FAT/SAT'],
+    c:'The complete machines were built by a subcontractor, while INEA remained responsible for what was delivered to the end customer.',
+    a:'First guided the subcontractor on INEA\u2019s standards and checked the PLC programs, HMI and electrical design; later also programmed the Siemens S7-1200/1500 machines in TIA Portal myself. Processes included foil application and flat-cable connection.',
+    r:'Prepared FAT/SAT documentation, executed factory acceptance tests and tracked defects with the subcontractor, then commissioned the machines at end-customer sites.',
+    fp:{ scope:'Two subcontracted projects, five machines (one 3-machine and one 2-machine project)', phase:'Standards guidance and design checks → PLC programming → FAT at INEA → defect tracking → SAT and commissioning at end-customer sites',
+         out:['Subcontractor guided on INEA\u2019s standards','PLC programs, HMI and electrical design checked against those standards','PLCs later programmed in TIA Portal','FAT/SAT documentation prepared and executed; defects tracked with the subcontractor','Machines commissioned at end-customer sites'] } },
   { tag:'PRJ_AUTO_LINES', cat:['plc','scada'], title:'Automotive assembly and test lines', role:'PLC/HMI programming and commissioning; at times the sole PLC engineer',
     badges:['S7-1200/1500','TIA Portal','Basic · Comfort · Unified','Vision','RFID','Robots'],
     c:'Automated lines for display assembly, catalytic-converter inspection and transport, and robot-fed ABS-module assembly and testing.',
@@ -1033,40 +981,6 @@ $('#fpClose').addEventListener('click', closeModal);
 $('#modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
 renderCards();
 
-/* ---------- Contact ---------- */
-const liTxt = CONFIG.linkedin ? CONFIG.linkedin.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '') : '';
-(function renderContact() {
-  const box = $('#contactBox');
-  if (!CONFIG.email && !CONFIG.linkedin) {
-    box.innerHTML = '<p class="cfg-missing">Contact links have not been added yet (set <code>email</code> and <code>linkedin</code> in the CONFIG block of this file).</p>';
-    return;
-  }
-  box.innerHTML = '<div class="contact-actions">' +
-    (CONFIG.email ? `<a class="btn btn-pri" href="mailto:${esc(CONFIG.email)}">Email Erik</a>` : '') +
-    (CONFIG.linkedin ? `<a class="btn" href="${esc(CONFIG.linkedin)}" target="_blank" rel="noopener">LinkedIn</a>` : '') + '</div>' +
-    (CONFIG.email ? `<p class="addr">${esc(CONFIG.email)} <button class="btn btn-sm" type="button" id="btnCopyMail">Copy address</button></p><p class="out" id="copyOut" aria-live="polite"></p>` : '');
-  if (CONFIG.email) {
-    $('#msgForm').hidden = false;
-    $('#btnCopyMail').addEventListener('click', async () => {
-      const out = $('#copyOut');
-      try { await navigator.clipboard.writeText(CONFIG.email); out.textContent = 'Address copied.'; out.className = 'out ok'; }
-      catch (e) { out.textContent = 'Copying is blocked here – select the address above instead.'; out.className = 'out warn'; }
-    });
-  }
-})();
-$('#msgForm').addEventListener('submit', e => {
-  e.preventDefault();
-  const out = $('#formOut');
-  const name = $('#fName').value.trim(), co = $('#fCo').value.trim(), msg = $('#fMsg').value.trim();
-  if (!name || !msg) { out.textContent = 'Please fill in your name and a message.'; out.className = 'out warn'; return; }
-  const body = `${msg}\n\n— ${name}${co ? ', ' + co : ''}`;
-  const href = `mailto:${CONFIG.email}?subject=${encodeURIComponent('Contact via CV – ' + name)}&body=${encodeURIComponent(body)}`;
-  out.innerHTML = `Email prepared. <a href="${esc(href)}">Open it in your mail app</a> and press send there. If the link does nothing, write to ${esc(CONFIG.email)}.`;
-  out.className = 'out ok';
-});
-
-/* ---------- CV download (links to the separately prepared PDF only) ---------- */
-$$('[data-cv]').forEach(a => { if (CONFIG.cvUrl) { a.href = CONFIG.cvUrl; a.hidden = false; } else { a.remove(); } });
 
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
