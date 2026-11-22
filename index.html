@@ -233,6 +233,8 @@ td.env{font-family:var(--mono);font-size:12.5px;color:var(--mute)}
 .seg button+button{border-left:1px solid var(--line-2)}
 .seg button[aria-pressed="true"]{background:#22304a;color:var(--focus)}
 .fld{display:inline-flex;align-items:center;gap:8px;font-size:11.5px;color:var(--mute)}
+.fld input{width:64px;min-height:38px;padding:6px 8px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--bg-2);font:12.5px var(--mono);color:var(--ink)}
+.fld input:focus{border-color:var(--focus);outline:none}
 select{min-height:38px;padding:6px 10px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--bg-2);font-family:var(--mono);font-size:12.5px;color:var(--ink)}
 .cmdbar{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto}
 .hmi .btn{font-family:var(--mono);font-size:12px;min-height:38px}
@@ -247,10 +249,14 @@ select{min-height:38px;padding:6px 10px;border:1px solid var(--line-2);border-ra
 .banner.MED{background:rgba(249,226,175,.10);color:var(--warn)}.banner.MED .bi{background:var(--warn)}
 .banner.LOW{background:rgba(205,214,244,.06);color:var(--ink)}.banner.LOW .bi{background:var(--mute)}
 .pg-wrap{overflow-x:auto;background:radial-gradient(ellipse at 50% 0%,#26263a,#1c1c2c 70%);border-bottom:1px solid var(--line)}
-#pg{display:block;width:100%;height:auto;min-width:640px}
+#pg{display:block;width:100%;height:auto;min-width:860px}
+.tunnel{fill:rgba(250,179,135,.05);stroke:#585b70}
+.heat{fill:#FAB387}
+.heat.off{fill:#45475a}
+.heat.low{fill:#F9E2AF}
 #pg text{font-family:var(--mono)}
-.z-lbl{font-size:11px;fill:#8A8FA8}
-.z-st{font-size:11px;fill:#A6ADC8}
+.z-lbl{font-size:11.5px;fill:#8A8FA8}
+.z-st{font-size:11.5px;fill:#A6ADC8}
 .zone{fill:rgba(255,255,255,.012);stroke:#34344a;stroke-dasharray:4 4}
 .zone.guard{stroke:#F9E2AF;stroke-dasharray:none;fill:rgba(249,226,175,.04)}
 .eq{fill:url(#gEq);stroke:#585b70}
@@ -271,6 +277,8 @@ select{min-height:38px;padding:6px 10px;border:1px solid var(--line-2);border-ra
 .sm .s.on{color:var(--ink);border-color:var(--ink);background:#33344a;font-weight:700}
 .sm .s.on.run{color:#14241a;background:var(--ok);border-color:var(--ok)}
 .sm .s.on.hold{color:#14142a;background:var(--focus);border-color:var(--focus)}
+.sm .s.on.susp{color:#2a2410;background:var(--warn,#F9E2AF);border-color:var(--warn,#F9E2AF)}
+.sm .s.on.done{color:#14241a;background:#94E2D5;border-color:#94E2D5}
 .sm .s.on.abort{color:#2a1018;background:var(--hi);border-color:var(--hi)}
 .sm .s.on.trans{background:#22304a;border-color:var(--focus);color:var(--focus)}
 .stbig{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
@@ -280,9 +288,9 @@ select{min-height:38px;padding:6px 10px;border:1px solid var(--line-2);border-ra
 .ring{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;color:var(--mute)}
 .ring svg{width:64px;height:64px}
 .ring .rv{font-size:13px;fill:#CDD6F4}
-.cnt{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.cnt{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
 .cnt div{padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--bg-2)}
-.cnt span{display:block;font-size:10px;color:var(--dim)}
+.cnt span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:10px;color:var(--dim)}
 .cnt b{font-size:16px}
 .ctl{display:grid;gap:6px}
 .ctl-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--bg-2)}
@@ -543,11 +551,12 @@ select{min-height:38px;padding:6px 10px;border:1px solid var(--line-2);border-ra
   <div class="view-hd"><span class="vnum">05</span><h1 id="h-sim">Simulator</h1><p>Interactive engineering demo — simulated data.</p></div>
   <div class="panel sim-intro">
     <div>
-      <p>An aseptic vial filling line: vials are filled and weighed, stoppered and capped, inspected and given a serial code, and rejects are diverted automatically. It runs entirely in your browser.</p>
+      <p>An aseptic vial filling line: vials are sterilised in a hot-air tunnel, filled and weighed, stoppered inside the RABS, crimp-capped, labelled and inspected, and packed into serialised trays. Rejects are diverted automatically. It runs entirely in your browser.</p>
       <ol>
         <li>Tick the <b>line clearance</b> checklist in the Batch panel, then press <b>Reset</b> and <b>Start</b>.</li>
         <li>In the Fault injection panel, open the RABS door or let the filling pump drift, and watch the hold or the fill-weight rejects.</li>
-        <li>Acknowledge the alarms, recover with <b>Unhold</b> or <b>Clear</b> and <b>Reset</b>, then stop and <b>close the batch</b> to see its summary.</li>
+        <li>When a tray is full the line suspends; press <b>Exchange tray</b> and it resumes by itself.</li>
+        <li>Acknowledge the alarms, recover with <b>Unhold</b> or <b>Clear</b> and <b>Reset</b>. When the planned vials are filled or the bulk tank T1 runs empty, the line runs empty and goes to <b>Complete</b>; then <b>close the batch</b> to see its summary.</li>
       </ol>
     </div>
     <p class="disclaimer">Simulation only. It does not connect to or control any equipment and is not a validated production, safety or GMP system. Terms such as line clearance, batch record and audit trail are shown in simplified form, and the state model is a simplified example in the style of S88/PackML.</p>
@@ -557,6 +566,8 @@ select{min-height:38px;padding:6px 10px;border:1px solid var(--line-2);border-ra
     <div class="panel-hd"><h2>VIAL FILLING LINE · SIMULATED</h2><span id="scanTxt" style="white-space:nowrap">SCAN 0</span></div>
     <div class="hbar">
       <div class="seg" role="group" aria-label="Operating mode"><button type="button" data-mode="AUTO" aria-pressed="true">AUTO</button><button type="button" data-mode="MANUAL" aria-pressed="false">MANUAL</button></div>
+      <label class="fld">REJECT LIMIT <input id="ootLimit" type="number" min="1" max="20" step="1" value="5" inputmode="numeric" aria-label="Consecutive fill-weight rejects before the line stops"></label>
+      <label class="fld">VIALS TO FILL <input id="batchSize" type="number" min="10" max="600" step="10" value="60" inputmode="numeric" aria-label="Planned vials for the batch; the bulk tank is charged for this quantity"></label>
       <label class="fld">RECIPE <select id="recipe"><option value="VIAL_2ML" selected>VIAL_2ML</option><option value="VIAL_5ML">VIAL_5ML</option><option value="VIAL_10ML">VIAL_10ML</option></select></label>
       <div class="cmdbar" id="cmdbar">
         <button class="btn go" type="button" data-cmd="RESET">RESET</button>
@@ -572,70 +583,109 @@ select{min-height:38px;padding:6px 10px;border:1px solid var(--line-2);border-ra
     <div class="banner" id="banner" role="status"><i class="bi"></i><span id="bannerTxt">NO ACTIVE ALARMS</span></div>
 
     <div class="pg-wrap">
-      <svg id="pg" viewBox="0 0 1000 300" role="img" aria-label="Process graphic of the simulated vial filling line">
+      <svg id="pg" viewBox="0 0 1300 300" role="img" aria-label="Process graphic of the simulated vial filling line">
         <defs>
           <linearGradient id="gBelt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3a52"/><stop offset="1" stop-color="#26263a"/></linearGradient>
           <linearGradient id="gEq" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3a52"/><stop offset="1" stop-color="#2a2a3e"/></linearGradient>
-          <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#3a3a52" stroke-width="2.5"/></pattern>
         </defs>
-        <rect class="zone" x="14" y="30" width="176" height="240" rx="6"/><text class="z-lbl" x="24" y="48">ST00 INFEED</text>
-        <rect class="zone" x="200" y="30" width="180" height="240" rx="6"/><text class="z-lbl" x="210" y="48">ST10 FILL &amp; WEIGH</text>
-        <rect class="zone" x="390" y="30" width="150" height="240" rx="6"/><text class="z-lbl" x="400" y="48">ST20 STOPPER &amp; CAP</text>
-        <rect class="zone" x="550" y="30" width="130" height="240" rx="6"/><text class="z-lbl" x="560" y="48">ST30 INSPECT</text>
-        <rect class="zone" x="690" y="30" width="140" height="240" rx="6"/><text class="z-lbl" x="700" y="48">ST40 REJECT</text>
-        <rect class="zone" x="852" y="30" width="140" height="240" rx="6"/><text class="z-lbl" x="862" y="48">OUTFEED</text>
-        <rect id="rabs" class="rabs" x="204" y="54" width="332" height="160" rx="8"/>
-        <text id="rabsTxt" class="z-lbl" x="214" y="68">RABS · GRADE A</text>
-        <text id="dpTxt" class="z-st" x="530" y="68" text-anchor="end">ΔP 15.0 Pa</text>
-        <path d="M110 206v58M420 206v58M640 206v58M880 206v58" stroke="#313244" stroke-width="3"/>
-        <rect x="24" y="180" width="714" height="26" rx="13" fill="url(#gBelt)" stroke="#45475a"/>
-        <rect x="802" y="180" width="112" height="26" rx="13" fill="url(#gBelt)" stroke="#45475a"/>
-        <line id="belt1" x1="38" y1="193" x2="726" y2="193" stroke="#4d4f66" stroke-width="16" stroke-dasharray="3 17"/>
-        <line id="belt2" x1="814" y1="193" x2="902" y2="193" stroke="#4d4f66" stroke-width="16" stroke-dasharray="3 17"/>
-        <circle cx="37" cy="193" r="9" fill="#2a2a3e" stroke="#8A8FA8"/><circle cx="725" cy="193" r="9" fill="#2a2a3e" stroke="#8A8FA8"/><circle cx="901" cy="193" r="9" fill="#2a2a3e" stroke="#8A8FA8"/>
+        <rect class="zone" x="14" y="30" width="240" height="240" rx="6"/><text class="z-lbl" x="134" y="48" text-anchor="middle">ST00 DEPYROGENATION TUNNEL</text>
+        <rect class="zone" x="264" y="30" width="180" height="240" rx="6"/><text class="z-lbl" x="354" y="48" text-anchor="middle">ST10 FILL &amp; WEIGH</text>
+        <rect class="zone" x="454" y="30" width="125" height="240" rx="6"/><text class="z-lbl" x="516.5" y="48" text-anchor="middle">ST20 STOPPERING</text>
+        <rect class="zone" x="589" y="30" width="125" height="240" rx="6"/><text class="z-lbl" x="651.5" y="48" text-anchor="middle">ST30 CRIMP CAP</text>
+        <rect class="zone" x="724" y="30" width="130" height="240" rx="6"/><text class="z-lbl" x="789" y="48" text-anchor="middle" style="font-size:10.5px">ST40 LABEL &amp; INSPECT</text>
+        <rect class="zone" x="864" y="30" width="140" height="240" rx="6"/><text class="z-lbl" x="934" y="48" text-anchor="middle">ST50 REJECT</text>
+        <rect class="zone" x="1014" y="30" width="272" height="240" rx="6"/><text class="z-lbl" x="1150" y="48" text-anchor="middle">ST60 OUTFEED &amp; AGGREGATION</text>
+        <rect id="rabs" class="rabs" x="268" y="54" width="307" height="160" rx="8"/>
+        <text id="rabsTxt" class="z-lbl" x="278" y="68">RABS · GRADE A</text>
+        <text id="dpTxt" class="z-st" x="569" y="68" text-anchor="end">ΔP 15.0 Pa</text>
+        <path d="M259 206v58M449 206v58M584 206v58M719 206v58M859 206v58M1040 206v58" stroke="#313244" stroke-width="3"/>
+        <rect x="24" y="180" width="888" height="26" rx="13" fill="url(#gBelt)" stroke="#45475a"/>
+        <rect x="976" y="180" width="116" height="26" rx="13" fill="url(#gBelt)" stroke="#45475a"/>
+        <line id="belt1" x1="38" y1="193" x2="900" y2="193" stroke="#4d4f66" stroke-width="16" stroke-dasharray="3 17"/>
+        <line id="belt2" x1="988" y1="193" x2="1078" y2="193" stroke="#4d4f66" stroke-width="16" stroke-dasharray="3 17"/>
+        <circle cx="37" cy="193" r="9" fill="#2a2a3e" stroke="#8A8FA8"/><circle cx="899" cy="193" r="9" fill="#2a2a3e" stroke="#8A8FA8"/><circle cx="1079" cy="193" r="9" fill="#2a2a3e" stroke="#8A8FA8"/>
+        <!-- ST00: depyrogenation tunnel -->
+        <rect class="tunnel" x="40" y="108" width="200" height="70" rx="6"/>
+        <rect id="h1" class="heat" x="52" y="116" width="56" height="8" rx="2"/><rect id="h2" class="heat" x="114" y="116" width="56" height="8" rx="2"/>
+        <rect x="184" y="116" width="46" height="8" rx="2" fill="#89B4FA" opacity=".55"/>
+        <path d="M197 128v6M207 128v6M217 128v6" stroke="#89B4FA" stroke-width="1.5" opacity=".55"/>
+        <line x1="177" y1="110" x2="177" y2="176" stroke="#585b70" stroke-dasharray="3 3"/>
+        <text id="ttTxt" class="z-st" x="108" y="82" text-anchor="middle">TT01 320 °C</text>
+        <text id="tunTxt" class="z-lbl" x="108" y="98" text-anchor="middle">HOT ZONE ≥ 300 °C</text>
+        <text id="tt2Txt" class="z-st" x="209" y="82" text-anchor="middle">TT02 —</text>
+        <text class="z-lbl" x="209" y="98" text-anchor="middle">COOLING</text>
         <!-- ST10: product tank, pump, filling needle on servo Z, load cell -->
-        <rect class="eq" x="214" y="80" width="30" height="40" rx="6"/><text x="229" y="104" text-anchor="middle" font-size="10" fill="#A6ADC8">T1</text>
-        <path d="M244 92h10M266 92h14v-14h10" stroke="#585b70" stroke-width="2" fill="none"/>
-        <circle id="p1" class="pump" cx="260" cy="92" r="8"/><path d="M256 96l4-8 4 8z" fill="#A6ADC8"/>
-        <rect class="eq" x="274" y="70" width="32" height="8" rx="2"/>
-        <rect id="rod" x="287" y="78" width="6" height="4" fill="#8A8FA8"/>
-        <g id="head"><rect class="eq" x="282" y="82" width="16" height="14" rx="2"/><line x1="290" y1="96" x2="290" y2="112" stroke="#CDD6F4" stroke-width="2"/></g>
-        <rect id="scale" x="270" y="207" width="40" height="5" rx="1" fill="#45475a"/>
-        <text id="wTxt" class="z-st" x="210" y="230">0.000 g</text>
-        <text id="st10Txt" class="z-lbl" x="210" y="246">IDLE</text>
-        <!-- ST20: stopper bowl + crimp head -->
-        <polygon id="bowl" points="440,74 490,74 478,100 452,100" fill="#2a2a3e" stroke="#585b70"/>
-        <path d="M465 100v18" stroke="#585b70" stroke-width="3"/>
-        <rect class="eq" x="453" y="118" width="24" height="14" rx="2"/>
-        <text id="st20Txt" class="z-st" x="400" y="230">IDLE</text>
-        <text id="bowlTxt" class="z-lbl" x="400" y="246">BOWL OK</text>
-        <!-- ST30: camera / code reader -->
-        <path d="M615 58v12" stroke="#585b70" stroke-width="3"/>
-        <rect class="eq" x="590" y="70" width="50" height="28" rx="5"/><text x="615" y="88" text-anchor="middle" font-size="10" fill="#A6ADC8">CAM</text>
-        <polygon id="camBeam" points="608,98 622,98 634,140 596,140" fill="rgba(137,180,250,0)"/>
-        <text id="st30Txt" class="z-st" x="560" y="230">IDLE</text>
-        <text id="snTxt" class="z-lbl" x="560" y="246">SN —</text>
+        <rect class="eq" x="278" y="80" width="30" height="40" rx="6"/><rect id="t1Lvl" x="281" y="117" width="24" height="0" rx="2" fill="#94E2D5" opacity=".35"/><text x="293" y="104" text-anchor="middle" font-size="10" fill="#A6ADC8">T1</text>
+        <text id="t1Txt" x="293" y="131" text-anchor="middle" font-size="9.5" fill="#8A8FA8">0 mL</text>
+        <path d="M308 92h10M330 92h14v-14h10" stroke="#585b70" stroke-width="2" fill="none"/>
+        <circle id="p1" class="pump" cx="324" cy="92" r="8"/><path d="M320 96l4-8 4 8z" fill="#A6ADC8"/>
+        <rect class="eq" x="338" y="70" width="32" height="8" rx="2"/>
+        <rect id="rod" x="351" y="78" width="6" height="4" fill="#8A8FA8"/>
+        <g id="head"><rect class="eq" x="346" y="82" width="16" height="14" rx="2"/><line x1="354" y1="96" x2="354" y2="112" stroke="#CDD6F4" stroke-width="2"/></g>
+        <rect id="scale" x="334" y="207" width="40" height="5" rx="1" fill="#45475a"/>
+        <text id="wTxt" class="z-st" x="274" y="230">0.000 g</text>
+        <text id="st10Txt" class="z-lbl" x="274" y="246">IDLE</text>
+        <!-- ST20: stopper bowl + stoppering head (inside the RABS) -->
+        <polygon id="bowl" points="491,74 541,74 529,100 503,100" fill="#2a2a3e" stroke="#585b70"/>
+        <path d="M516 100v18" stroke="#585b70" stroke-width="3"/>
+        <rect class="eq" x="504" y="118" width="24" height="14" rx="2"/>
+        <text id="st20Txt" class="z-st" x="464" y="230">IDLE</text>
+        <text id="bowlTxt" class="z-lbl" x="464" y="246">BOWL OK</text>
+        <!-- ST30: crimp capping (outside the RABS) -->
+        <path d="M651 56v14" stroke="#585b70" stroke-width="3"/>
+        <rect class="eq" x="631" y="70" width="40" height="24" rx="4"/><text x="651" y="86" text-anchor="middle" font-size="9" fill="#A6ADC8">CRIMP</text>
+        <g id="crimpHead"><rect x="641" y="94" width="20" height="10" rx="2" fill="#7F849C"/></g>
+        <text id="st30Txt" class="z-st" x="599" y="230">IDLE</text>
+        <text id="capTxt" class="z-lbl" x="599" y="246">ALU CAP</text>
+        <!-- ST40: label + camera / code reader -->
+        <path d="M789 58v12" stroke="#585b70" stroke-width="3"/>
+        <rect class="eq" x="764" y="70" width="50" height="28" rx="5"/><text x="789" y="88" text-anchor="middle" font-size="10" fill="#A6ADC8">CAM</text>
+        <polygon id="camBeam" points="782,98 796,98 808,140 770,140" fill="rgba(137,180,250,0)"/>
+        <text id="st40Txt" class="z-st" x="734" y="230">IDLE</text>
+        <text id="snTxt" class="z-lbl" x="734" y="246">SN —</text>
         <!-- photo eyes -->
-        <g class="pe" id="pe1"><rect x="298" y="128" width="8" height="10" rx="2"/><line x1="302" y1="138" x2="302" y2="180"/></g>
-        <g class="pe" id="pe2"><rect x="473" y="138" width="8" height="10" rx="2"/><line x1="477" y1="148" x2="477" y2="180"/></g>
-        <g class="pe" id="pe3"><rect x="623" y="146" width="8" height="10" rx="2"/><line x1="627" y1="156" x2="627" y2="180"/></g>
-        <!-- ST40: diverter flap, reject chute and bin -->
-        <polygon points="742,190 800,190 792,262 752,262" fill="url(#hatch)" stroke="#45475a"/>
-        <rect x="728" y="262" width="88" height="30" rx="4" fill="#2a2a3e" stroke="#585b70"/>
-        <text id="rejTxt" class="z-st" x="772" y="282" text-anchor="middle">REJ 0</text>
-        <line id="flap" x1="742" y1="181" x2="800" y2="181" stroke="#CDD6F4" stroke-width="5" stroke-linecap="round"/>
-        <circle cx="742" cy="181" r="4" fill="#CDD6F4"/>
-        <text id="st40Txt" class="z-st" x="700" y="230">Y40 → GOOD</text>
-        <!-- outfeed tray -->
-        <rect x="918" y="196" width="68" height="70" rx="4" fill="#232335" stroke="#585b70"/>
-        <rect id="binFill" x="921" y="263" width="62" height="0" fill="rgba(166,227,161,.35)"/>
-        <text id="binTxt" class="z-st" x="952" y="284" text-anchor="middle">0/30</text>
+        <g class="pe" id="pe1"><rect x="362" y="128" width="8" height="10" rx="2"/><line x1="366" y1="138" x2="366" y2="180"/></g>
+        <g class="pe" id="pe2"><rect x="524" y="138" width="8" height="10" rx="2"/><line x1="528" y1="148" x2="528" y2="180"/></g>
+        <g class="pe" id="pe3"><rect x="659" y="138" width="8" height="10" rx="2"/><line x1="663" y1="148" x2="663" y2="180"/></g>
+        <g class="pe" id="pe4"><rect x="797" y="146" width="8" height="10" rx="2"/><line x1="801" y1="156" x2="801" y2="180"/></g>
+        <!-- ST50: diverter flap and guided reject chute (vials leave the line intact) -->
+        <text id="rejTxt" class="z-lbl" x="868" y="248">REJ 0</text>
+        <line id="flap" x1="916" y1="181" x2="974" y2="181" stroke="#CDD6F4" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="916" cy="181" r="4" fill="#CDD6F4"/>
+        <text id="st50Txt" class="z-st" x="868" y="230">Y50 GOOD</text>
+        <!-- ST60: pick-and-place into a 6 × 5 tray + aggregation -->
+        <g id="trayMap" aria-hidden="true"></g>
+        <path d="M1108 266H1286" stroke="#45475a" stroke-width="3"/>
+        <text id="aggTxt1" class="z-st" x="1114" y="283">—</text>
+        <text id="aggTxt2" class="z-lbl" x="1114" y="296">ROW 1/5 · AGGREGATED 0</text>
         <!-- conveyor motor -->
         <path d="M60 206v28" stroke="#45475a" stroke-width="2"/>
         <circle id="m1" class="mot" cx="60" cy="250" r="16"/><text x="60" y="255" text-anchor="middle" font-size="13" font-weight="700" fill="#CDD6F4">M</text>
-        <text id="m1Txt" class="z-st" x="84" y="248">M1 0.0 m/min</text>
-        <text id="m1Sub" class="z-lbl" x="84" y="262">VFD · STOPPED</text>
+        <text id="m1Txt" class="z-st" x="84" y="252">M1 0.0 m/min</text>
+        <text id="m1Sub" class="z-lbl" x="84" y="266">VFD · STOPPED</text>
         <g id="parts"></g>
+        <g aria-hidden="true">
+          <path d="M916 196L930 232V300H962V232L974 196Z" fill="rgba(205,214,244,.05)"/>
+          <path d="M916 196L930 232V300M974 196L962 232V300" fill="none" stroke="#7f849c" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M930 246H962M930 262H962M930 278H962" stroke="#585b70" stroke-width="1" opacity=".6"/>
+        </g>
+        <g id="trayOld"></g>
+        <g id="trayG">
+          <rect x="1124" y="224" width="160" height="14" rx="2" fill="#1e1e2e" stroke="#45475a"/>
+          <g id="trayV"></g>
+          <rect x="1114" y="238" width="170" height="26" rx="3" fill="#2a2a3e" stroke="#585b70"/>
+          <text x="1199" y="255" text-anchor="middle" font-size="9" fill="#6c7086">TRAY · 6 × 5 POCKETS</text>
+        </g>
+        <g id="pp">
+          <line x1="1072" y1="64" x2="1284" y2="64" stroke="#45475a" stroke-width="4" stroke-linecap="round"/>
+          <line id="ppRod" x1="1084" y1="70" x2="1084" y2="104" stroke="#7f849c" stroke-width="3"/>
+          <rect id="ppCar" class="eq" x="1072" y="57" width="24" height="13" rx="3"/>
+          <g id="ppHead">
+            <rect class="eq" x="-14" y="-56" width="28" height="10" rx="2"/>
+            <rect id="ppF1" x="-13" y="-47" width="3" height="14" rx="1" fill="#A6ADC8"/>
+            <rect id="ppF2" x="10" y="-47" width="3" height="14" rx="1" fill="#A6ADC8"/>
+          </g>
+        </g>
       </svg>
     </div>
     <div class="hint">Swipe the graphic sideways to see the whole line.</div>
@@ -646,17 +696,22 @@ select{min-height:38px;padding:6px 10px;border:1px solid var(--line-2);border-ra
         <div class="stbig"><b id="stBig">STOPPED</b><span id="modeTxt">AUTO · VIAL_2ML</span></div>
         <div class="sm" id="sm"></div>
         <details><summary>View state logic (SCL sketch)</summary>
-<pre><code><span class="cm">// Abort and hold causes are evaluated every scan</span>
+<pre><code><span class="cm">// Abort, hold and suspend causes are evaluated every scan</span>
 <span class="k">IF</span> #EStop <span class="k">OR</span> #PumpFault <span class="k">THEN</span> #State := ABORTING;
-<span class="k">ELSIF</span> (#RabsDoorOpen <span class="k">OR</span> #DpLow <span class="k">OR</span> #StopperEmpty <span class="k">OR</span> #TrayFull)
-      <span class="k">AND</span> #State = RUNNING <span class="k">THEN</span> #State := HOLDING;
+<span class="k">ELSIF</span> (#RabsDoorOpen <span class="k">OR</span> #DpLow <span class="k">OR</span> #TunnelLow <span class="k">OR</span> #RejectLimit <span class="k">OR</span> #StopperEmpty)
+      <span class="k">AND</span> #State = EXECUTE <span class="k">THEN</span> #State := HOLDING;
+<span class="k">ELSIF</span> #TrayFull <span class="k">AND</span> #State = EXECUTE <span class="k">THEN</span> #State := SUSPENDING;   <span class="cm">// waiting, not a fault</span>
 <span class="k">END_IF</span>;
 <span class="k">CASE</span> #State <span class="k">OF</span>
-  STOPPED:  <span class="k">IF</span> #Cmd.Reset <span class="k">AND</span> #LineClearanceOK <span class="k">THEN</span> #State := RESETTING; <span class="k">END_IF</span>;
-  IDLE:     <span class="k">IF</span> #Cmd.Start <span class="k">AND</span> #Auto <span class="k">THEN</span> #State := STARTING; <span class="k">END_IF</span>;
-  HELD:     <span class="k">IF</span> #Cmd.Unhold <span class="k">AND NOT</span> #HoldCause <span class="k">THEN</span> #State := UNHOLDING; <span class="k">END_IF</span>;
-  ABORTED:  <span class="k">IF</span> #Cmd.Clear <span class="k">AND</span> #AllAcked <span class="k">THEN</span> #State := CLEARING; <span class="k">END_IF</span>;
-  <span class="cm">// ... STARTING, HOLDING, UNHOLDING, STOPPING, CLEARING</span>
+  STOPPED:   <span class="k">IF</span> #Cmd.Reset <span class="k">AND</span> #LineClearanceOK <span class="k">THEN</span> #State := RESETTING; <span class="k">END_IF</span>;
+  IDLE:      <span class="k">IF</span> #Cmd.Start <span class="k">AND</span> #Auto <span class="k">THEN</span> #State := STARTING; <span class="k">END_IF</span>;
+  EXECUTE:   <span class="k">IF</span> #VialsIn &gt;= #VialsToFill <span class="k">OR</span> #BulkLow <span class="k">THEN</span> #State := COMPLETING; <span class="k">END_IF</span>;
+  HELD:      <span class="k">IF</span> #Cmd.Unhold <span class="k">AND NOT</span> #HoldCause <span class="k">THEN</span> #State := UNHOLDING; <span class="k">END_IF</span>;
+  SUSPENDED: <span class="k">IF NOT</span> #TrayFull <span class="k">AND NOT</span> #HoldCause <span class="k">THEN</span> #State := UNSUSPENDING; <span class="k">END_IF</span>;   <span class="cm">// machine-generated Unsuspend</span>
+  COMPLETING:<span class="k">IF</span> #LineEmpty <span class="k">THEN</span> #State := COMPLETE; <span class="k">END_IF</span>;
+  COMPLETE:  <span class="k">IF</span> #Cmd.Reset <span class="k">AND</span> #BatchClosed <span class="k">AND</span> #LineClearanceOK <span class="k">THEN</span> #State := RESETTING; <span class="k">END_IF</span>;
+  ABORTED:   <span class="k">IF</span> #Cmd.Clear <span class="k">AND</span> #AllAcked <span class="k">THEN</span> #State := CLEARING; <span class="k">END_IF</span>;
+  <span class="cm">// ... STARTING, HOLDING, UNHOLDING, SUSPENDING, UNSUSPENDING, STOPPING, CLEARING</span>
 <span class="k">END_CASE</span>;</code></pre>
         </details>
       </div>
@@ -679,12 +734,13 @@ select{min-height:38px;padding:6px 10px;border:1px solid var(--line-2);border-ra
         <div class="ctl">
           <div class="ctl-row"><div><div class="tn">E-STOP</div><div class="td">Latching emergency stop</div></div><button class="sw hi" type="button" role="switch" aria-checked="false" data-f="estop" aria-label="E-stop pressed"><span>OFF</span></button></div>
           <div class="ctl-row"><div><div class="tn">RABS DOOR</div><div class="td">Door opened, pressure drops</div></div><button class="sw wn" type="button" role="switch" aria-checked="false" data-f="door" aria-label="RABS door open"><span>OFF</span></button></div>
+          <div class="ctl-row"><div><div class="tn">TUNNEL HEATER</div><div class="td">Heater fault, temperature falls</div></div><button class="sw wn" type="button" role="switch" aria-checked="false" data-f="heater" aria-label="Tunnel heater fault"><span>OFF</span></button></div>
           <div class="ctl-row"><div><div class="tn">PUMP P1 DRIFT</div><div class="td">Fill weights run high</div></div><button class="sw wn" type="button" role="switch" aria-checked="false" data-f="drift" aria-label="Filling pump drift"><span>OFF</span></button></div>
           <div class="btnrow">
             <button class="btn" type="button" data-act="bowl">STOPPER BOWL EMPTY</button>
             <button class="btn" type="button" data-act="pump">PUMP DRIVE FAULT</button>
             <button class="btn" type="button" data-act="refill">REFILL STOPPER BOWL</button>
-            <button class="btn" type="button" data-act="tray">EMPTY OUTFEED TRAY</button>
+            <button class="btn" type="button" data-act="tray">EXCHANGE TRAY</button>
           </div>
         </div>
         <h3>MANUAL MODE <span>needs MANUAL + STOPPED</span></h3>
@@ -697,7 +753,7 @@ select{min-height:38px;padding:6px 10px;border:1px solid var(--line-2);border-ra
       <div class="hcell c8">
         <h3>TREND · LAST 60 S <span>5 Hz</span></h3>
         <div class="trend"><canvas id="trend" aria-label="Trend of line speed, fill weight and RABS differential pressure"></canvas></div>
-        <div class="pens"><span style="--c:#89B4FA">M1 speed <b id="pv1">0.0</b> m/min (0–20)</span><span style="--c:#FAB387">Last fill <b id="pv2">—</b> % of target (90–110, limits ±2 %)</span><span style="--c:#CBA6F7">RABS ΔP <b id="pv3">15.0</b> Pa (0–20)</span></div>
+        <div class="pens"><span style="--c:#89B4FA">M1 speed <b id="pv1">0.0</b> m/min (0–20)</span><span style="--c:#FAB387">Last fill <b id="pv2">—</b> % of target (90–110, limits ±2 %)</span><span style="--c:#CBA6F7">RABS ΔP <b id="pv3">15.0</b> Pa (0–20)</span><span style="--c:#94E2D5">Tunnel <b id="pv4">320</b> °C (0–400)</span></div>
       </div>
       <div class="hcell c4 wide-md">
         <h3>PRODUCTION <span id="ppmTxt">0 VIALS/MIN</span></h3>
@@ -707,8 +763,10 @@ select{min-height:38px;padding:6px 10px;border:1px solid var(--line-2);border-ra
           <div><span>ACCEPTED</span><b id="cGood" style="color:var(--ok)">0</b></div>
           <div><span>REJECTED</span><b id="cRej">0</b></div>
           <div><span>FILL OOT</span><b id="cFill">0</b></div>
-          <div><span>CAP FAULT</span><b id="cCap">0</b></div>
-          <div><span>CODE NOREAD</span><b id="cNr">0</b></div>
+          <div><span>CLOSURE</span><b id="cCap">0</b></div>
+          <div><span>NO READ</span><b id="cNr">0</b></div>
+          <div><span>DEPYRO NOK</span><b id="cDep">0</b></div>
+          <div><span>OTHER</span><b id="cOth">0</b></div>
         </div>
       </div>
       <div class="hcell c7">
@@ -992,7 +1050,7 @@ show(location.hash.slice(1));
 
 /* ============================================================
    SIMULATOR – aseptic vial filling line (simulated data only)
-   infeed → ST10 fill & weigh → ST20 stopper & cap → ST30 inspect & serialize → ST40 reject → outfeed tray
+   ST00 depyrogenation tunnel → ST10 fill & weigh → ST20 stoppering → ST30 crimp cap → ST40 label & inspect → ST50 reject → ST60 outfeed & aggregation
    Simplified S88/PackML-style unit states, AUTO/MANUAL, recipes, alarms, trends, OEE.
    Wrapped so a failure here never breaks the rest of the portfolio.
    ============================================================ */
@@ -1003,22 +1061,32 @@ function initSim() {
     VIAL_10ML:{ spd:8,  target:10.0, fillT:1.8, spawn:2.6, prod:'Product A · 10 mL', gtin:'X' }
   };
   const TOL = 0.02;                                   // ±2 % fill-weight tolerance
-  const POS = { fill:290, cap:465, insp:615, div:742, exit:908 };
-  const DUR = { RESETTING:1.2, STARTING:1.0, UNHOLDING:0.8, ABORTING:0.4, CLEARING:1.2 };
-  const STATES = [['STOPPED','RESETTING','IDLE'],['STARTING','RUNNING','STOPPING'],['HOLDING','HELD','UNHOLDING'],['ABORTING','ABORTED','CLEARING']];
-  const KIND = s => s === 'RUNNING' ? 'run' : ['HOLDING','HELD','UNHOLDING'].includes(s) ? 'hold' : ['ABORTING','ABORTED','CLEARING'].includes(s) ? 'abort' : '';
-  const newCnt = () => ({ in:0, good:0, rej:0, fill:0, cap:0, nr:0 });
+  const POS = { fill:354, stop:516, cap:651, insp:789, div:916, exit:1084 };
+  const CHUTE_X = 948;
+  const TUN = { hot0:44, cool0:177, end:240 };   // ST00 tunnel: hot zone, then cooling zone
+  // ST60 pick-and-place: hold point = bottom of the gripped vial (SVG y)
+  const PP = { home:160, pick:180, carry:160, vx:650, vy:450, cols:6, rows:5 };
+  const depth = i => PP.rows - 1 - Math.floor(i / PP.cols);   // 4 = back row, 0 = front row
+  const slotX = i => 1126 + (i % PP.cols) * 27.5 + depth(i) * 2;
+  const slotY = i => 258 - depth(i) * 6;   // back rows sit higher, as seen at an angle
+  const DUR = { RESETTING:1.2, STARTING:1.0, UNHOLDING:0.8, UNSUSPENDING:0.8, ABORTING:0.4, CLEARING:1.2 };
+  // the 17 states of the PackML state model (ISA-TR88.00.02); RUNNING is called EXECUTE there
+  const STATES = [['STOPPED','RESETTING','IDLE'],['STARTING','EXECUTE','STOPPING'],['HOLDING','HELD','UNHOLDING'],['SUSPENDING','SUSPENDED','UNSUSPENDING'],['COMPLETING','COMPLETE'],['ABORTING','ABORTED','CLEARING']];
+  const KIND = s => s === 'EXECUTE' ? 'run' : ['HOLDING','HELD','UNHOLDING'].includes(s) ? 'hold' : ['SUSPENDING','SUSPENDED','UNSUSPENDING'].includes(s) ? 'susp' : ['COMPLETING','COMPLETE'].includes(s) ? 'done' : ['ABORTING','ABORTED','CLEARING'].includes(s) ? 'abort' : '';
+  const newCnt = () => ({ in:0, good:0, rej:0, fill:0, cap:0, nr:0, dep:0, oth:0 });
   const L = {
     state:'STOPPED', mode:'AUTO', recipe:'VIAL_2ML', t:0, v:0, z:0, zT:0, flap:0, scan:0, dp:15,
     parts:[], nextId:1, serial:41270, spawnT:0, cnt:newCnt(), tray:0, trayCap:30,
-    tRun:0, tDown:0, started:false, done:[], ootRun:0, nrRun:0, lastW:null, lastSn:'—', fills:[],
-    st10:{ part:null, phase:'', t:0, fv:0 }, st20:{ part:null, t:0 }, st30:{ part:null, t:0, flash:0, ok:true },
-    f:{ estop:false, door:false, drift:false, bowl:false, pump:false },
+    tRun:0, tDown:0, started:false, done:[], ootRun:0, ootLimit:5, ootTrip:false, nrRun:0, lastW:null, lastSn:'—', fills:[],
+    st10:{ part:null, phase:'', t:0, fv:0 }, st20:{ part:null, t:0 }, stC:{ part:null, t:0 }, st30:{ part:null, t:0, flash:0, ok:true },
+    tt:320, tOut:null, batchSize:60, bulk:0, bulk0:0, compWhy:'', trayNo:1, traySn:[], aggCount:0, trayV:[], pp:{ ph:'HOME', x:1084, y:160, t:0, vial:null, target:null },
+    f:{ estop:false, door:false, drift:false, bowl:false, pump:false, heater:false },
     man:{ jog:false, div:false, z:false },
     batch:{ no:41, cleared:false, start:null }, lastBatch:''
   };
   const R = () => RECIPES[L.recipe];
   const batchId = () => `B2611-${String(L.batch.no).padStart(4, '0')}`;
+  const trayId = () => `T${batchId().slice(1)}-${String(L.trayNo).padStart(2, '0')}`;
   const lotId = () => `L2611${String(L.batch.no).padStart(3, '0')}`;
 
   /* audit trail + event log */
@@ -1039,9 +1107,10 @@ function initSim() {
     ALM_011:{ p:'MED',  m:'RABS differential pressure low (< 10 Pa)' },
     ALM_020:{ p:'MED',  m:'Stopper bowl empty' },
     ALM_030:{ p:'HIGH', m:'Filling pump P1: drive fault' },
-    ALM_040:{ p:'LOW',  m:'3 consecutive fill weights out of tolerance' },
+    ALM_040:{ p:'HIGH', m:'Fill-weight reject limit reached – infeed blocked' },
     ALM_041:{ p:'LOW',  m:'3 consecutive serial code NOREADs' },
-    ALM_050:{ p:'MED',  m:'Outfeed tray full' }
+    ALM_050:{ p:'LOW',  m:'Outfeed tray full – exchange the tray to continue' },
+    ALM_060:{ p:'MED',  m:'Depyrogenation tunnel below 300 °C – vials inside are rejected' }
   };
   const PR = { HIGH:3, MED:2, LOW:1 };
   const alarms = new Map();
@@ -1061,26 +1130,28 @@ function initSim() {
   function ackAlm(id) {
     const a = alarms.get(id); if (!a || a.ack) return;
     a.ack = true; if (!a.act) alarms.delete(id);
+    if (id === 'ALM_040' && L.ootTrip) { L.ootTrip = false; L.ootRun = 0; log('EVT', 'Reject limit released by acknowledgement · infeed enabled'); }
     op('EVT', `${id} acknowledged`); almDirty = true;
   }
   const setAlm = (id, on) => on ? raise(id) : clearAlm(id);
 
   /* state handling */
   const abortCause = () => L.f.estop ? 'E-stop pressed' : L.f.pump ? 'filling pump fault' : '';
-  const holdCause  = () => L.f.door ? 'RABS door open' : L.dp < 12 && (L.dp < 10 || ['HELD','HOLDING'].includes(L.state)) ? 'RABS pressure not recovered' : L.f.bowl ? 'stopper bowl empty' : L.tray >= L.trayCap ? 'outfeed tray full' : '';
+  const holdCause  = () => L.f.door ? 'RABS door open' : L.dp < 12 && (L.dp < 10 || ['HELD','HOLDING'].includes(L.state)) ? 'RABS pressure not recovered' : L.tt < 300 ? 'tunnel below 300 °C' : L.ootTrip ? 'fill-weight reject limit reached' : L.f.bowl ? 'stopper bowl empty' : '';
+  const suspendCause = () => L.tray >= L.trayCap ? 'outfeed tray full, waiting for an empty tray' : '';   // waiting condition, not a fault
   function goState(s, why) {
     if (L.state === s) return;
-    log(s === 'RUNNING' ? 'RUN' : 'EVT', `${L.state} → ${s}${why ? ' · ' + why : ''}`);
+    log(s === 'EXECUTE' ? 'RUN' : 'EVT', `${L.state} → ${s}${why ? ' · ' + why : ''}`);
     L.state = s; L.t = 0;
   }
   function why(cmd) {
     const s = L.state, ab = abortCause(), hc = holdCause();
     switch (cmd) {
-      case 'RESET':  return s !== 'STOPPED' ? 'only from STOPPED' : L.mode !== 'AUTO' ? 'mode is MANUAL' : !L.batch.cleared ? 'line clearance not confirmed' : ab;
+      case 'RESET':  return !['STOPPED','COMPLETE'].includes(s) ? 'only from STOPPED or COMPLETE' : L.mode !== 'AUTO' ? 'mode is MANUAL' : s === 'COMPLETE' && L.cnt.in ? 'close the batch first' : !L.batch.cleared ? 'line clearance not confirmed' : ab;
       case 'START':  return s !== 'IDLE' ? 'only from IDLE' : L.mode !== 'AUTO' ? 'mode is MANUAL' : ab || hc;
-      case 'HOLD':   return s === 'RUNNING' ? '' : 'only from RUNNING';
+      case 'HOLD':   return s === 'EXECUTE' ? '' : 'only from EXECUTE';
       case 'UNHOLD': return s !== 'HELD' ? 'only from HELD' : ab || hc;
-      case 'STOP':   return ['IDLE','STARTING','RUNNING','HELD'].includes(s) ? '' : 'not allowed in ' + s;
+      case 'STOP':   return ['STOPPING','STOPPED','ABORTING','ABORTED','CLEARING'].includes(s) ? 'not allowed in ' + s : '';
       case 'ABORT':  return ['ABORTING','ABORTED'].includes(s) ? 'already aborted' : '';
       case 'CLEAR':  return s !== 'ABORTED' ? 'only from ABORTED' : L.f.estop ? 'E-stop still pressed' : [...alarms.values()].some(a => !a.ack) ? 'acknowledge all alarms first' : '';
     }
@@ -1088,18 +1159,37 @@ function initSim() {
   }
   function nextHint() {
     const s = L.state, ab = abortCause(), hc = holdCause();
-    if (L.mode === 'MANUAL') return ['STOPPED','IDLE'].includes(s) ? 'Manual mode: use the jog switches, or switch back to AUTO.' : 'Manual mode.';
+    if (L.mode === 'MANUAL' && ['STOPPED','IDLE'].includes(s) && !ab) return 'Manual mode: use the jog switches, or switch back to AUTO.';
     switch (s) {
       case 'STOPPED':
         if (ab) return `Clear the cause first: ${ab}.`;
         if (!L.batch.cleared) return L.cnt.in ? 'Stopped. Close the batch, or complete line clearance to continue.' : 'Next: tick the line clearance checklist in the Batch panel and confirm it.';
         return L.cnt.in ? 'Stopped. Press RESET to continue this batch, or CLOSE BATCH to finish it.' : 'Next: press RESET to prepare the line.';
-      case 'IDLE': return hc ? `Start is blocked: ${hc}.` : 'Next: press START.';
-      case 'RUNNING': return 'Running. Try the Fault injection panel, or press HOLD / STOP.';
-      case 'HELD': return hc ? `Held: ${hc}. Fix it, then press UNHOLD.` : 'Held. Press UNHOLD to continue, or STOP.';
+      case 'IDLE': return L.ootTrip ? 'Start is blocked: fill-weight reject limit reached. Press ACK on ALM_040 first.' : hc ? `Start is blocked: ${hc}.` : 'Next: press START.';
+      case 'EXECUTE': return `Producing · ${L.cnt.in}/${L.batchSize} vials · T1 ${mlTxt(L.bulk)} left. Try the Fault injection panel, or press HOLD / STOP.`;
+      case 'SUSPENDED': return L.tray >= L.trayCap ? 'Suspended: outfeed tray full. Press EXCHANGE TRAY and the line resumes by itself.' : hc ? `Suspended. Resumes when cleared: ${hc}.` : 'Suspended.';
+      case 'COMPLETING': return L.tray >= L.trayCap ? 'Completing: press EXCHANGE TRAY so the last vials can be packed.' : L.f.door || L.dp < 10 ? 'Completing: conveyor paused, close the RABS door.' : `Completing: ${L.compWhy}. Infeed stopped, emptying the line…`;
+      case 'COMPLETE': return L.cnt.in ? 'Batch complete. Press CLOSE BATCH to sign it off.' : !L.batch.cleared ? 'Next: tick the line clearance checklist and confirm it, then RESET.' : 'Next: press RESET to prepare the line.';
+      case 'HELD': return L.ootTrip ? 'Held: fill-weight reject limit reached. Press ACK on ALM_040, check pump P1, then UNHOLD.' : hc ? `Held: ${hc}. Fix it, then press UNHOLD.` : 'Held. Press UNHOLD to continue, or STOP.';
       case 'ABORTED': return L.f.estop ? 'Aborted. Release the E-stop, then ACK ALL and CLEAR.' : [...alarms.values()].some(a => !a.ack) ? 'Aborted. Press ACK ALL, then CLEAR.' : 'Aborted. Press CLEAR.';
       default: return s.charAt(0) + s.slice(1).toLowerCase() + '…';
     }
+  }
+  // bulk tank T1: charged for the planned vials plus 2 % overage (fill-weight spread); 1 g ≈ 1 mL
+  const OVERAGE = 0.02;
+  const mlTxt = v => v >= 1000 ? `${(v / 1000).toFixed(2)} L` : `${v.toFixed(1)} mL`;
+  function chargeBulk() {
+    L.bulk0 = L.bulk = L.batchSize * R().target * (1 + OVERAGE);
+    log('EVT', `Bulk tank T1 charged: ${mlTxt(L.bulk0)} for ${L.batchSize} vials (${R().prod}, lot ${lotId()})`);
+  }
+  const committed = () => L.parts.filter(p => !p.drop && p.fillOk === null && wants(p, 'fillOk') && !(L.st10.part === p && L.st10.phase !== 'DOWN')).length * R().target;
+  const bulkLow = () => L.bulk - committed() < R().target * 1.05;
+  function reconcile(final) {   // vials in = accepted + rejected + still on the line
+    const onLine = L.parts.length + (L.pp.vial ? 1 : 0), c = L.cnt;
+    const base = final ? c.in : c.in - onLine;   // at close, vials left on the line count as losses
+    const yld = base > 0 ? (c.good / base * 100).toFixed(1) + ' %' : '—';
+    const txt = final ? `In ${c.in} = accepted ${c.good} + rejected ${c.rej}` : `${c.in} = ${c.good} acc + ${c.rej} rej${onLine ? ` + ${onLine} on line` : ''}`;
+    return { onLine, ok: c.in === c.good + c.rej + onLine, txt, yld };
   }
   const NEXT = { RESET:'RESETTING', START:'STARTING', HOLD:'HOLDING', UNHOLD:'UNHOLDING', STOP:'STOPPING', ABORT:'ABORTING', CLEAR:'CLEARING' };
   function command(cmd) {
@@ -1108,6 +1198,7 @@ function initSim() {
     op('CMD', cmd);
     if (cmd === 'START') { L.started = true; if (!L.batch.start) L.batch.start = new Date(); }
     if (cmd === 'CLEAR' && L.f.pump) { L.f.pump = false; log('EVT', 'Filling pump P1 drive fault reset'); }
+    if (cmd === 'RESET' && !L.cnt.in) chargeBulk();
     goState(NEXT[cmd], 'Cmd_' + cmd);
   }
   $('#cmdbar').addEventListener('click', e => { const b = e.target.closest('[data-cmd]'); if (b) command(b.dataset.cmd); });
@@ -1118,39 +1209,58 @@ function initSim() {
     const m = b.dataset.mode; if (m === L.mode) return;
     if (!['STOPPED','IDLE'].includes(L.state)) { op('WRN', `Mode change rejected: unit is ${L.state}`); return; }
     L.mode = m; if (m === 'MANUAL' && L.state === 'IDLE') goState('STOPPED', 'mode MANUAL');
+    if (m === 'MANUAL' && L.st10.part) {   // interrupted fill: the vial is rejected when the line restarts
+      if (L.st10.part.fillOk === null) L.st10.part.miss = 'ST10';
+      L.st10 = { part:null, phase:'', t:0, fv:0 }; L.zT = 0;
+    }
     if (m === 'AUTO') { L.man = { jog:false, div:false, z:false }; $$('#manual .sw').forEach(s => setSw(s, false)); }
     $$('#simPanel .seg [data-mode]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.mode === m)));
     op('CMD', 'Mode → ' + m);
   }));
+  $('#ootLimit').addEventListener('change', e => {
+    const v = Math.max(1, Math.min(20, Math.round(+e.target.value || L.ootLimit)));
+    e.target.value = v;
+    if (v !== L.ootLimit) { op('CMD', `Reject limit ${L.ootLimit} → ${v} consecutive vials`); L.ootLimit = v; }
+  });
+  $('#batchSize').addEventListener('change', e => {
+    const v = Math.max(10, Math.min(600, Math.round((+e.target.value || L.batchSize) / 10) * 10));
+    if (L.cnt.in || L.bulk0 && !['STOPPED','IDLE'].includes(L.state)) { op('WRN', 'Vials-to-fill change rejected: batch in progress, the bulk is already charged'); e.target.value = L.batchSize; return; }
+    e.target.value = v;
+    if (v !== L.batchSize) { op('CMD', `Vials to fill ${L.batchSize} → ${v}`); L.batchSize = v; if (L.bulk0) chargeBulk(); }
+  });
   $('#recipe').addEventListener('change', e => {
-    const why2 = !['STOPPED','IDLE'].includes(L.state) ? `unit is ${L.state}` : L.cnt.in ? 'close the current batch first' : '';
+    const why2 = !['STOPPED','IDLE','COMPLETE'].includes(L.state) ? `unit is ${L.state}` : L.cnt.in ? 'close the current batch first' : '';
     if (why2) { op('WRN', `Recipe change rejected: ${why2}`); e.target.value = L.recipe; return; }
-    op('CMD', `Recipe ${L.recipe} → ${e.target.value}`); L.recipe = e.target.value;
+    op('CMD', `Recipe ${L.recipe} → ${e.target.value}`); L.recipe = e.target.value; if (L.bulk0 && !L.cnt.in) chargeBulk();
   });
 
   /* line clearance + batch close */
   const lcBoxes = $$('#clearance [data-lc]');
   $('#lcConfirm').addEventListener('click', () => {
     if (L.batch.cleared) { op('WRN', 'Line clearance already confirmed for ' + batchId()); return; }
-    if (L.state !== 'STOPPED') { op('WRN', 'Line clearance needs the unit STOPPED'); return; }
+    if (!['STOPPED','COMPLETE'].includes(L.state)) { op('WRN', 'Line clearance needs the unit STOPPED or COMPLETE'); return; }
     if (!lcBoxes.every(c => c.checked)) { op('WRN', 'Line clearance rejected: checklist incomplete'); return; }
     L.batch.cleared = true; lcBoxes.forEach(c => c.disabled = true);
     op('CMD', `Line clearance confirmed and signed for ${batchId()} (${R().prod}, lot ${lotId()})`);
   });
   $('#batchClose').addEventListener('click', () => {
-    if (L.state !== 'STOPPED') { op('WRN', 'Close batch rejected: unit must be STOPPED'); return; }
+    if (!['STOPPED','COMPLETE'].includes(L.state)) { op('WRN', 'Close batch rejected: unit must be STOPPED or COMPLETE'); return; }
     if (!L.cnt.in) { op('WRN', 'Close batch rejected: no vials produced in this batch'); return; }
-    const st = fillStats();
-    L.lastBatch = `${batchId()} closed: ${L.cnt.good} accepted, ${L.cnt.rej} rejected, yield ${(L.cnt.good / Math.max(1, L.cnt.good + L.cnt.rej) * 100).toFixed(1)} %, mean fill ${st ? st.mean.toFixed(3) + ' g' : '—'}.`;
+    const st = fillStats(), rc = reconcile(true);
+    const removed = rc.onLine ? ` (${rc.onLine} removed at line clearance)` : '';
+    L.lastBatch = `${batchId()} closed: ${rc.txt}${removed} · yield ${rc.yld} · mean fill ${st ? st.mean.toFixed(3) + ' g' : '—'} · bulk used ${mlTxt(L.bulk0 - L.bulk)} of ${mlTxt(L.bulk0)}, residual ${mlTxt(L.bulk)} discarded.`;
+    if (L.tray) aggregate();
+    L.bulk = L.bulk0 = 0;
     op('CMD', 'Batch closed and signed · ' + L.lastBatch);
     L.batch = { no:L.batch.no + 1, cleared:false, start:null };
-    L.cnt = newCnt(); L.fills = []; L.tRun = 0; L.tDown = 0; L.started = false; L.done = []; L.ootRun = 0; L.nrRun = 0; L.lastW = null;
-    L.parts = []; L.st10 = { part:null, phase:'', t:0, fv:0 }; L.st20 = { part:null, t:0 }; L.st30.part = null;
+    L.cnt = newCnt(); L.fills = []; L.tRun = 0; L.tDown = 0; L.started = false; L.done = []; L.ootRun = 0; L.ootTrip = false; L.nrRun = 0; L.lastW = null;
+    L.parts = []; L.st10 = { part:null, phase:'', t:0, fv:0 }; L.st20 = { part:null, t:0 }; L.stC = { part:null, t:0 }; L.st30.part = null; L.trayNo = 1; L.aggCount = 0; L.trayV = [];
+    if (L.pp.vial || L.pp.target) { L.pp.vial = null; L.pp.target = null; L.pp.ph = 'RISE'; }
     lcBoxes.forEach(c => { c.checked = false; c.disabled = false; });
   });
 
   /* fault injection + manual */
-  const FNAME = { estop:['E-stop','PRESSED','RELEASED'], door:['RABS door','OPEN','CLOSED'], drift:['Pump P1 calibration','DRIFTING','NORMAL'] };
+  const FNAME = { estop:['E-stop','PRESSED','RELEASED'], door:['RABS door','OPEN','CLOSED'], drift:['Pump P1 calibration','DRIFTING','NORMAL'], heater:['Tunnel heater','FAULT','OK'] };
   $$('#simPanel [data-f]').forEach(b => b.addEventListener('click', () => {
     const k = b.dataset.f; L.f[k] = !L.f[k]; setSw(b, L.f[k]);
     op('IN', `${FNAME[k][0]} = ${L.f[k] ? FNAME[k][1] : FNAME[k][2]}`);
@@ -1160,7 +1270,7 @@ function initSim() {
     if (a === 'bowl')   { if (!L.f.bowl) { L.f.bowl = true; op('IN', 'Stopper bowl ran empty'); } }
     if (a === 'pump')   { if (!L.f.pump) { L.f.pump = true; op('IN', 'Filling pump P1 drive reports fault'); } }
     if (a === 'refill') { if (!L.f.bowl) { op('WRN', 'Stopper bowl is not empty'); return; } L.f.bowl = false; op('IN', 'Stopper bowl refilled'); }
-    if (a === 'tray')   { L.tray = 0; op('IN', 'Outfeed tray exchanged'); }
+    if (a === 'tray')   { if (!L.tray) { op('WRN', 'Outfeed tray is empty'); return; } aggregate(); op('IN', 'Outfeed tray exchanged'); }
   }));
   $$('#manual [data-m]').forEach(b => b.addEventListener('click', () => {
     const k = b.dataset.m;
@@ -1174,20 +1284,34 @@ function initSim() {
 
   /* process model */
   const gauss = () => { let u = 0, v = 0; while (!u) u = Math.random(); while (!v) v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
-  const bad = p => p.fillOk === false || p.cap === 'MISSING' || p.code === 'NOREAD';
+  const bad = p => p.fillOk === false || p.stop === 'MISSING' || p.cap === 'MISSING' || p.code === 'NOREAD' || !!p.miss || !!p.nodep;
+  // tray aggregation: link every vial serial in the tray to the tray ID, then start a new tray
+  function aggregate() {
+    const n = L.traySn.length;
+    log('EVT', `Tray ${trayId()} aggregated: ${L.tray} vials${n ? `, SN ${L.traySn[0]}–${L.traySn[n - 1]}` : ''}`);
+    L.aggCount++; L.trayNo++; L.tray = 0; L.traySn = [];
+    trayLeaves(); L.trayV = [];
+  }
   function fillStats() {
     const a = L.fills; if (!a.length) return null;
     const mean = a.reduce((s, x) => s + x, 0) / a.length;
     const sd = Math.sqrt(a.reduce((s, x) => s + (x - mean) ** 2, 0) / Math.max(1, a.length - 1));
     return { mean, sd, min:Math.min(...a), max:Math.max(...a), n:a.length };
   }
+  const MISS = [['fillOk', 'fill', 'ST10'], ['stop', 'stop', 'ST20'], ['cap', 'cap', 'ST30'], ['code', 'insp', 'ST40']];
+  // stations a vial still has to visit: a fill-weight reject is still stoppered and crimped so it cannot spill,
+  // but is not labelled or serialised; any other failure (incl. depyrogenation not assured) goes straight to the diverter, unfilled
+  const needs = p => !bad(p) ? MISS : p.fillOk === false && !p.miss && p.stop !== 'MISSING' && p.cap !== 'MISSING' ? MISS.slice(1, 3) : [];
+  const wants = (p, k) => needs(p).some(m => m[0] === k);
   function stopFor(p) {
     if (L.mode !== 'AUTO') return null;
-    if (p.fillOk === null) return POS.fill;
     if (L.st10.part === p) return POS.fill;
-    if (p.cap === null) return POS.cap;
-    if (p.code === null) return POS.insp;
-    if (bad(p)) return POS.div;
+    for (const [k, pos, st] of needs(p)) {
+      if (p[k] !== null) continue;
+      if (p.x <= POS[pos] + 0.5) return POS[pos];
+      p.miss = st; log('EVT', `Vial ${p.id}: passed ${st} without processing · rejected`); break;   // moved past a station by hand
+    }
+    if (bad(p)) return p.x > POS.div + 0.5 ? null : POS.div;   // rejects bypass the remaining stations
     if (L.flap > 0.08) return POS.div - 40;
     return null;
   }
@@ -1196,21 +1320,49 @@ function initSim() {
     const rec = R(), ab = abortCause();
     // RABS differential pressure: collapses with the door open, recovers when closed
     L.dp = L.f.door ? Math.max(2, L.dp - 8 * dt) : Math.min(15, L.dp + 4 * dt);
+    // depyrogenation tunnel: falls on heater fault, recovers to 320 °C
+    L.tt = L.f.heater ? Math.max(150, L.tt - 12 * dt) : Math.min(320, L.tt + 8 * dt);
+    // vials in the tunnel: hot zone heats them to TT01, cooling zone brings them back near room temperature
+    L.parts.forEach(p => {
+      if (p.drop) return;
+      const hot = p.x >= TUN.hot0 && p.x < TUN.cool0, cool = p.x >= TUN.cool0 && p.x < TUN.end;
+      const [tgt, tau] = hot ? [L.tt, 0.15] : cool ? [21, 0.07] : [21, 3];
+      p.temp += (tgt - p.temp) * Math.min(1, dt / tau);
+      if (hot && L.tt < 300 && !p.nodep) {
+        p.nodep = true;
+        log('EVT', `Vial ${p.id}: depyrogenation not assured (TT01 ${Math.floor(L.tt)} °C, below 300 °C) · will be rejected unfilled`);
+      }
+      if (p.x >= TUN.end && p.tOut === undefined) { p.tOut = p.temp; L.tOut = p.temp; }
+    });
     const hc = holdCause();
     setAlm('ALM_001', L.f.estop); setAlm('ALM_010', L.f.door); setAlm('ALM_011', L.dp < 10);
-    setAlm('ALM_020', L.f.bowl); setAlm('ALM_030', L.f.pump); setAlm('ALM_040', L.ootRun >= 3);
-    setAlm('ALM_041', L.nrRun >= 3); setAlm('ALM_050', L.tray >= L.trayCap);
+    setAlm('ALM_020', L.f.bowl); setAlm('ALM_030', L.f.pump); setAlm('ALM_040', L.ootTrip);
+    setAlm('ALM_041', L.nrRun >= 3); setAlm('ALM_050', L.tray >= L.trayCap); setAlm('ALM_060', L.tt < 300);
     if (ab && !['ABORTING','ABORTED'].includes(L.state)) goState('ABORTING', 'interlock: ' + ab);
-    else if (hc && ['STARTING','RUNNING','UNHOLDING'].includes(L.state)) goState('HOLDING', 'interlock: ' + hc);
+    else if (hc && L.state === 'EXECUTE') goState('HOLDING', 'interlock: ' + hc);
+    else if (suspendCause() && L.state === 'EXECUTE') goState('SUSPENDING', suspendCause());
+    else if (L.state === 'EXECUTE' && (L.cnt.in >= L.batchSize || bulkLow())) {
+      L.compWhy = L.cnt.in >= L.batchSize ? `${L.batchSize} vials filled as planned` : `bulk tank T1 empty after ${L.cnt.in} vials`;
+      goState('COMPLETING', L.compWhy + ' · infeed stopped');
+    }
 
     const setV = rec.spd * 1000 / 60;   // m/min → mm/s (1 px = 1 mm)
     let vT = 0;
     switch (L.state) {
       case 'RESETTING': if (L.t >= DUR.RESETTING) goState('IDLE', 'reset done'); break;
-      case 'STARTING':  vT = setV; if (L.t >= DUR.STARTING) goState('RUNNING', 'speed at setpoint'); break;
-      case 'RUNNING':   vT = setV; break;
+      case 'STARTING':  vT = setV; if (L.t >= DUR.STARTING) goState('EXECUTE', 'speed at setpoint'); break;
+      case 'EXECUTE':   vT = setV; break;
+      case 'SUSPENDING': if (L.v === 0 && L.t >= 0.5) goState('SUSPENDED', 'conveyor stopped'); break;
+      case 'SUSPENDED':  if (!suspendCause() && !hc && !ab) goState('UNSUSPENDING', 'empty tray in place · Unsuspend'); break;
+      case 'UNSUSPENDING': vT = setV; if (L.t >= DUR.UNSUSPENDING) goState('EXECUTE', 'unsuspend done'); break;
+      case 'COMPLETING': {
+        vT = L.f.door || L.dp < 10 ? 0 : setV;   // run-out pauses while the RABS is open
+        const empty = !L.parts.length && !L.pp.vial && !L.pp.target && L.pp.ph === 'HOME' && !L.st10.part;
+        if (empty && L.t >= 0.5) { if (L.tray) { log('EVT', 'Last tray is partly filled'); aggregate(); } goState('COMPLETE', 'line empty'); }
+        break;
+      }
       case 'HOLDING':   if (L.v === 0 && L.t >= 0.5) goState('HELD', 'conveyor stopped'); break;
-      case 'UNHOLDING': vT = setV; if (L.t >= DUR.UNHOLDING) goState('RUNNING', 'unhold done'); break;
+      case 'UNHOLDING': vT = setV; if (L.t >= DUR.UNHOLDING) goState('EXECUTE', 'unhold done'); break;
       case 'STOPPING':  if (L.v === 0 && L.t >= 0.8) goState('STOPPED', 'conveyor stopped'); break;
       case 'ABORTING':  if (L.t >= DUR.ABORTING) goState('ABORTED', 'outputs off'); break;
       case 'CLEARING':  L.zT = 0; if (L.t >= DUR.CLEARING) { L.st10 = { part:null, phase:'', t:0, fv:0 }; goState('STOPPED', 'faults cleared'); } break;
@@ -1219,29 +1371,29 @@ function initSim() {
       vT = L.man.jog ? setV * 0.5 : 0;
       if (!L.f.door) L.zT = L.man.z ? 30 : 0;
     }
-    if (L.started) { if (L.state === 'RUNNING') L.tRun += dt; else if (['HOLDING','HELD','UNHOLDING','ABORTING','ABORTED','CLEARING'].includes(L.state)) L.tDown += dt; }
+    if (L.started) { if (L.state === 'EXECUTE') L.tRun += dt; else if (['HOLDING','HELD','UNHOLDING','SUSPENDING','SUSPENDED','UNSUSPENDING','ABORTING','ABORTED','CLEARING'].includes(L.state)) L.tDown += dt; }
 
     const acc = (L.state === 'ABORTING' || L.state === 'ABORTED' || ab) ? 6000 : 380;
     L.v = L.v < vT ? Math.min(vT, L.v + acc * dt) : Math.max(vT, L.v - acc * dt);
-    const working = ['STARTING','RUNNING','HOLDING','UNHOLDING','STOPPING'].includes(L.state) && L.mode === 'AUTO';
+    const working = ['STARTING','EXECUTE','HOLDING','UNHOLDING','SUSPENDING','UNSUSPENDING','COMPLETING','STOPPING'].includes(L.state) && L.mode === 'AUTO';
 
     // infeed
-    if (L.state === 'RUNNING' && L.mode === 'AUTO') {
+    if (L.state === 'EXECUTE' && L.mode === 'AUTO') {
       L.spawnT += dt;
       const first = L.parts.filter(p => !p.drop).reduce((m, p) => Math.min(m, p.x), Infinity);
-      if (L.spawnT >= rec.spawn && first > 70) {
+      if (L.spawnT >= rec.spawn && first > 70 && !L.ootTrip && L.cnt.in < L.batchSize && !bulkLow()) {
         L.spawnT = 0; L.cnt.in++;
-        L.parts.push({ id:L.nextId++, x:24, y:0, vy:0, fillOk:null, w:null, level:0, cap:null, code:null, sn:'', drop:false });
+        L.parts.push({ id:L.nextId++, x:24, y:0, vy:0, temp:21, fillOk:null, w:null, level:0, stop:null, cap:null, code:null, sn:'', drop:false });
       }
     }
 
     // ST10 fill & weigh: needle DOWN → DOSE → UP, net weight on the load cell
     const st10 = L.st10, needleOk = !L.f.pump && !L.f.estop && !L.f.door;
-    const atFill = L.parts.find(p => !p.drop && p.fillOk === null && Math.abs(p.x - POS.fill) < 0.5);
+    const atFill = L.parts.find(p => !p.drop && wants(p, 'fillOk') && p.fillOk === null && Math.abs(p.x - POS.fill) < 0.5);
     if (atFill && working && !st10.part) { st10.part = atFill; st10.phase = 'DOWN'; st10.t = 0; }
     if (st10.part && working && needleOk) {
       const p = st10.part;
-      if (st10.phase === 'DOWN') { L.zT = 30; if (L.z >= 29.9) { st10.phase = 'DOSE'; st10.t = 0; st10.fv = rec.target * (1 + (L.f.drift ? 0.035 : 0) + gauss() * 0.006); } }
+      if (st10.phase === 'DOWN') { L.zT = 30; if (L.z >= 29.9) { st10.phase = 'DOSE'; st10.t = 0; st10.fv = Math.max(0, Math.min(L.bulk, rec.target * (1 + (L.f.drift ? 0.035 : 0) + gauss() * 0.006))); L.bulk -= st10.fv; } }
       else if (st10.phase === 'DOSE') {
         st10.t += dt;
         const k = Math.min(1, st10.t / rec.fillT);
@@ -1250,6 +1402,7 @@ function initSim() {
           p.w = st10.fv; p.fillOk = Math.abs(st10.fv / rec.target - 1) <= TOL;
           L.lastW = st10.fv; L.fills.push(st10.fv);
           L.ootRun = p.fillOk ? 0 : L.ootRun + 1;
+          if (L.ootRun >= L.ootLimit && !L.ootTrip) { L.ootTrip = true; log('EVT', `${L.ootRun} consecutive fill weights out of tolerance (limit ${L.ootLimit}) · line held, infeed blocked`); }
           if (!p.fillOk) log('EVT', `Vial ${p.id}: fill ${st10.fv.toFixed(3)} g out of tolerance (${(rec.target * (1 - TOL)).toFixed(3)}–${(rec.target * (1 + TOL)).toFixed(3)} g)`);
           st10.phase = 'UP';
         }
@@ -1257,21 +1410,34 @@ function initSim() {
     }
     if (needleOk || L.state === 'CLEARING') { const dz = 100 * dt; L.z = L.z < L.zT ? Math.min(L.zT, L.z + dz) : Math.max(L.zT, L.z - dz); }
 
-    // ST20 stopper & cap
+    // ST20 stoppering (inside the RABS)
     const st20 = L.st20;
-    const atCap = L.parts.find(p => !p.drop && p.fillOk !== null && p.cap === null && Math.abs(p.x - POS.cap) < 0.5);
-    if (atCap && working) {
-      if (st20.part !== atCap) { st20.part = atCap; st20.t = 0; }
+    const atStop = L.parts.find(p => !p.drop && wants(p, 'stop') && p.fillOk !== null && p.stop === null && Math.abs(p.x - POS.stop) < 0.5);
+    if (atStop && working) {
+      if (st20.part !== atStop) { st20.part = atStop; st20.t = 0; }
       if (!L.f.bowl) {
         st20.t += dt;
-        if (st20.t >= 0.5) { atCap.cap = Math.random() < 0.99 ? 'OK' : 'MISSING'; if (atCap.cap === 'MISSING') log('EVT', `Vial ${atCap.id}: stopper not seated`); st20.part = null; }
+        if (st20.t >= 0.35) { atStop.stop = Math.random() < 0.995 ? 'OK' : 'MISSING'; if (atStop.stop === 'MISSING') log('EVT', `Vial ${atStop.id}: stopper not seated`); st20.part = null; }
+      }
+    }
+
+    // ST30 crimp capping (outside the RABS)
+    const stC = L.stC;
+    const atCrimp = L.parts.find(p => !p.drop && wants(p, 'cap') && p.stop !== null && p.cap === null && Math.abs(p.x - POS.cap) < 0.5);
+    if (atCrimp && working) {
+      if (stC.part !== atCrimp) { stC.part = atCrimp; stC.t = 0; }
+      stC.t += dt;
+      if (stC.t >= 0.45) {
+        atCrimp.cap = Math.random() < 0.995 ? 'OK' : 'MISSING';
+        if (atCrimp.cap === 'MISSING') log('EVT', `Vial ${atCrimp.id}: crimp check failed`);
+        stC.part = null;
       }
     }
 
     // ST30 inspect: stopper/cap presence + 2D serial code
     const st30 = L.st30;
     st30.flash = Math.max(0, st30.flash - dt);
-    const atInsp = L.parts.find(p => !p.drop && p.cap !== null && p.code === null && Math.abs(p.x - POS.insp) < 0.5);
+    const atInsp = L.parts.find(p => !p.drop && wants(p, 'code') && p.cap !== null && p.code === null && Math.abs(p.x - POS.insp) < 0.5);
     if (atInsp && working) {
       if (st30.part !== atInsp) { st30.part = atInsp; st30.t = 0; }
       st30.t += dt;
@@ -1285,7 +1451,11 @@ function initSim() {
 
     // ST40 diverter
     let flapT = 0;
-    if (L.mode === 'AUTO') flapT = L.parts.some(p => !p.drop && bad(p) && p.code !== null && p.x > POS.div - 140 && p.x <= POS.div) ? 1 : 0;
+    if (L.mode === 'AUTO') {
+      // decide on the leading vial only: the flap never opens while a good vial is in front of a reject
+      const lead = L.parts.filter(p => !p.drop && p.x <= POS.div + 30).reduce((m, p) => !m || p.x > m.x ? p : m, null);
+      flapT = (lead && bad(lead) && lead.x > POS.div - 140) || L.parts.some(p => p.drop === 'rej' && p.y < 90) ? 1 : 0;
+    }
     else flapT = L.man.div ? 1 : 0;
     if (!ab) L.flap = L.flap < flapT ? Math.min(flapT, L.flap + 5 * dt) : Math.max(flapT, L.flap - 5 * dt);
 
@@ -1297,23 +1467,60 @@ function initSim() {
         const st = stopFor(p);
         if (st !== null && p.x <= st && nx >= st) nx = st;
         if (st !== null && p.x >= st && st !== POS.div - 40) nx = p.x;
-        nx = Math.min(nx, ahead - 40);
+        nx = Math.min(nx, ahead - 40, POS.exit);
         p.x = Math.max(p.x, nx);
         ahead = p.x;
-        if (p.x >= POS.div - 0.5 && p.x < POS.div + 20 && L.flap > 0.9 && (bad(p) || L.mode !== 'AUTO')) { p.drop = 'rej'; p.vy = 0; }
-        if (p.x >= POS.exit) { p.drop = 'good'; p.vy = 0; }
+        if (p.x >= POS.div - 0.5 && p.x < POS.div + 20 && L.flap > 0.9 && (bad(p) || L.mode !== 'AUTO') && !L.parts.some(q => q.drop === 'rej' && q.y < 50)) { p.drop = 'rej'; p.vy = 40; }
+        if (p.x >= POS.exit - 0.5 && L.mode === 'AUTO' && bad(p)) { p.gone = true; L.cnt.rej++; L.cnt.oth++; log('EVT', `Vial ${p.id}: passed the diverter unchecked · removed at outfeed`); }
       });
     }
     L.parts.forEach(p => {
       if (!p.drop) return;
-      p.vy += 900 * dt; p.y += p.vy * dt; p.x += (p.drop === 'rej' ? 30 : 20) * dt;
-      if (p.drop === 'rej' && p.y > 78) {
+      p.vy = Math.min(170, p.vy + 900 * dt); p.y += p.vy * dt;   // chute brakes the vial to a steady speed
+      p.x += (CHUTE_X - p.x) * Math.min(1, 10 * dt);   // centre in the chute
+      if (p.drop === 'rej' && p.y > 118) {
         p.gone = true;
-        if (L.mode === 'AUTO') { L.cnt.rej++; if (p.fillOk === false) L.cnt.fill++; else if (p.cap === 'MISSING') L.cnt.cap++; else if (p.code === 'NOREAD') L.cnt.nr++; L.done.push(performance.now()); }
+        { L.cnt.rej++; if (p.nodep) L.cnt.dep++; else if (p.fillOk === false) L.cnt.fill++; else if (p.stop === 'MISSING' || p.cap === 'MISSING') L.cnt.cap++; else if (p.code === 'NOREAD') L.cnt.nr++; else L.cnt.oth++; L.done.push(performance.now()); }
       }
-      if (p.drop === 'good' && p.y > 60) { p.gone = true; L.tray++; if (L.mode === 'AUTO') { L.cnt.good++; L.done.push(performance.now()); } }
     });
     L.parts = L.parts.filter(p => !p.gone);
+    pickPlace(dt);
+  }
+
+  // ST60 pick-and-place: DOWN → GRIP → UP → MOVE → LOWER → OPEN → RISE → RETURN, back rows first
+  const toward = (a, b, v) => a < b ? Math.min(b, a + v) : Math.max(b, a - v);
+  function pickPlace(dt) {
+    const pp = L.pp;
+    if (L.f.estop || ['ABORTING','ABORTED'].includes(L.state)) return;   // outputs off
+    const go = (x, y) => { pp.x = toward(pp.x, x, PP.vx * dt); pp.y = toward(pp.y, y, PP.vy * dt); return pp.x === x && pp.y === y; };
+    const slot = Math.min(L.tray, L.trayCap - 1);
+    switch (pp.ph) {
+      case 'HOME': {
+        if (!go(POS.exit, PP.home)) break;
+        const v = L.parts.find(p => !p.drop && p.x >= POS.exit - 0.5);
+        if (v && L.tray < L.trayCap) { pp.target = v; pp.ph = 'DOWN'; }
+        break;
+      }
+      case 'DOWN':  if (!L.parts.includes(pp.target)) { pp.target = null; pp.ph = 'RISE'; break; }
+                    if (go(POS.exit, PP.pick)) { pp.ph = 'GRIP'; pp.t = 0; } break;
+      case 'GRIP':  if (!L.parts.includes(pp.target)) { pp.target = null; pp.ph = 'RISE'; break; }
+                    pp.t += dt; if (pp.t >= 0.12) { pp.vial = pp.target; pp.target = null; L.parts = L.parts.filter(p => p !== pp.vial); pp.ph = 'UP'; } break;
+      case 'UP':    if (go(POS.exit, PP.carry)) pp.ph = 'MOVE'; break;
+      case 'MOVE':  if (go(slotX(slot), PP.carry)) pp.ph = 'LOWER'; break;
+      case 'LOWER': if (go(slotX(slot), slotY(slot))) { pp.ph = 'OPEN'; pp.t = 0; } break;
+      case 'OPEN':
+        pp.t += dt;
+        if (pp.t >= 0.08 && pp.vial) {
+          const v = pp.vial; v.slot = slot; pp.vial = null;
+          L.trayV.push(v); L.tray++; if (v.sn) L.traySn.push(v.sn);
+          if (bad(v)) { L.cnt.rej++; L.cnt.oth++; log('EVT', `Vial ${v.id}: reject packed by hand in MANUAL · counted as rejected`); }
+          else { L.cnt.good++; L.done.push(performance.now()); }
+        }
+        if (pp.t >= 0.08) pp.ph = 'RISE';
+        break;
+      case 'RISE':   if (go(pp.x, PP.carry)) pp.ph = 'RETURN'; break;
+      case 'RETURN': if (go(POS.exit, PP.home)) pp.ph = 'HOME'; break;
+    }
   }
 
   /* SVG rendering */
@@ -1328,8 +1535,70 @@ function initSim() {
       '<rect x="-6" y="-40" width="12" height="7" fill="rgba(205,214,244,.07)" stroke="#A6ADC8" stroke-width="1.2"/>' +
       '<rect class="vs" x="-8" y="-44" width="16" height="6" rx="1" fill="#8A8FA8" visibility="hidden"/>' +
       '<rect class="vc" x="-9" y="-45" width="18" height="5" rx="1" fill="#CDD6F4" visibility="hidden"/>' +
-      '<rect class="vl" x="-7" y="-26" width="14" height="10" rx="1" fill="#CDD6F4" visibility="hidden"/>';
+      '<g class="vl" visibility="hidden"><rect x="-11" y="-23" width="22" height="10" fill="#E6E9F5" opacity=".9"/><rect x="-4" y="-21.5" width="7" height="7" fill="#313244"/><rect x="-2.5" y="-20" width="2" height="2" fill="#E6E9F5"/><rect x="0.5" y="-17.5" width="1.5" height="1.5" fill="#E6E9F5"/></g>';
     return g;
+  }
+  function paintVial(g, p, x, y, tilt) {
+    g.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)})${tilt ? ` rotate(${tilt})` : ''}`);
+    const lvl = Math.min(1.15, p.level) * 22;
+    const q = g.querySelector('.vq'); q.setAttribute('height', lvl.toFixed(1)); q.setAttribute('y', (-2 - lvl).toFixed(1));
+    g.querySelector('.vs').setAttribute('visibility', p.stop === 'OK' ? 'visible' : 'hidden');
+    g.querySelector('.vc').setAttribute('visibility', p.cap === 'OK' ? 'visible' : 'hidden');
+    g.querySelector('.vl').setAttribute('visibility', p.code === 'OK' ? 'visible' : 'hidden');
+    const col = bad(p) ? (p.fillOk === false ? '#F38BA8' : '#F9E2AF') : p.temp > 60 ? '#FAB387' : p.code === 'OK' ? '#A6E3A1' : '#A6ADC8';   // orange while hot
+    g.querySelector('.vb').setAttribute('stroke', col);
+  }
+  // tray map (top view) cells, back row on top
+  const mapG = E('trayMap'), mapCells = [];
+  for (let i = 0; i < 30; i++) {
+    const r = document.createElementNS(NS, 'rect');
+    r.setAttribute('x', 1022 + (i % 6) * 8); r.setAttribute('y', 58 + Math.floor(i / 6) * 7);
+    r.setAttribute('width', 7); r.setAttribute('height', 6); r.setAttribute('rx', 1);
+    mapG.appendChild(r); mapCells.push(r);
+  }
+  const trayVG = E('trayV'), trayEls = new Map(), leaving = [];
+  let trayFade = 1;
+  function trayLeaves() {   // full tray slides out to the right, an empty one fades in
+    if (reduce) return;
+    const c = E('trayG').cloneNode(true);
+    c.removeAttribute('id'); c.querySelectorAll('[id]').forEach(n => n.removeAttribute('id'));
+    c.querySelectorAll('.carry').forEach(n => n.remove());
+    E('trayOld').appendChild(c); leaving.push({ el:c, t:0 }); trayFade = 0;
+  }
+  function renderTray(dt) {
+    const pp = L.pp, keep = new Set(), list = L.trayV.slice();
+    if (pp.vial) list.push(pp.vial);   // the gripped vial is drawn last: in front of earlier rows, behind the tray wall
+    list.forEach(v => {
+      keep.add(v.id);
+      let g = trayEls.get(v.id);
+      if (!g) { g = vialEl(); trayEls.set(v.id, g); }
+      trayVG.appendChild(g);   // keeps drawing order
+      g.classList.toggle('carry', v === pp.vial);
+      if (v === pp.vial) { paintVial(g, v, pp.x, pp.y, 0); g.removeAttribute('opacity'); }
+      else { paintVial(g, v, slotX(v.slot), slotY(v.slot), 0); g.setAttribute('opacity', (1 - depth(v.slot) * 0.15).toFixed(2)); }
+    });
+    trayEls.forEach((g, id) => { if (!keep.has(id)) { g.remove(); trayEls.delete(id); } });
+    // gripper
+    const closed = !!pp.vial || pp.ph === 'GRIP';
+    E('ppHead').setAttribute('transform', `translate(${pp.x.toFixed(1)} ${pp.y.toFixed(1)})`);
+    E('ppCar').setAttribute('x', (pp.x - 12).toFixed(1));
+    E('ppRod').setAttribute('x1', pp.x.toFixed(1)); E('ppRod').setAttribute('x2', pp.x.toFixed(1)); E('ppRod').setAttribute('y2', (pp.y - 56).toFixed(1));
+    const fx = closed ? 6.5 : 13;
+    E('ppF1').setAttribute('x', (-fx - 3).toFixed(1)); E('ppF2').setAttribute('x', fx.toFixed(1));
+    // tray map + text
+    mapCells.forEach((r, i) => {
+      const full = i < L.tray, next = i === L.tray && L.tray < L.trayCap;
+      r.setAttribute('fill', full ? 'rgba(166,227,161,.75)' : 'none');
+      r.setAttribute('stroke', full ? 'none' : next ? '#89B4FA' : '#45475a');
+    });
+    // tray exchange animation (real time)
+    for (let i = leaving.length - 1; i >= 0; i--) {
+      const a = leaving[i]; a.t += dt; const k = Math.min(1, a.t / 0.7);
+      a.el.setAttribute('transform', `translate(${(k * k * 220).toFixed(1)} 0)`); a.el.setAttribute('opacity', (1 - k).toFixed(2));
+      if (k >= 1) { a.el.remove(); leaving.splice(i, 1); }
+    }
+    trayFade = Math.min(1, trayFade + dt / 0.4);
+    E('trayG').setAttribute('opacity', trayFade.toFixed(2));
   }
   function renderPG(dt) {
     beltOff -= L.v * dt;
@@ -1340,25 +1609,30 @@ function initSim() {
       seen.add(p.id);
       let g = partEls.get(p.id);
       if (!g) { g = vialEl(); partsG.appendChild(g); partEls.set(p.id, g); }
-      const tilt = p.drop === 'rej' ? Math.min(40, p.y) : 0;
-      g.setAttribute('transform', `translate(${p.x.toFixed(1)} ${(180 + p.y).toFixed(1)}) rotate(${tilt})`);
-      const lvl = Math.min(1.15, p.level) * 22;
-      const q = g.querySelector('.vq'); q.setAttribute('height', lvl.toFixed(1)); q.setAttribute('y', (-2 - lvl).toFixed(1));
-      g.querySelector('.vs').setAttribute('visibility', p.cap === 'OK' ? 'visible' : 'hidden');
-      g.querySelector('.vc').setAttribute('visibility', p.cap === 'OK' ? 'visible' : 'hidden');
-      g.querySelector('.vl').setAttribute('visibility', p.code === 'OK' ? 'visible' : 'hidden');
-      const col = bad(p) ? (p.fillOk === false ? '#F38BA8' : '#F9E2AF') : p.code === 'OK' ? '#A6E3A1' : '#A6ADC8';
-      g.querySelector('.vb').setAttribute('stroke', col);
+      // slides off the flap with a slight tilt, then stays upright in the chute and fades out at the bottom
+      const tilt = p.drop === 'rej' ? 10 * Math.min(1, p.y / 6) * Math.max(0, Math.min(1, 1 - (p.y - 6) / 24)) : 0;
+      paintVial(g, p, p.x, 180 + p.y, tilt);
+      if (p.drop === 'rej') g.setAttribute('opacity', Math.max(0, Math.min(1, (118 - p.y) / 40)).toFixed(2)); else g.removeAttribute('opacity');
     });
     partEls.forEach((g, id) => { if (!seen.has(id)) { g.remove(); partEls.delete(id); } });
+    renderTray(dt);
     const run = L.v > 0.5;
     E('m1').setAttribute('class', 'mot' + (run ? ' on' : ''));
     E('m1Txt').textContent = `M1 ${(L.v * 0.06).toFixed(1)} m/min`;
     E('m1Sub').textContent = 'VFD · ' + (run ? 'RUNNING' : L.f.estop ? 'STO ACTIVE' : 'STOPPED');
     const near = x => L.parts.some(p => !p.drop && Math.abs(p.x - x) < 16);
     E('pe1').setAttribute('class', 'pe' + (near(POS.fill) ? ' on' : ''));
-    E('pe2').setAttribute('class', 'pe' + (near(POS.cap) ? ' on' : ''));
-    E('pe3').setAttribute('class', 'pe' + (near(POS.insp) ? ' on' : ''));
+    E('pe2').setAttribute('class', 'pe' + (near(POS.stop) ? ' on' : ''));
+    E('pe3').setAttribute('class', 'pe' + (near(POS.cap) ? ' on' : ''));
+    E('pe4').setAttribute('class', 'pe' + (near(POS.insp) ? ' on' : ''));
+    // ST00 tunnel
+    const tLow = L.tt < 300;
+    ['h1','h2'].forEach(h => E(h).setAttribute('class', 'heat' + (L.f.heater ? ' off' : tLow ? ' low' : '')));
+    E('ttTxt').textContent = `TT01 ${L.tt.toFixed(0)} °C`;
+    E('ttTxt').setAttribute('fill', tLow ? '#F9E2AF' : '#A6ADC8');
+    E('tunTxt').textContent = L.f.heater ? 'HEATER FAULT' : tLow ? 'BELOW 300 °C' : 'HOT ZONE ≥ 300 °C';
+    E('tt2Txt').textContent = L.tOut === null ? 'TT02 —' : `TT02 ${L.tOut.toFixed(0)} °C`;
+    E('tunTxt').setAttribute('fill', L.f.heater || tLow ? '#F9E2AF' : '#8A8FA8');
     // RABS + pressure
     const dpBad = L.f.door || L.dp < 10;
     E('rabs').setAttribute('class', 'rabs' + (dpBad ? ' bad' : ''));
@@ -1372,41 +1646,45 @@ function initSim() {
     E('head').setAttribute('transform', `translate(0 ${zp.toFixed(1)})`);
     E('rod').setAttribute('height', (4 + zp).toFixed(1));
     E('scale').setAttribute('fill', L.st10.part ? '#94E2D5' : '#45475a');
+    const lv = L.bulk0 ? Math.max(0, L.bulk / L.bulk0) : 0;
+    E('t1Lvl').setAttribute('height', (lv * 34).toFixed(1)); E('t1Lvl').setAttribute('y', (117 - lv * 34).toFixed(1));
+    E('t1Txt').textContent = L.bulk0 ? mlTxt(L.bulk) : 'EMPTY';
     E('wTxt').textContent = dosing ? `${(L.lastWLive || 0).toFixed(3)} g` : L.lastW === null ? '0.000 g' : `${L.lastW.toFixed(3)} g`;
     E('wTxt').setAttribute('fill', L.lastW !== null && !dosing && Math.abs(L.lastW / R().target - 1) > TOL ? '#F38BA8' : '#A6ADC8');
-    E('st10Txt').textContent = L.f.pump ? 'PUMP FAULT' : L.st10.phase ? L.st10.phase + (dosing ? '…' : '') : `IDLE · TARGET ${R().target.toFixed(2)} g ±2 %`;
+    E('st10Txt').textContent = L.f.pump ? 'PUMP FAULT' : L.st10.phase ? L.st10.phase + (dosing ? '…' : '') : `IDLE · ${R().target.toFixed(2)} g ±2 %`;
     E('st10Txt').setAttribute('fill', L.f.pump ? '#F38BA8' : '#8A8FA8');
     // ST20
     E('bowl').setAttribute('stroke', L.f.bowl ? '#F9E2AF' : '#585b70');
     E('bowlTxt').textContent = L.f.bowl ? 'BOWL EMPTY' : 'BOWL OK';
     E('bowlTxt').setAttribute('fill', L.f.bowl ? '#F9E2AF' : '#8A8FA8');
-    E('st20Txt').textContent = L.st20.part ? (L.f.bowl ? 'WAITING FOR STOPPERS' : 'STOPPER + CRIMP…') : 'IDLE';
+    E('st20Txt').textContent = L.st20.part ? (L.f.bowl ? 'NO STOPPERS' : 'STOPPERING…') : 'IDLE';
+    E('st30Txt').textContent = L.stC.part ? 'CRIMPING…' : 'IDLE';
+    E('crimpHead').setAttribute('transform', `translate(0 ${L.stC.part ? Math.min(1, L.stC.t / 0.2) * 14 : 0})`);
     // ST30
     const insp = !!L.st30.part;
     E('camBeam').setAttribute('fill', L.st30.flash > 0 ? (L.st30.ok ? 'rgba(166,227,161,.35)' : 'rgba(249,226,175,.35)') : insp ? 'rgba(137,180,250,.22)' : 'rgba(137,180,250,0)');
-    E('st30Txt').textContent = insp ? 'INSPECTING…' : 'IDLE';
+    E('st40Txt').textContent = insp ? 'INSPECTING…' : 'IDLE';
     E('snTxt').textContent = 'SN ' + L.lastSn;
     // ST40 + outfeed
-    E('flap').setAttribute('transform', `rotate(${(L.flap * 42).toFixed(1)} 742 181)`);
-    E('st40Txt').textContent = L.flap > 0.5 ? 'Y40 → REJECT' : 'Y40 → GOOD';
+    E('flap').setAttribute('transform', `rotate(${(L.flap * 68).toFixed(1)} 916 181)`);   // opens flat against the funnel wall
+    E('st50Txt').textContent = L.flap > 0.5 ? 'Y50 REJ' : 'Y50 GOOD';
+    E('aggTxt1').textContent = `${trayId()} · ${L.tray}/${L.trayCap}`;
+    E('aggTxt1').setAttribute('fill', L.tray >= L.trayCap ? '#F9E2AF' : '#A6ADC8');
+    E('aggTxt2').textContent = L.tray >= L.trayCap ? `TRAY FULL · AGGREGATED ${L.aggCount}` : `ROW ${Math.floor(L.tray / 6) + 1}/5 · AGGREGATED ${L.aggCount}`;
     E('rejTxt').textContent = 'REJ ' + L.cnt.rej;
-    const fill = Math.min(1, L.tray / L.trayCap) * 64;
-    E('binFill').setAttribute('y', (263 - fill).toFixed(1)); E('binFill').setAttribute('height', fill.toFixed(1));
-    E('binFill').setAttribute('fill', L.tray >= L.trayCap ? 'rgba(249,226,175,.45)' : 'rgba(166,227,161,.35)');
-    E('binTxt').textContent = `${L.tray}/${L.trayCap}`;
   }
 
   /* state chips */
   E('sm').innerHTML = STATES.map(r => `<div class="row">${r.map(s => `<div class="s" data-s="${s}">${s}<i></i></div>`).join('')}</div>`).join('');
   function renderState() {
-    const s = L.state, trans = DUR[s] || ['HOLDING','STOPPING'].includes(s);
+    const s = L.state, trans = DUR[s] || ['HOLDING','SUSPENDING','COMPLETING','STOPPING'].includes(s);
     $$('#sm .s').forEach(d => {
       const on = d.dataset.s === s;
       d.className = 's' + (on ? ' on ' + (trans ? 'trans' : KIND(s)) : '');
       d.lastChild.style.width = on && DUR[s] ? Math.min(100, L.t / DUR[s] * 100) + '%' : '0';
     });
     E('stBig').textContent = s;
-    E('stBig').style.color = s === 'RUNNING' ? 'var(--ok)' : KIND(s) === 'abort' ? 'var(--hi)' : KIND(s) === 'hold' ? 'var(--focus)' : 'var(--ink)';
+    E('stBig').style.color = s === 'EXECUTE' ? 'var(--ok)' : KIND(s) === 'abort' ? 'var(--hi)' : KIND(s) === 'hold' ? 'var(--focus)' : KIND(s) === 'susp' ? '#F9E2AF' : KIND(s) === 'done' ? '#94E2D5' : 'var(--ink)';
     E('modeTxt').textContent = `${L.mode} · ${L.recipe}`;
     E('tInState').textContent = L.t.toFixed(1) + ' s';
     $$('#cmdbar [data-cmd]').forEach(b => { const w = why(b.dataset.cmd); b.classList.toggle('off', !!w); b.title = w ? 'Not available: ' + w : 'Send ' + b.dataset.cmd; b.setAttribute('aria-disabled', String(!!w)); });
@@ -1419,17 +1697,18 @@ function initSim() {
   function renderBatch() {
     const st = fillStats(), rec = R(), out = L.cnt.good + L.cnt.rej;
     const exp = new Date(); exp.setFullYear(exp.getFullYear() + 2);
-    const status = !L.batch.cleared && !L.cnt.in ? 'CLEARANCE PENDING' : L.cnt.in ? (L.state === 'STOPPED' ? 'IN PROGRESS · STOPPED' : 'IN PROGRESS') : 'READY';
-    const b = E('batchStat'); b.textContent = status; b.className = 'badge' + (status === 'CLEARANCE PENDING' ? ' warn' : status === 'READY' ? ' okb' : '');
+    const status = !L.batch.cleared && !L.cnt.in ? 'CLEARANCE PENDING' : L.cnt.in ? (L.state === 'COMPLETE' ? 'COMPLETE · TO CLOSE' : L.state === 'STOPPED' ? 'IN PROGRESS · STOPPED' : 'IN PROGRESS') : 'READY';
+    const b = E('batchStat'); b.textContent = status; b.className = 'badge' + (status === 'CLEARANCE PENDING' ? ' warn' : status === 'READY' || status.startsWith('COMPLETE') ? ' okb' : '');
     E('batchKv').innerHTML = [
-      ['Batch', batchId()], ['Product', rec.prod], ['Lot / expiry', `${lotId()} · ${exp.toISOString().slice(0, 7)}`],
+      ['Batch', batchId()], ['Vials filled / planned', `${L.cnt.in} / ${L.batchSize}`], ['Bulk T1', L.bulk0 ? `${mlTxt(L.bulk)} of ${mlTxt(L.bulk0)}` : 'not charged'], ['Product', rec.prod], ['Lot / expiry', `${lotId()} · ${exp.toISOString().slice(0, 7)}`],
       ['Fill target', `${rec.target.toFixed(3)} g ±2 %`],
       ['Mean fill', st ? `${st.mean.toFixed(3)} g (n=${st.n})` : '—'], ['Std dev', st ? `${(st.sd * 1000).toFixed(1)} mg` : '—'],
       ['Min / max', st ? `${st.min.toFixed(3)} / ${st.max.toFixed(3)} g` : '—'],
-      ['Yield', out ? `${(L.cnt.good / out * 100).toFixed(1)} %` : '—']
+      ['Reconciliation', reconcile().txt], ['Yield', reconcile().yld], ['Trays aggregated', String(L.aggCount)]
     ].map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('');
-    E('lcConfirm').classList.toggle('off', L.batch.cleared || L.state !== 'STOPPED');
-    E('batchClose').classList.toggle('off', L.state !== 'STOPPED' || !L.cnt.in);
+    const stopLike = ['STOPPED','COMPLETE'].includes(L.state);
+    E('lcConfirm').classList.toggle('off', L.batch.cleared || !stopLike);
+    E('batchClose').classList.toggle('off', !stopLike || !L.cnt.in);
     E('lastBatch').textContent = L.lastBatch ? 'Last batch: ' + L.lastBatch : '';
   }
 
@@ -1451,6 +1730,7 @@ function initSim() {
     });
     E('cIn').textContent = L.cnt.in; E('cGood').textContent = L.cnt.good; E('cRej').textContent = L.cnt.rej;
     E('cFill').textContent = L.cnt.fill; E('cCap').textContent = L.cnt.cap; E('cNr').textContent = L.cnt.nr;
+    E('cDep').textContent = L.cnt.dep; E('cOth').textContent = L.cnt.oth;
     E('ppmTxt').textContent = L.done.length + ' VIALS/MIN';
   }
 
@@ -1458,10 +1738,10 @@ function initSim() {
   const WATCH = [
     ['"Line".State', () => L.state], ['"Line".Mode', () => L.mode], ['"Batch".ID', () => batchId()], ['"Batch".LineClearanceOK', () => L.batch.cleared],
     ['"M1".SpeedAct', () => (L.v * 0.06).toFixed(1)], ['"P1".FillSet', () => R().target.toFixed(3)],
-    ['"P1".FillLast', () => L.lastW === null ? '—' : L.lastW.toFixed(3)], ['"ST10".OOT_Run', () => L.ootRun],
-    ['"ST10".NeedleZ', () => L.z.toFixed(1)], ['"ST20".StopperBowlOK', () => !L.f.bowl], ['"ST30".LastSerial', () => L.lastSn],
+    ['"P1".FillLast', () => L.lastW === null ? '—' : L.lastW.toFixed(3)], ['"ST10".OOT_Run', () => `${L.ootRun} / ${L.ootLimit}`], ['"ST10".InfeedBlocked', () => L.ootTrip],
+    ['"T1".Bulk_mL', () => L.bulk.toFixed(1)], ['"TT01".Temp_C', () => L.tt.toFixed(0)], ['"TT02".VialOut_C', () => L.tOut === null ? '—' : L.tOut.toFixed(0)], ['"ST20".StopperBowlOK', () => !L.f.bowl], ['"ST30".LastSerial', () => L.lastSn],
     ['"RABS".DP_Pa', () => L.dp.toFixed(1)], ['"RABS".DoorClosed', () => !L.f.door], ['"Y40".ToReject', () => L.flap > 0.5],
-    ['"Sim".EStopOK', () => !L.f.estop]
+    ['"Agg".TrayID', () => trayId()], ['"Agg".VialsInTray', () => L.tray], ['"PP60".Step', () => L.pp.ph], ['"Sim".EStopOK', () => !L.f.estop]
   ];
   E('watch').innerHTML = WATCH.map(([n], i) => `<tr><td>${esc(n)}</td><td id="w${i}"></td></tr>`).join('');
   function renderWatch() {
@@ -1488,7 +1768,7 @@ function initSim() {
   /* trend (canvas, simulated data) */
   const TR = [], TRN = 300;
   const fillPct = s => s.f === null ? null : (s.f - 90) / 20;            // 90–110 % → 0–1
-  const PENS = [['#89B4FA', s => s.v / 20], ['#FAB387', fillPct], ['#CBA6F7', s => s.dp / 20]];
+  const PENS = [['#89B4FA', s => s.v / 20], ['#FAB387', fillPct], ['#CBA6F7', s => s.dp / 20], ['#94E2D5', s => s.tt / 400]];
   const cv = E('trend');
   function drawTrend() {
     const w = cv.clientWidth, h = cv.clientHeight; if (!w || !h) return;
@@ -1527,8 +1807,8 @@ function initSim() {
     if (acc5 >= 0.2) {
       acc5 = 0;
       const fp = L.lastW === null ? null : L.lastW / R().target * 100;
-      TR.push({ v:L.v * 0.06, f:fp, dp:L.dp }); if (TR.length > TRN) TR.shift();
-      E('pv1').textContent = (L.v * 0.06).toFixed(1); E('pv2').textContent = fp === null ? '—' : fp.toFixed(1); E('pv3').textContent = L.dp.toFixed(1);
+      TR.push({ v:L.v * 0.06, f:fp, dp:L.dp, tt:L.tt }); if (TR.length > TRN) TR.shift();
+      E('pv1').textContent = (L.v * 0.06).toFixed(1); E('pv2').textContent = fp === null ? '—' : fp.toFixed(1); E('pv3').textContent = L.dp.toFixed(1); E('pv4').textContent = L.tt.toFixed(0);
       drawTrend();
     }
     if (accUi >= 0.1) { accUi = 0; renderState(); renderKpi(); renderWatch(); renderBatch(); if (almDirty) renderAlarms(); }
@@ -1537,6 +1817,7 @@ function initSim() {
   log('EVT', 'Simulator ready · unit STOPPED · line clearance pending for ' + batchId());
   renderAlarms(); renderState(); renderKpi(); renderWatch(); renderBatch(); renderPG(0);
   return {
+    test: { L, step(sec) { for (let i = 0; i < sec / 0.02; i++) tick(0.02); renderPG(0); } },   // used by automated tests only
     visible(on) {
       if (on && !running) { running = true; last = performance.now(); requestAnimationFrame(loop); requestAnimationFrame(drawTrend); }
       if (!on) running = false;
